@@ -1,0 +1,67 @@
+import 'package:flutter/material.dart';
+import 'package:get_state_manager/get_state_manager.dart';
+
+import '../filters/filter.dart';
+import '../controller/searcher_page_stream_controller.dart';
+import 'stream_seacher_builde_base.dart';
+
+class StreamSearchBuilder<
+        T> //extends StreamBuilderBase<List<T>, AsyncSnapshot<List<T>>> {
+    extends StreamSearcherGetxBuilderBase<List<T>, AsyncSnapshot<List<T>>> {
+  const StreamSearchBuilder({
+    Key key,
+    this.searcher,
+    this.initialData,
+    @required this.listBuilder,
+    Stream<List<T>> stream,
+    @required this.builder,
+  })  : assert(builder != null),
+        super(key: key, stream: stream, searcher: searcher);
+
+  final AsyncWidgetBuilder<List<T>> builder;
+  final List<T> initialData;
+  final FunctionList<T> listBuilder;
+  final SearcherPageStreamController<T> searcher;
+
+  @override
+  AsyncSnapshot<List<T>> initial() =>
+      AsyncSnapshot<List<T>>.withData(ConnectionState.none, initialData);
+
+  @override
+  AsyncSnapshot<List<T>> afterConnected(AsyncSnapshot<List<T>> current) =>
+      current.inState(ConnectionState.waiting);
+
+  @override
+  AsyncSnapshot<List<T>> afterData(
+      AsyncSnapshot<List<T>> current, List<T> data) {
+    return AsyncSnapshot<List<T>>.withData(ConnectionState.active, data);
+  }
+
+  @override
+  AsyncSnapshot<List<T>> afterError(
+      AsyncSnapshot<List<T>> current, Object error) {
+    return AsyncSnapshot<List<T>>.withError(ConnectionState.active, error);
+  }
+
+  @override
+  AsyncSnapshot<List<T>> afterDone(AsyncSnapshot<List<T>> current) =>
+      current.inState(ConnectionState.done);
+
+  @override
+  AsyncSnapshot<List<T>> afterDisconnected(AsyncSnapshot<List<T>> current) =>
+      current.inState(ConnectionState.none);
+
+  @override
+  Widget build(BuildContext context, AsyncSnapshot<List<T>> currentSummary) {
+    if (currentSummary.hasData) {
+      searcher.haveInitialData = true;
+      //searcher.initialChangeList = currentSummary.data;
+      // searcher.onSearchFilter(currentSummary.data);
+      return Obx(() {
+        return listBuilder(searcher.listSearch, searcher.isModSearch);
+      });
+    }
+
+    return builder(context, currentSummary);
+  }
+}

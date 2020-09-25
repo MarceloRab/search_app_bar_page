@@ -1,0 +1,24 @@
+name: search_app_bar_page
+description: Uma página de search prontinha pra você.
+version: 0.0.1
+author:
+homepage:
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+  flutter: ">=1.17.0 <2.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  diacritic: ">=0.1.1 <2.0.0" # mudar letras - acentuação
+  get_state_manager: ">=3.10.2 <4.0.0"
+
+
+
+flutter:
+
