@@ -16,7 +16,7 @@ O projeto dele esta parado há mais de 01 ano.
 
 ##### ✷ A página se divide entre o <i>SEARCH_APP_BAR</i> + paramentros do <i>CONTROLLER</i> + paremetros para o <i>BODY</i> de um Scaffold. 
 
-## Paramestros necessários
+## Parâmetros necessários
 
 Temos duas páginas: <blockquote> SearchAppBarPage e SearchAppBarPageStream.</blockquote>
 
@@ -46,7 +46,7 @@ SearchAppBarPageStream({
 ```
 
 ## Exemplo Completo
-##### 🔎 SearchAppBarPage
+#### 🔎 SearchAppBarPage
 
 ```dart
 import 'package:flutter/material.dart';
@@ -146,7 +146,7 @@ class Person {
 }
 
 ```
-##### 🔎 SearchAppBarPageStream
+#### 🔎 SearchAppBarPageStream
 ```dart
 import 'package:flutter/material.dart';
 import 'package:search_app_bar_page/search_app_bar_page.dart';
