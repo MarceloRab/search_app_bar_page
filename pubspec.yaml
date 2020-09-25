@@ -1,7 +1,6 @@
 name: search_app_bar_page
 description: Uma página de search prontinha pra você.
 version: 0.0.1
-author: Antonio Rabelo
 homepage: https://github.com/MarceloRab/search_app_bar_page
 
 environment:
@@ -11,12 +10,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  diacritic: ">=0.1.1 <2.0.0" # mudar letras - acentuação
+  get_state_manager: ">=3.10.2 <4.0.0"
+  meta: ^1.1.8
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  diacritic: ">=0.1.1 <2.0.0" # mudar letras - acentuação
-  get_state_manager: ">=3.10.2 <4.0.0"
+
 
 flutter:
 

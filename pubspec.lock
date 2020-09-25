@@ -44,7 +44,7 @@ packages:
     source: hosted
     version: "1.14.13"
   diacritic:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: diacritic
       url: "https://pub.dartlang.org"
@@ -89,7 +89,7 @@ packages:
     source: hosted
     version: "3.10.2"
   get_state_manager:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: get_state_manager
       url: "https://pub.dartlang.org"
@@ -103,7 +103,7 @@ packages:
     source: hosted
     version: "0.12.8"
   meta:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: meta
       url: "https://pub.dartlang.org"
