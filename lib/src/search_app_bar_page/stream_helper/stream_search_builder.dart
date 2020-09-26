@@ -5,11 +5,10 @@ import '../controller/searcher_page_stream_controller.dart';
 import '../filters/filter.dart';
 import 'stream_seacher_builde_base.dart';
 
-// ignore: must_be_immutable
 class StreamSearchBuilder<
         T> //extends StreamBuilderBase<List<T>, AsyncSnapshot<List<T>>> {
     extends StreamSearcherGetxBuilderBase<List<T>, AsyncSnapshot<List<T>>> {
-   StreamSearchBuilder({
+  const StreamSearchBuilder({
     Key key,
     this.searcher,
     this.initialData,
@@ -28,10 +27,8 @@ class StreamSearchBuilder<
   final List<T> initialData;
   final FunctionList<T> listBuilder;
   @override
-  // ignore: overridden_fields
   final SearcherPageStreamController<T> searcher;
   @override
-  // ignore: overridden_fields
   final Widget widgetConnecty;
 
   @override

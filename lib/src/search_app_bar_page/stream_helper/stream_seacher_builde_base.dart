@@ -7,9 +7,8 @@ import '../controller/searcher_page_stream_controller.dart';
 
 typedef WidgetConnecty = Widget Function();
 
-// ignore: must_be_immutable
 abstract class StreamSearcherGetxBuilderBase<T, S> extends StatefulWidget {
-  StreamSearcherGetxBuilderBase(
+  const StreamSearcherGetxBuilderBase(
       {Key key,
       @required this.searcher,
       @required this.stream,
@@ -18,7 +17,7 @@ abstract class StreamSearcherGetxBuilderBase<T, S> extends StatefulWidget {
 
   // nao de pode colocar final. Após um setState precisa refaze-la
   // vide o metodo didUpdateWidget
-  Stream<T> stream;
+  final Stream<T> stream;
   final SearcherPageStreamController searcher;
 
   S initial();
@@ -98,7 +97,7 @@ class _StreamSearcherGetxBuilderBase<T, S>
       if (_subscription != null) {
         _unsubscribe();
         //Necessário para resolver após o setState
-        widget.stream = oldWidget.stream.asBroadcastStream();
+        //widget.stream = oldWidget.stream.asBroadcastStream();
         _summary = widget.afterDisconnected(_summary);
       }
 
@@ -120,14 +119,17 @@ class _StreamSearcherGetxBuilderBase<T, S>
   void dispose() {
     _unsubscribe();
     _unsubscribeConnecty();
+    widget.searcher.onClose();
     super.dispose();
   }
 
   void _subscribe() {
-    // if (widget.stream != null) {
-    _subscription = widget.stream.listen((T data) {
+    _subscription = widget.stream.listen((data) {
       downConnectyWithoutData = false;
       _data = data;
+      // reflexo no searchList
+      widget.searcher.wrabListSearch(data as List);
+      // reflexo no searchList
       if (!widget.searcher.haveInitialData) {
         setState(() {
           _summary = widget.afterData(_summary, data);
@@ -146,6 +148,22 @@ class _StreamSearcherGetxBuilderBase<T, S>
     });
     _summary = widget.afterConnected(_summary);
   }
+
+  /*void _wrabListSearch(List<T> listData) {
+    if (widget.searcher.bancoInit) {
+      // Fica negativo dentro do StreamBuilder
+      // Após apresentar o primeiro Obx(())
+      widget.searcher.listFull = listData;
+      if (widget.searcher.rxSearch.value.isNotEmpty) {
+        widget.searcher.refreshSeachList(widget.searcher.rxSearch.value);
+      } else {
+        widget.searcher.sortCompareList(listData);
+        widget.searcher.onSearchFilter(listData);
+      }
+    } else {
+      widget.searcher.initialChangeList = listData;
+    }
+  }*/
 
   void _subscribeConnecty() {
     if (_subscriptionConnecty != null) {

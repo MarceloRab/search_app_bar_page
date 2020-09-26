@@ -31,6 +31,7 @@ class SearcherPageStreamController<T> extends SeacherBase {
   bool haveInitialData = false;
 
   Worker _worker;
+
   //final Stream<List<T>> listStream;
 
   //StreamSubscription _streamSubscription;
@@ -96,6 +97,22 @@ class SearcherPageStreamController<T> extends SeacherBase {
         initialChangeList = listData;
       }
     });*/
+  }
+
+  void wrabListSearch(List<T> listData) {
+    if (bancoInit) {
+      // Fica negativo dentro do StreamBuilder
+      // Após apresentar o primeiro Obx(())
+      listFull = listData;
+      if (rxSearch.value.isNotEmpty) {
+        refreshSeachList(rxSearch.value);
+      } else {
+        sortCompareList(listData);
+        onSearchFilter(listData);
+      }
+    } else {
+      initialChangeList = listData;
+    }
   }
 
   void subscribeWorker() {

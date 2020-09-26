@@ -18,6 +18,8 @@ O projeto dele esta parado há mais de 01 ano.
 
 ## Parâmetros necessários
 
+![](lib/img/example_video.mp4)
+
 Temos duas páginas: <blockquote> SearchAppBarPage e SearchAppBarPageStream.</blockquote>
 
 🔎 SearchAppBarPage precisa de uma lista que é a lista completa a ser filtrada e 

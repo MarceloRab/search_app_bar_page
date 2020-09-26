@@ -6,6 +6,7 @@ linter:
     # Use parameter order as in json response
     always_put_required_named_parameters_first: false
     prefer_function_declarations_over_variables: false
+    overridden_fields: false
 
 
     # Util classes are awesome!

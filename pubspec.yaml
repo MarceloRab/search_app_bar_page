@@ -1,6 +1,6 @@
 name: search_app_bar_page
 description: Uma página de search prontinha pra você.
-version: 0.1.0
+version: 0.1.1
 homepage: https://github.com/MarceloRab/search_app_bar_page
 
 environment:
