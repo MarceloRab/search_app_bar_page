@@ -21,13 +21,13 @@ O projeto dele esta parado há mais de 01 ano.
 Temos duas páginas: <blockquote> SearchAppBarPage e SearchAppBarPageStream.</blockquote>
 
 🔎 SearchAppBarPage precisa de uma lista que é a lista completa a ser filtrada e 
-uma funçåo que é repassada para montar o Widget a depender da lista filtada.
+uma funçåo que é repassada para montar o Widget a depender da lista filtrada.
 
 ```dart
 SearchAppBarPage({ 
        Key key,
        /// Parametros para o SearcherGetController
-       @required this.listFull,
+       @required this.listFull, 
        @required this.listBuilder,
              ...
 ```
@@ -40,12 +40,13 @@ repassada para montar o Widget a depender da lista filtada. Esta é renovada pel
 SearchAppBarPageStream({
     Key key,
     /// Parametros para o SearcherGetController
-    @required this.listStream,
+    @required this.listStream, /// final Stream<List<T>> listStream;
     @required this.listBuilder,
              ...
 ```
 
-## Exemplo Completo
+## Exemplo 
+###### Vide [Example](https://pub.dev/packages/search_app_bar_page/example) para mais detalhes.
 #### 🔎 SearchAppBarPage
 
 ```dart
@@ -260,10 +261,18 @@ Divide os filtros em três tipos:
 
 Default = FiltersTypes.contains;
 
-## Paramestros do search_app_bar
+## Parametros do search_app_bar
 
 Aqui [search_app_bar paremetros](https://pub.dev/packages/search_app_bar#parameters), 
 no pacote base, você pode entender cado compenente.
+<blockquote> Componentes NOVOS </blockquote>
+
+``` [iconConnectyOffAppBar]``` Aparece quando o status da conexao é off. Já existe um icone default. Caso nao queira apresentar escolha
+``` [showIconConnectyOffAppBar]```  = false; default = true.
+
+``` [widgetConnecty]``` Apenas mostra algo quando esta sem conexao e ainda nao tem o primeiro valor da stream. Se a conexao voltar passa a mostrar o 
+``` [widgetWaiting]```  até apresentar o primeiro dado. Todos já vem com default por padrao.
+
 
 ## Disclaimer
 

@@ -11,7 +11,7 @@ class SearchWidget extends StatefulWidget implements PreferredSizeWidget {
 
   final SeacherBase controller;
 
-  SearchWidget({
+  const SearchWidget({
     @required this.controller,
     @required this.onCancelSearch,
     this.color,

@@ -53,7 +53,7 @@ class SearchAppBarPage<T> extends StatefulWidget {
   final StringFilter<T> stringFilter;
   final Compare<T> compareSort;
 
-  SearchAppBarPage({
+  const SearchAppBarPage({
     Key key,
 
     /// Parametros para o SearcherGetController
@@ -106,6 +106,10 @@ class SearchAppBarPage<T> extends StatefulWidget {
 class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
   SearcherPageController<T> _controller;
 
+  //Worker _worker;
+
+  _SearchAppBarPageState();
+
   @override
   void initState() {
     super.initState();
@@ -116,6 +120,11 @@ class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
         filtersType: widget.filtersType)
       ..onInit()
       ..onReady();
+  }
+
+  @override
+  void didUpdateWidget(SearchAppBarPage<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
   }
 
   @override

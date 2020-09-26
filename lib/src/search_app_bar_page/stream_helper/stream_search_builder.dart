@@ -1,27 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:get_state_manager/get_state_manager.dart';
 
-import '../filters/filter.dart';
 import '../controller/searcher_page_stream_controller.dart';
+import '../filters/filter.dart';
 import 'stream_seacher_builde_base.dart';
 
+// ignore: must_be_immutable
 class StreamSearchBuilder<
         T> //extends StreamBuilderBase<List<T>, AsyncSnapshot<List<T>>> {
     extends StreamSearcherGetxBuilderBase<List<T>, AsyncSnapshot<List<T>>> {
-  const StreamSearchBuilder({
+   StreamSearchBuilder({
     Key key,
     this.searcher,
     this.initialData,
+    @required this.widgetConnecty,
     @required this.listBuilder,
     Stream<List<T>> stream,
     @required this.builder,
   })  : assert(builder != null),
-        super(key: key, stream: stream, searcher: searcher);
+        super(
+            key: key,
+            stream: stream,
+            searcher: searcher,
+            widgetConnecty: widgetConnecty);
 
   final AsyncWidgetBuilder<List<T>> builder;
   final List<T> initialData;
   final FunctionList<T> listBuilder;
+  @override
+  // ignore: overridden_fields
   final SearcherPageStreamController<T> searcher;
+  @override
+  // ignore: overridden_fields
+  final Widget widgetConnecty;
 
   @override
   AsyncSnapshot<List<T>> initial() =>
@@ -55,8 +66,10 @@ class StreamSearchBuilder<
   Widget build(BuildContext context, AsyncSnapshot<List<T>> currentSummary) {
     if (currentSummary.hasData) {
       searcher.haveInitialData = true;
-      //searcher.initialChangeList = currentSummary.data;
-      // searcher.onSearchFilter(currentSummary.data);
+
+      /// Para mostrar o botao de procurar no app bar a partir dai
+      /// no método _buildAppBar - class SearchAppBar
+
       return Obx(() {
         return listBuilder(searcher.listSearch, searcher.isModSearch);
       });

@@ -1,7 +1,6 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
+
 import 'package:get_state_manager/get_state_manager.dart';
-import 'package:meta/meta.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/filters/filters_type.dart';
 
@@ -10,10 +9,14 @@ import '../filters/filter.dart';
 class SearcherPageStreamController<T> extends SeacherBase {
   final RxBool _isModSearch = false.obs;
 
+  @override
   bool get isModSearch => _isModSearch.value;
 
+  @override
   set isModSearch(bool value) => _isModSearch.value = value;
 
+  @override
+  // ignore: overridden_fields
   final rxSearch = ''.obs;
 
   final listSearch = <T>[].obs;
@@ -28,14 +31,14 @@ class SearcherPageStreamController<T> extends SeacherBase {
   bool haveInitialData = false;
 
   Worker _worker;
-  final Stream<List<T>> listStream;
+  //final Stream<List<T>> listStream;
 
-  StreamSubscription _streamSubscription;
+  //StreamSubscription _streamSubscription;
 
   StringFilter<T> get _defaultFilter => (T value) => value as String;
 
   SearcherPageStreamController({
-    @required this.listStream,
+    //@required this.listStream,
     this.stringFilter,
     this.compareSort,
     this.filtersType = FiltersTypes.contains,
@@ -44,15 +47,15 @@ class SearcherPageStreamController<T> extends SeacherBase {
       if (T == String) {
         stringFilter = _defaultFilter;
       } else {
-        throw (Exception(
-            'Voce precisa tipar sua página ou será uam lista String por padrao'));
+        throw Exception(
+            'Voce precisa tipar sua página ou deverá ser tipada como String');
       }
     }
   }
 
   var listFull = <T>[];
 
-  set _initialChangeList(List<T> list) {
+  set initialChangeList(List<T> list) {
     if (!bancoInit) {
       bancoInit = true;
       _bancoInit.close();
@@ -65,8 +68,10 @@ class SearcherPageStreamController<T> extends SeacherBase {
 
   final RxBool _bancoInit = false.obs;
 
+  @override
   set bancoInit(bool value) => _bancoInit.value = value;
 
+  @override
   bool get bancoInit => _bancoInit.value;
 
   void onInit() {
@@ -78,7 +83,7 @@ class SearcherPageStreamController<T> extends SeacherBase {
       _filters = Filters.contains;
     }
 
-    _streamSubscription = listStream.listen((listData) {
+    /*_streamSubscription = listStream.listen((listData) {
       if (bancoInit) {
         listFull = listData;
         if (rxSearch.value.isNotEmpty) {
@@ -88,13 +93,13 @@ class SearcherPageStreamController<T> extends SeacherBase {
           onSearchFilter(listData);
         }
       } else {
-        _initialChangeList = listData;
+        initialChangeList = listData;
       }
-    });
+    });*/
   }
 
-  void onReady() {
-    _worker = ever(rxSearch, (value) {
+  void subscribeWorker() {
+    _worker = ever(rxSearch, (String value) {
       refreshSeachList(value);
     });
   }
@@ -115,7 +120,6 @@ class SearcherPageStreamController<T> extends SeacherBase {
   }
 
   FutureOr onClose() {
-    _streamSubscription?.cancel();
     _worker?.dispose();
     _isModSearch.close();
     rxSearch.close();

@@ -7,7 +7,7 @@ abstract class SeacherBase{
 
   set isModSearch(bool value) => _isModSearch.value = value;
 
-  final rxSearch = ''.obs;
+  final RxString rxSearch = ''.obs;
 
   final RxBool _bancoInit = false.obs;
 

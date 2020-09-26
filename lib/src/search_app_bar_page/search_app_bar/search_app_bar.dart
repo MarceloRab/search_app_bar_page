@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get_state_manager/get_state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/widgets/connecty_widget.dart';
 
 import 'search_paint.dart';
 import 'search_widget.dart';
@@ -20,13 +21,17 @@ class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
   final TextCapitalization capitalization;
   final List<Widget> actions;
   final int _searchButtonPosition;
-
   final SeacherBase controller;
-
   final double elevation;
+
+  final bool showIconConnectyOffAppBar;
+  final Widget iconConnectyOffAppBar;
+  final Color iconConnectyOffAppBarColor;
 
   SearchAppBar({
     //@required this.searcher,
+    Key key,
+    @required this.controller,
     this.elevation = 4.0,
     this.title,
     this.centerTitle = false,
@@ -39,15 +44,18 @@ class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.capitalization = TextCapitalization.none,
     this.actions = const <Widget>[],
     int searchButtonPosition,
-    @required this.controller,
+    this.showIconConnectyOffAppBar = false,
+    this.iconConnectyOffAppBarColor = Colors.redAccent,
+    this.iconConnectyOffAppBar,
   })  : _searchButtonPosition = (searchButtonPosition != null &&
                 (0 <= searchButtonPosition &&
                     searchButtonPosition <= actions.length))
             ? searchButtonPosition
             : max(actions.length, 0),
-        //assert(controller != null),
+        //assert(showIconConnectyOffAppBar && iconConnectyOffAppBar == null),
         // assert(controller is DisposableInterface);
-        assert(controller is SeacherBase);
+        assert(controller is SeacherBase),
+        super(key: key);
 
   // assert(controller.isModSearch != null),
   //assert(controller.search != null);
@@ -67,6 +75,7 @@ class _SearchAppBarState extends State<SearchAppBar>
   AnimationController _controller;
   Animation<double> _animation;
   double _elevation;
+  Widget _iconConnectyOffAppBar;
 
   //final ProductsController controller = Modular.get<ProductsController>();
 
@@ -78,6 +87,19 @@ class _SearchAppBarState extends State<SearchAppBar>
     _animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
     _controller.addStatusListener(animationStatusListener);
     _elevation = widget.elevation;
+
+    if (widget.iconConnectyOffAppBar == null) {
+      _iconConnectyOffAppBar = ConnectyWidget(
+        color: widget.iconConnectyOffAppBarColor,
+      );
+      /*  IconButton(
+        onPressed: () {},
+        icon: const Icon(Icons.signal_wifi_off),
+        color: Colors.redAccent.withAlpha(80),
+      );*/
+    } else {
+      _iconConnectyOffAppBar = widget.iconConnectyOffAppBar;
+    }
   }
 
   void animationStatusListener(AnimationStatus animationStatus) {
@@ -136,6 +158,11 @@ class _SearchAppBarState extends State<SearchAppBar>
     increasedActions.insert(widget._searchButtonPosition, searchButton);
     final removeSeacher = <Widget>[];
     removeSeacher.addAll(widget.actions);
+
+    if (widget.showIconConnectyOffAppBar) {
+      increasedActions.insert(0, _iconConnectyOffAppBar);
+      removeSeacher.insert(0, _iconConnectyOffAppBar);
+    }
     return Obx(() {
       if (widget.controller.bancoInit)
         // if (widget.controller.listSearch != null)

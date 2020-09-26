@@ -10,11 +10,15 @@ import '../filters/filter.dart';
 class SearcherPageController<T> extends SeacherBase {
   final RxBool _isModSearch = false.obs;
 
+  @override
   bool get isModSearch => _isModSearch.value;
 
+  @override
   set isModSearch(bool value) => _isModSearch.value = value;
 
-  final rxSearch = ''.obs;
+  @override
+  // ignore: overridden_fields
+  final RxString rxSearch = ''.obs;
 
   final listSearch = <T>[].obs;
   final List<T> listFull;
@@ -30,8 +34,10 @@ class SearcherPageController<T> extends SeacherBase {
 
   final RxBool _bancoInit = true.obs;
 
+  @override
   set bancoInit(bool value) => _bancoInit.value = value;
 
+  @override
   bool get bancoInit => _bancoInit.value;
 
   StringFilter<T> get _defaultFilter => (T value) => value as String;
@@ -46,8 +52,8 @@ class SearcherPageController<T> extends SeacherBase {
       if (T == String) {
         stringFilter = _defaultFilter;
       } else {
-        throw (Exception(
-            'Voce precisa tipar sua página ou será uam lista String por padrao'));
+        throw Exception(
+            'Voce precisa tipar sua página ou deverá ser tipada como String');
       }
     }
     _bancoInit.close();
@@ -65,7 +71,7 @@ class SearcherPageController<T> extends SeacherBase {
   }
 
   void onReady() {
-    _worker = ever(rxSearch, (value) {
+    _worker = ever(rxSearch, (String value) {
       refreshSeachList(value);
     });
   }
