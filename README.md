@@ -1,8 +1,8 @@
 # search_app_bar_page 
 
-Um pacote em Flutter para lhe dar uma search page.
+A Flutter package to give you a simple search page.
 
-#### Outra língua [Em Português](docs/README.pt.md )
+#### Translation [Em Português](docs/README.pt.md )
 
 ## Introdução
 
