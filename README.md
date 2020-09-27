@@ -4,7 +4,7 @@ A Flutter package to give you a simple search page.
 
 #### Translation [Em Português](docs/README.pt.md )
 
-## Introdução
+## Introduction
 
 This package was built to generate a complete and reactive search screen with the best possible facility.
 It is based on another package. Would you like 👀 how the animation looks? Open here [search_app_bar] (https://pub.dev/packages/search_app_bar)
