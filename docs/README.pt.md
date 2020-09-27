@@ -2,9 +2,7 @@
 
 Um pacote em Flutter para lhe dar uma search page.
 
-#### Outra língua [Em Português](docs/README.pt.md )
-
-## Introdução
+## Introduction
 
 Este pacote foi construido para gerar uma tela de search completa e reativa com a melhor facilidade possível. 
 Ele tem como base outro pacote. Gostaria de 👀 como fica a animação? Abra aqui [search_app_bar](https://pub.dev/packages/search_app_bar) 
@@ -58,7 +56,7 @@ SearchAppBarPageStream({
 ```
 
 ## Exemplo 
-###### Vide [Example](https://pub.dev/packages/search_app_bar_page/example) para mais detalhes.
+###### See [Example](https://pub.dev/packages/search_app_bar_page/example) para mais detalhes.
 #### 🔎 SearchAppBarPage
 
 ```dart
