@@ -6,7 +6,6 @@ A Flutter package to give you a simple search page.
 
 ## Introdução
 
-
 This package was built to generate a complete and reactive search screen with the best possible facility.
 It is based on another package. Would you like 👀 how the animation looks? Open here [search_app_bar] (https://pub.dev/packages/search_app_bar)
 (by - rodolfoggp@gmail.com). There you have the details of the search_app_bar functions. With the changes here,
@@ -57,7 +56,7 @@ SearchAppBarPageStream({
 ```
 
 ## Exemplo 
-###### Vide [Example](https://pub.dev/packages/search_app_bar_page/example) para mais detalhes.
+###### Vide [Example](https://pub.dev/packages/search_app_bar_page/example) for more details.
 #### 🔎 SearchAppBarPage
 
 ```dart
@@ -264,7 +263,7 @@ class Person {
 
 
 
-## Filtros
+## Filters
 
 These are the filters that the Controller uses to filter the list. Divide the filters into three types: 
 
@@ -272,7 +271,7 @@ These are the filters that the Controller uses to filter the list. Divide the fi
 
 Default = FiltersTypes.contains;
 
-## Parametros do search_app_bar
+## Search_app_bar parameters
 
 Here [search_app_bar parameters] (https://pub.dev/packages/search_app_bar#parameters),
 in the base package, you can understand each component.
@@ -287,10 +286,10 @@ in the base package, you can understand each component.
 
 ## Disclaimer
 
-O projeto inicial deste pacote tem uma animação fornecida em um tutorial by Nishant Desai
+The initial design of this package has an animation provided in a tutorial by Nishant Desai
 at: https://blog.usejournal.com/change-app-bar-in-flutter-with-animation-cfffb3413e8a
 
-Todos os méritos para Rodolfo (rodolfoggp@gmail.com) e Nishant Desai.
+All merits for Rodolfo (rodolfoggp@gmail.com) and Nishant Desai.
 
        
 
