@@ -7,7 +7,7 @@ A Flutter package to give you a simple search page.
 ## Introduction
 
 This package was built to generate a complete and reactive search screen with the best possible facility.
-It is based on another package. Would you like 👀 the animation when triggering the search? Open here [search_app_bar] (https://pub.dev/packages/search_app_bar)
+It is based on another package. Would you like 👀 the animation when triggering the search? Open here [search_app_bar](https://pub.dev/packages/search_app_bar)
 (by - rodolfoggp@gmail.com). There you have the details of the search_app_bar functions. With the changes here,
 you will not need to extend the controller class but just pass the base list to be filtered or insert
 the stream that returns your list to be filtered. In this case, there is already a StreamBuilder to do the
