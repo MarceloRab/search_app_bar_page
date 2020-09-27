@@ -55,7 +55,7 @@ SearchAppBarPageStream({
              ...
 ```
 
-## Exemplo 
+## Example 
 ###### Vide [Example](https://pub.dev/packages/search_app_bar_page/example) for more details.
 #### 🔎 SearchAppBarPage
 
@@ -260,8 +260,6 @@ class Person {
 }
 
 ```
-
-
 
 ## Filters
 
