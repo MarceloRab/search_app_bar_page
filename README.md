@@ -6,26 +6,30 @@ Um pacote em Flutter para lhe dar uma search page.
 
 ## Introdução
 
-Este pacote foi construido para gerar uma tela de search completa e reativa com a melhor facilidade possível. 
-Ele tem como base outro pacote. Gostaria de 👀 como fica a animação? Abra aqui [search_app_bar](https://pub.dev/packages/search_app_bar) 
-(by - rodolfoggp@gmail.com). Lá você tem os pormenores das funções do search_app_bar. Com as mudanças aqui, 
-voce não vai precisar extender a classe controller mas apenas passar a lista base para ser filtrada ou insira 
-a stream que devolve a sua lista para ser filtrada. Nesta caso, já existe um StreamBuilder para fazer o 
-tratamento em pano de fundo. 
 
-Obs.: Minha real intenção era atualizar o projeto do Rodolfo, mas já mandei algumas mensagens, a primeira há 06 meses, e não obtenho resposta.
-O projeto dele esta parado há mais de 01 ano.
+This package was built to generate a complete and reactive search screen with the best possible facility.
+It is based on another package. Would you like 👀 how the animation looks? Open here [search_app_bar] (https://pub.dev/packages/search_app_bar)
+(by - rodolfoggp@gmail.com). There you have the details of the search_app_bar functions. With the changes here,
+you will not need to extend the controller class but just pass the base list to be filtered or insert
+the stream that returns your list to be filtered. In this case, there is already a StreamBuilder to do the
+background treatment. Unfortunately, I was unable to update the base package, as Rodolfo has not changed the package for more 
+than 01 year and has not responded to my change request by email.
 
-##### ✷ A página se divide entre o <i>SEARCH_APP_BAR</i> + paramentros do <i>CONTROLLER</i> + paremetros para o <i>BODY</i> de um Scaffold. 
+##### ✷ The page is divided between 
+- SEARCH_APP_BAR 
+- CONTROLLER
+- BODY de um Scaffold.
 
-## Parâmetros necessários
+## Required parameters
 
 ![](lib/img/example_video.mp4)
 
 Temos duas páginas: <blockquote> SearchAppBarPage e SearchAppBarPageStream.</blockquote>
 
-🔎 SearchAppBarPage precisa de uma lista que é a lista completa a ser filtrada e 
-uma funçåo que é repassada para montar o Widget a depender da lista filtrada.
+🔎 SearchAppBarPage needs a list that is the complete list to be filtered and a function that is passed on to build
+the Widget depending on the filtered list. If you type the page, you need [stringFilter]. This is a function that receives 
+the parameter T (type of list) and you choose it as the Return String from the object. As in the example below. It was typed
+as Person and returned person.name. This will be used to filter by the search query. 
 
 ```dart
 SearchAppBarPage({ 
@@ -33,12 +37,15 @@ SearchAppBarPage({
        /// Parametros para o SearcherGetController
        @required this.listFull, 
        @required this.listBuilder,
+       this. StringFilter,   /// Required if you type. 
+       ///If not, it is understood that the type will be String. 
              ...
 ```
 
-🔎 SearchAppBarPageStream precisa de um stream que já é trabalhado, ou seja, 
-já existe um Widget por padrão de erro e espera. Também precisa de uma funçåo que é 
-repassada para montar o Widget a depender da lista filtada. Esta é renovada pelo fluxo natural do stream.
+🔎 SearchAppBarPageStream needs a stream that is already worked on, that is, there is already a Widget by default 
+for error and waiting. You can modify them at will. You also need a function that is passed on to assemble the Widget 
+that will be presented on the Body, depending on the filtered list. This is renewed by the natural flow of the stream 
+and also by the search filtering. 
 
 ```dart 
 SearchAppBarPageStream({
@@ -259,7 +266,7 @@ class Person {
 
 ## Filtros
 
-Divide os filtros em três tipos:
+These are the filters that the Controller uses to filter the list. Divide the filters into three types: 
 
 ```enum FiltersTypes { startsWith, equals, contains }```
 
@@ -267,15 +274,15 @@ Default = FiltersTypes.contains;
 
 ## Parametros do search_app_bar
 
-Aqui [search_app_bar paremetros](https://pub.dev/packages/search_app_bar#parameters), 
-no pacote base, você pode entender cado compenente.
-<blockquote> Componentes NOVOS </blockquote>
+Here [search_app_bar parameters] (https://pub.dev/packages/search_app_bar#parameters),
+in the base package, you can understand each component.
+<blockquote> NEW Components </blockquote>
 
-``` [iconConnectyOffAppBar]``` Aparece quando o status da conexao é off. Já existe um icone default. Caso nao queira apresentar escolha
-``` [showIconConnectyOffAppBar]```  = false; default = true.
+`` `[iconConnectyOffAppBar]` `` Appears when the connection status is off. There is already a default icon. If you don't want to present a choice
+`` `[showIconConnectyOffAppBar]` `` = false;
 
-``` [widgetConnecty]``` Apenas mostra algo quando esta sem conexao e ainda nao tem o primeiro valor da stream. Se a conexao voltar passa a mostrar o 
-``` [widgetWaiting]```  até apresentar o primeiro dado. Todos já vem com default por padrao.
+`` `[widgetConnecty]` `` Only shows something when it is disconnected and does not yet have the first value of the stream. If the connection goes back to show the
+`` `[widgetWaiting]` `` until you receive the first data. Everyone already comes with They all come with default widgets.
 
 
 ## Disclaimer
