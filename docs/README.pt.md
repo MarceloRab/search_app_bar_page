@@ -16,7 +16,10 @@ tratamento em pano de fundo.
 Obs.: Minha real intenção era atualizar o projeto do Rodolfo, mas já mandei algumas mensagens, a primeira há 06 meses, e não obtenho resposta.
 O projeto dele esta parado há mais de 01 ano.
 
-##### ✷ A página se divide entre o <i>SEARCH_APP_BAR</i> + paramentros do <i>CONTROLLER</i> + paremetros para o <i>BODY</i> de um Scaffold. 
+##### As página se divide entre: 
+-  SEARCH_APP_BAR 
+-  CONTROLLER
+- BODY de um Scaffold.
 
 ## Parâmetros necessários
 
@@ -24,8 +27,10 @@ O projeto dele esta parado há mais de 01 ano.
 
 Temos duas páginas: <blockquote> SearchAppBarPage e SearchAppBarPageStream.</blockquote>
 
-🔎 SearchAppBarPage precisa de uma lista que é a lista completa a ser filtrada e 
-uma funçåo que é repassada para montar o Widget a depender da lista filtrada.
+🔎 <p> SearchAppBarPage precisa de uma lista que é a lista completa a ser filtrada e uma função que é repassada 
+       para montar o Widget a depender da lista filtrada. Se você tipar a página, se faz necessário [stringFilter].
+       Esta é uma função que recebe o parâmetro T (tipo da lista) e você escolhe como o String de retorno a partir 
+       do objeto. Como no exemplo abaixo. Foi tipada como Person e retornou o person.name. Este será usado para filtrar pelo query do search.
 
 ```dart
 SearchAppBarPage({ 
@@ -33,12 +38,15 @@ SearchAppBarPage({
        /// Parametros para o SearcherGetController
        @required this.listFull, 
        @required this.listBuilder,
+       this. StringFilter,    /// If not, it is understood that the type will be String. 
+      /// Caso não tipe, subtendem-se String por padrão.
              ...
 ```
 
-🔎 SearchAppBarPageStream precisa de um stream que já é trabalhado, ou seja, 
-já existe um Widget por padrão de erro e espera. Também precisa de uma funçåo que é 
-repassada para montar o Widget a depender da lista filtada. Esta é renovada pelo fluxo natural do stream.
+🔎 <p> SearchAppBarPageStream precisa de um stream que já é trabalhado, ou seja, já existe um Widget por 
+       padrão de erro e espera. Você pode modificá-los a vontade Também precisa de uma função que é repassada 
+       para montar o Widget que será apresentado no Body, a depender da lista filtrada. Esta é renovada pelo 
+       fluxo natural do stream e também pelo filtragem do Search. 
 
 ```dart 
 SearchAppBarPageStream({
@@ -275,8 +283,7 @@ no pacote base, você pode entender cado compenente.
 ``` [showIconConnectyOffAppBar]```  = false; default = true.
 
 ``` [widgetConnecty]``` Apenas mostra algo quando esta sem conexao e ainda nao tem o primeiro valor da stream. Se a conexao voltar passa a mostrar o 
-``` [widgetWaiting]```  até apresentar o primeiro dado. Todos já vem com default por padrao.
-
+``` [widgetWaiting]```  até apresentar o primeiro dado. Todos já vem com widgets default.
 
 ## Disclaimer
 
