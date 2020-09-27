@@ -2,7 +2,7 @@
 
 Um pacote em Flutter para lhe dar uma search page.
 
-#### Outra língua [Em Português](<raiz>/docs/README.pt.md )
+#### Outra língua [Em Português](docs/README.pt.md )
 
 ## Introdução
 
