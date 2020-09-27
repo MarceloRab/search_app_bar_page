@@ -2,7 +2,7 @@
 
 Um pacote em Flutter para lhe dar uma search page.
 
-## Introduction
+## Introdução
 
 Este pacote foi construido para gerar uma tela de search completa e reativa com a melhor facilidade possível. 
 Ele tem como base outro pacote. Gostaria de 👀 como fica a animação? Abra aqui [search_app_bar](https://pub.dev/packages/search_app_bar) 
@@ -260,8 +260,6 @@ class Person {
 }
 
 ```
-
-
 
 ## Filtros
 
