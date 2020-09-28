@@ -7,7 +7,7 @@ class ConnectyWidget extends StatefulWidget {
 
   const ConnectyWidget({
     Key key,
-    this.color ,
+    this.color,
   }) : super(key: key);
 
   @override

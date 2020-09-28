@@ -6,8 +6,7 @@ class SearchAppBarStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SearchAppBarPageStream<Person>(
-      searchAppBariconTheme:
-          Theme.of(context).iconTheme.copyWith(color: Colors.white),
+      magnifyinGlassColor: Colors.white,
       searchAppBarcenterTitle: true,
       searchAppBarhintText: 'Pesquise um Nome',
       searchAppBartitle: Text(

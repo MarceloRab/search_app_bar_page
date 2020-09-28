@@ -16,8 +16,7 @@ class SearchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     //return SearchAppBarPage<String>(
     return SearchAppBarPage<Person>(
-      searchAppBariconTheme:
-          Theme.of(context).iconTheme.copyWith(color: Colors.white),
+      magnifyinGlassColor: Colors.white,
       searchAppBarcenterTitle: true,
       searchAppBarhintText: 'Pesquise um Nome',
       searchAppBartitle: Text(

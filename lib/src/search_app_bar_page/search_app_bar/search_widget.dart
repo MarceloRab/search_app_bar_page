@@ -10,6 +10,7 @@ class SearchWidget extends StatefulWidget implements PreferredSizeWidget {
   final String hintText;
 
   final SeacherBase controller;
+  final TextInputType keyboardType;
 
   const SearchWidget({
     @required this.controller,
@@ -17,6 +18,7 @@ class SearchWidget extends StatefulWidget implements PreferredSizeWidget {
     this.color,
     this.textCapitalization,
     this.hintText,
+    this.keyboardType = TextInputType.text,
   });
 
   @override
@@ -82,6 +84,7 @@ class _SearchWidgetState extends State<SearchWidget> {
       controller: textController,
       //textAlign: TextAlign.left,
       //autocorrect: false,
+      keyboardType: widget.keyboardType,
       autofocus: true,
       decoration: InputDecoration(
         border: InputBorder.none,

@@ -23,12 +23,14 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
   final TextCapitalization searchAppBarcapitalization;
   final List<Widget> searchAppBaractions;
   final double searchAppBarelevation;
-  final bool showIconConnectyOffAppBar;
+  final TextInputType searchAppBarKeyboardType;
+  final Color magnifyinGlassColor;
+  final bool hideDefaultConnectyIconOffAppBar;
   final Widget iconConnectyOffAppBar;
 
   ///  [iconConnectyOffAppBar] Aparece quando o status da conexao é off.
   ///  já existe um icone default. Caso nao queira apresentar escolha
-  ///  [showIconConnectyOffAppBar] = false;
+  ///  [hideDefaultConnectyIconOffAppBar] = false;
 
   /// Parametros para o Scaffold
 
@@ -60,15 +62,29 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
 
   /// Parametros para o SearcherGetController
   final List<T> initialData;
-  final Stream<List<T>> listStream;
-  final FiltersTypes filtersType;
-  final FunctionList<T> listBuilder;
-  final StringFilter<T> stringFilter;
-  final Compare<T> compareSort;
 
-  /// Para montar em asBroadcastStream
-  // nao de pode colocar final. Após um setState precisa refaze-la
-  // vide o metodo didUpdateWidget
+  /// [listStream] Just pass the Stream and we are already in charge
+  /// of working with the data. There is a StremBuilder in background.
+  final Stream<List<T>> listStream;
+
+  /// [filtersType] These are the filters that the Controller uses to
+  /// filter the list. Divide the filters into three types:
+  /// startsWith, equals, contains. Default = FiltersTypes.contains;
+  final FiltersTypes filtersType;
+
+  /// [listBuilder] Function applied when receiving data
+  /// through Stream or filtering in search.
+  final FunctionList<T> listBuilder;
+
+  /// [stringFilter] Required if you type.
+  ///If not, it is understood that the type will be String.
+  /// ex.: stringFilter: (Person person) => person.name,
+  /// The list will be filtered by the person.name contains (default) a query.
+  final StringFilter<T> stringFilter;
+
+  /// [compareSort] If you want to pass a function to filter the order
+  /// in which your list appears.
+  final Compare<T> compareSort;
 
   const SearchAppBarPageStream({
     Key key,
@@ -76,9 +92,9 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
     /// Parametros para o SearcherGetController
     @required this.listStream,
     @required this.listBuilder,
+    this.stringFilter,
     this.compareSort,
     this.filtersType,
-    this.stringFilter,
     this.widgetConnecty,
 
     /// Paramentros do SearchAppBar
@@ -93,8 +109,10 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
     this.searchAppBarcapitalization = TextCapitalization.none,
     this.searchAppBaractions = const <Widget>[],
     this.searchAppBarelevation = 4.0,
-    this.showIconConnectyOffAppBar = true,
+    this.hideDefaultConnectyIconOffAppBar = false,
     this.iconConnectyOffAppBar,
+    this.searchAppBarKeyboardType,
+    this.magnifyinGlassColor,
 
     /// Parametros para o Scaffold
 
@@ -149,21 +167,23 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: SearchAppBar(
-          controller: _controller,
-          title: widget.searchAppBartitle,
-          centerTitle: widget.searchAppBarcenterTitle,
-          elevation: widget.searchAppBarelevation,
-          iconTheme: widget.searchAppBariconTheme,
-          backgroundColor: widget.searchAppBarbackgroundColor,
-          searchBackgroundColor: widget.searchAppBarModeSearchBackgroundColor,
-          searchElementsColor: widget.searchAppBarElementsColor,
-          hintText: widget.searchAppBarhintText,
-          flattenOnSearch: widget.searchAppBarflattenOnSearch,
-          capitalization: widget.searchAppBarcapitalization,
-          actions: widget.searchAppBaractions,
-          showIconConnectyOffAppBar: widget.showIconConnectyOffAppBar,
-          iconConnectyOffAppBar: widget.iconConnectyOffAppBar,
-        ),
+            controller: _controller,
+            title: widget.searchAppBartitle,
+            centerTitle: widget.searchAppBarcenterTitle,
+            elevation: widget.searchAppBarelevation,
+            iconTheme: widget.searchAppBariconTheme,
+            backgroundColor: widget.searchAppBarbackgroundColor,
+            searchBackgroundColor: widget.searchAppBarModeSearchBackgroundColor,
+            searchElementsColor: widget.searchAppBarElementsColor,
+            hintText: widget.searchAppBarhintText,
+            flattenOnSearch: widget.searchAppBarflattenOnSearch,
+            capitalization: widget.searchAppBarcapitalization,
+            actions: widget.searchAppBaractions,
+            hideDefaultConnectyIconOffAppBar:
+                widget.hideDefaultConnectyIconOffAppBar,
+            iconConnectyOffAppBar: widget.iconConnectyOffAppBar,
+            keyboardType: widget.searchAppBarKeyboardType,
+            magnifyinGlassColor: widget.magnifyinGlassColor),
         body: StreamSearchBuilder<T>(
             initialData: widget.initialData,
             widgetConnecty: widget.widgetConnecty,

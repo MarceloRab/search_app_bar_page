@@ -16,6 +16,7 @@ class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Color backgroundColor;
   final Color searchBackgroundColor;
   final Color searchElementsColor;
+  final Color magnifyinGlassColor;
   final String hintText;
   final bool flattenOnSearch;
   final TextCapitalization capitalization;
@@ -24,9 +25,10 @@ class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
   final SeacherBase controller;
   final double elevation;
 
-  final bool showIconConnectyOffAppBar;
+  final bool hideDefaultConnectyIconOffAppBar;
   final Widget iconConnectyOffAppBar;
   final Color iconConnectyOffAppBarColor;
+  final TextInputType keyboardType;
 
   SearchAppBar({
     //@required this.searcher,
@@ -44,15 +46,19 @@ class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.capitalization = TextCapitalization.none,
     this.actions = const <Widget>[],
     int searchButtonPosition,
-    this.showIconConnectyOffAppBar = false,
+    this.hideDefaultConnectyIconOffAppBar = false,
     this.iconConnectyOffAppBarColor = Colors.redAccent,
     this.iconConnectyOffAppBar,
+    this.keyboardType,
+    this.magnifyinGlassColor,
   })  : _searchButtonPosition = (searchButtonPosition != null &&
                 (0 <= searchButtonPosition &&
                     searchButtonPosition <= actions.length))
             ? searchButtonPosition
             : max(actions.length, 0),
-        //assert(showIconConnectyOffAppBar && iconConnectyOffAppBar == null),
+        //assert(
+        // hideDefaultConnectyIconOffAppBar &&
+        // iconConnectyOffAppBar == null),
         // assert(controller is DisposableInterface);
         assert(controller is SeacherBase),
         super(key: key);
@@ -76,6 +82,7 @@ class _SearchAppBarState extends State<SearchAppBar>
   Animation<double> _animation;
   double _elevation;
   Widget _iconConnectyOffAppBar;
+  bool _hideDefaultConnectyIconOffAppBar;
 
   //final ProductsController controller = Modular.get<ProductsController>();
 
@@ -87,8 +94,24 @@ class _SearchAppBarState extends State<SearchAppBar>
     _animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
     _controller.addStatusListener(animationStatusListener);
     _elevation = widget.elevation;
+    _hideDefaultConnectyIconOffAppBar = widget.hideDefaultConnectyIconOffAppBar;
 
-    if (widget.iconConnectyOffAppBar == null) {
+    buildwidgetConnecty();
+  }
+
+  /* @override
+  void didUpdateWidget(SearchAppBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.hideDefaultConnectyIconOffAppBar !=
+        widget.hideDefaultConnectyIconOffAppBar) {
+      buildwidgetConnecty();
+    }
+  }*/
+
+  void buildwidgetConnecty() {
+    if (widget.iconConnectyOffAppBar == null &&
+        !_hideDefaultConnectyIconOffAppBar) {
       _iconConnectyOffAppBar = ConnectyWidget(
         color: widget.iconConnectyOffAppBarColor,
       );
@@ -97,8 +120,10 @@ class _SearchAppBarState extends State<SearchAppBar>
         icon: const Icon(Icons.signal_wifi_off),
         color: Colors.redAccent.withAlpha(80),
       );*/
-    } else {
-      _iconConnectyOffAppBar = widget.iconConnectyOffAppBar;
+    } else if (_hideDefaultConnectyIconOffAppBar) {
+      if (widget.iconConnectyOffAppBar != null) {
+        _iconConnectyOffAppBar = widget.iconConnectyOffAppBar;
+      }
     }
   }
 
@@ -159,17 +184,19 @@ class _SearchAppBarState extends State<SearchAppBar>
     final removeSeacher = <Widget>[];
     removeSeacher.addAll(widget.actions);
 
-    if (widget.showIconConnectyOffAppBar) {
+    if (_iconConnectyOffAppBar != null) {
       increasedActions.insert(0, _iconConnectyOffAppBar);
       removeSeacher.insert(0, _iconConnectyOffAppBar);
     }
+
     return Obx(() {
       if (widget.controller.bancoInit)
         // if (widget.controller.listSearch != null)
         return AppBar(
           backgroundColor:
-              widget.backgroundColor ?? Theme.of(context).primaryColor,
-          iconTheme: widget.iconTheme ?? Theme.of(context).iconTheme,
+              widget.backgroundColor ?? Theme.of(context).appBarTheme.color,
+          iconTheme:
+              widget.iconTheme ?? Theme.of(context).appBarTheme.iconTheme,
           title: widget.title,
           elevation: _elevation,
           centerTitle: widget.centerTitle,
@@ -178,8 +205,9 @@ class _SearchAppBarState extends State<SearchAppBar>
       else {
         return AppBar(
           backgroundColor:
-              widget.backgroundColor ?? Theme.of(context).primaryColor,
-          iconTheme: widget.iconTheme ?? Theme.of(context).iconTheme,
+              widget.backgroundColor ?? Theme.of(context).appBarTheme.color,
+          iconTheme:
+              widget.iconTheme ?? Theme.of(context).appBarTheme.iconTheme,
           title: widget.title,
           elevation: _elevation,
           centerTitle: widget.centerTitle,
@@ -196,7 +224,8 @@ class _SearchAppBarState extends State<SearchAppBar>
         onPressed: null,
         icon: Icon(
           Icons.search,
-          color: widget.iconTheme?.color ?? Theme.of(context).iconTheme.color,
+          color:
+              widget.magnifyinGlassColor ?? Theme.of(context).iconTheme.color,
         ),
       ),
     );
@@ -229,6 +258,7 @@ class _SearchAppBarState extends State<SearchAppBar>
             onCancelSearch: cancelSearch,
             textCapitalization: widget.capitalization,
             hintText: widget.hintText,
+            keyboardType: widget.keyboardType,
           )
         : const SizedBox.shrink();
   }

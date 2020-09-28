@@ -21,11 +21,12 @@ class SearchAppBarPage<T> extends StatefulWidget {
   final bool searchAppBarflattenOnSearch;
   final TextCapitalization searchAppBarcapitalization;
   final List<Widget> searchAppBaractions;
-  final double searchAppBarelevation;
+  final double searchAppBarElevation;
+  final TextInputType searchAppBarKeyboardType;
+  final Color magnifyinGlassColor;
 
   /// Parametros para o Scaffold
 
-  final Widget widgetWaiting;
   final Widget searchePageFloaActionButton;
   final FloatingActionButtonLocation searchePageFloatingActionButtonLocation;
   final FloatingActionButtonAnimator searchePageFloatingActionButtonAnimator;
@@ -47,8 +48,11 @@ class SearchAppBarPage<T> extends StatefulWidget {
   final bool endDrawerEnableOpenDragGesture;
 
   /// Parametros para o SearcherGetController
+
   final List<T> listFull;
   final FiltersTypes filtersType;
+
+  /// [listBuilder] Function applied when it is filtered.
   final FunctionList<T> listBuilder;
   final StringFilter<T> stringFilter;
   final Compare<T> compareSort;
@@ -61,6 +65,11 @@ class SearchAppBarPage<T> extends StatefulWidget {
     @required this.listBuilder,
     this.compareSort,
     this.filtersType,
+
+    /// [stringFilter] Required if you type.
+    ///If not, it is understood that the type will be String.
+    /// ex.: stringFilter: (Person person) => person.name,
+    /// The list will be filtered by the person.name contains (default) a query.
     this.stringFilter,
 
     /// Paramentros do SearchAppBar
@@ -74,10 +83,12 @@ class SearchAppBarPage<T> extends StatefulWidget {
     this.searchAppBarflattenOnSearch = false,
     this.searchAppBarcapitalization = TextCapitalization.none,
     this.searchAppBaractions = const <Widget>[],
-    this.searchAppBarelevation = 4.0,
+    this.searchAppBarElevation = 4.0,
+    this.searchAppBarKeyboardType,
+    this.magnifyinGlassColor,
 
     /// Parametros para o Scaffold
-    this.widgetWaiting,
+
     this.searchePageFloaActionButton,
     this.searchePageFloatingActionButtonLocation,
     this.searchePageFloatingActionButtonAnimator,
@@ -137,19 +148,20 @@ class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: SearchAppBar(
-          controller: _controller,
-          title: widget.searchAppBartitle,
-          centerTitle: widget.searchAppBarcenterTitle,
-          elevation: widget.searchAppBarelevation,
-          iconTheme: widget.searchAppBariconTheme,
-          backgroundColor: widget.searchAppBarbackgroundColor,
-          searchBackgroundColor: widget.searchAppBarModeSearchBackgroundColor,
-          searchElementsColor: widget.searchAppBarElementsColor,
-          hintText: widget.searchAppBarhintText,
-          flattenOnSearch: widget.searchAppBarflattenOnSearch,
-          capitalization: widget.searchAppBarcapitalization,
-          actions: widget.searchAppBaractions,
-        ),
+            controller: _controller,
+            title: widget.searchAppBartitle,
+            centerTitle: widget.searchAppBarcenterTitle,
+            elevation: widget.searchAppBarElevation,
+            iconTheme: widget.searchAppBariconTheme,
+            backgroundColor: widget.searchAppBarbackgroundColor,
+            searchBackgroundColor: widget.searchAppBarModeSearchBackgroundColor,
+            searchElementsColor: widget.searchAppBarElementsColor,
+            hintText: widget.searchAppBarhintText,
+            flattenOnSearch: widget.searchAppBarflattenOnSearch,
+            capitalization: widget.searchAppBarcapitalization,
+            actions: widget.searchAppBaractions,
+            keyboardType: widget.searchAppBarKeyboardType,
+            magnifyinGlassColor: widget.magnifyinGlassColor),
         body: Obx(() => widget.listBuilder(
             _controller.listSearch, _controller.isModSearch)),
         floatingActionButton: widget.searchePageFloaActionButton,

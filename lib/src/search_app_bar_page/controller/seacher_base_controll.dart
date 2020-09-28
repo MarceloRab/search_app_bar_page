@@ -1,6 +1,6 @@
 import 'package:get_state_manager/get_state_manager.dart';
 
-abstract class SeacherBase{
+abstract class SeacherBase {
   final RxBool _isModSearch = false.obs;
 
   bool get isModSearch => _isModSearch.value;
