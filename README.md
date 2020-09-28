@@ -2,7 +2,7 @@
 
 A Flutter package to give you a simple search page.
 
-#### Translation [Em Português](docs/README.pt.md )
+#### Translation [Em Português](doc/README.pt.md )
 
 ## Introduction
 
