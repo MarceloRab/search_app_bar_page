@@ -1,3 +1,7 @@
+## [0.2.2]
+- Fixed when using null initialList (SearchAppBarPageStream) and making a setState in the initialList 
+not null.
+
 ## [0.2.1]
 - Correction in changing [widgetOffConnectyWaiting] and [widgetWaiting]. Correction to intialList 
 within Stream <List> and Internet Connection. Readme and documentation improvements.

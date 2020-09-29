@@ -7,7 +7,8 @@ typedef StringFilter<T> = String Function(T test);
 
 typedef Compare<T> = int Function(T a, T b);
 
-typedef FunctionList<T> = Widget Function(List<T> list, bool isModSearch);
+typedef FunctionList<T> = Widget Function(
+    BuildContext context, List<T> list, bool isModSearch);
 
 class Filters {
   static Filter<String> startsWith = (test, query) {

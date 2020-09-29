@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:search_app_bar_page/search_app_bar_page.dart';
 
-import 'routes/app_pages.dart';
-
 void main() {
   runApp(
     GetMaterialApp(
@@ -12,6 +10,12 @@ void main() {
       getPages: AppPages.routes,
     ),
   );
+}
+
+abstract class Routes {
+  static const HOME = '/home';
+  static const PAGE_1 = '/page-1';
+  static const PAGE_2 = '/page-2';
 }
 
 class AppPages {
@@ -61,16 +65,6 @@ class HomePage extends StatelessWidget {
 }
 
 class SearchPage extends StatelessWidget {
-  /*final dataStrings = [
-    'Antonio Rabelo',
-    'Raquel Lima',
-    'Roberto Costa',
-    'Alina Silva',
-    'William Lima',
-    'Flavio Assunção',
-    'Zenilda Cardoso'
-  ];*/
-
   @override
   Widget build(BuildContext context) {
     //return SearchAppBarPage<String>(
@@ -89,7 +83,7 @@ class SearchPage extends StatelessWidget {
       /// Caso queira sort escolha como fazer
       compareSort: (Person a, Person b) => a.name.compareTo(b.name),
       filtersType: FiltersTypes.contains,
-      listBuilder: (list, isModSearch) {
+      listBuilder: (context, list, isModSearch) {
         // Rertorne seu widget com a lista para o body da page
         // Pode alterar a tela relacionando o tipo de procura
         return ListView.builder(
@@ -124,6 +118,16 @@ class SearchPage extends StatelessWidget {
       },
     );
   }
+
+/*final dataStrings = [
+    'Antonio Rabelo',
+    'Raquel Lima',
+    'Roberto Costa',
+    'Alina Silva',
+    'William Lima',
+    'Flavio Assunção',
+    'Zenilda Cardoso'
+  ];*/
 }
 
 // ignore: must_be_immutable
@@ -135,10 +139,22 @@ class SearchAppBarStream extends StatefulWidget {
 }
 
 class _SearchAppBarStreamState extends State<SearchAppBarStream> {
+  //var _initialData;
+
+  /*@override
+  void initState() {
+    Future.delayed(Duration(seconds: 6), () {
+      setState(() {
+        _initialData = dataListPerson0;
+      });
+    });
+    super.initState();
+  }*/
+
   @override
   Widget build(BuildContext context) {
     return SearchAppBarPageStream<Person>(
-      //initialData: dataListPerson0,
+      //initialData: _initialData,
       magnifyinGlassColor: Colors.white,
       searchAppBarcenterTitle: true,
       searchAppBarhintText: 'Pesquise um Nome',
@@ -150,7 +166,7 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
       stringFilter: (Person person) => person.name,
       compareSort: (Person a, Person b) => a.name.compareTo(b.name),
       filtersType: FiltersTypes.contains,
-      listBuilder: (list, isModSearch) {
+      listBuilder: (context, list, isModSearch) {
         // Rertorne seu widget com a lista para o body da page
         // Pode alterar a tela relacionando o tipo de procura
         return Column(
@@ -210,7 +226,7 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
   }
 
   Stream<List<Person>> _streamListPerson = (() async* {
-    await Future<void>.delayed(Duration(seconds: 20));
+    await Future<void>.delayed(Duration(seconds: 15));
     yield dataListPerson;
     await Future<void>.delayed(Duration(seconds: 8));
     yield dataListPerson2;

@@ -7,8 +7,8 @@ import '../controller/searcher_page_stream_controller.dart';
 
 typedef WidgetConnecty = Widget Function();
 
-abstract class StreamSearcherGetxBuilderBase<T, S> extends StatefulWidget {
-  const StreamSearcherGetxBuilderBase(
+abstract class StreamSearcherBuilderBase<T, S> extends StatefulWidget {
+  const StreamSearcherBuilderBase(
       {Key key,
       @required this.searcher,
       @required this.stream,
@@ -41,20 +41,20 @@ abstract class StreamSearcherGetxBuilderBase<T, S> extends StatefulWidget {
   Widget build(BuildContext context, S currentSummary);
 
   @override
-  State<StreamSearcherGetxBuilderBase<T, S>> createState() =>
+  State<StreamSearcherBuilderBase<T, S>> createState() =>
       _StreamSearcherGetxBuilderBase<T, S>();
 }
 
 /// State for [StreamBuilderBase].
 class _StreamSearcherGetxBuilderBase<T, S>
-    extends State<StreamSearcherGetxBuilderBase<T, S>> {
+    extends State<StreamSearcherBuilderBase<T, S>> {
   StreamSubscription<T> _subscription;
   StreamSubscription _subscriptionConnecty;
   S _summary;
 
   // T as List
-  T _data;
-  bool _haveData;
+  T _initialData;
+  bool _haveInitialData;
 
   ConnectyController _connectyController;
   bool downConnectyWithoutData = false;
@@ -64,15 +64,15 @@ class _StreamSearcherGetxBuilderBase<T, S>
   @override
   void initState() {
     super.initState();
-    _data = widget.haveInitialData;
-    _haveData = _data != null;
+    _initialData = widget.haveInitialData;
+    _haveInitialData = _initialData != null;
     _summary = widget.initial();
     _subscribeStream();
-    if (!_haveData) {
+    if (!_haveInitialData) {
       _connectyController = ConnectyController();
       _subscribeConnecty();
     } else {
-      widget.searcher.wrabListSearch(_data as List);
+      widget.searcher.wrabListSearch(_initialData as List);
     }
 
     if (widget.widgetConnecty == null) {
@@ -102,7 +102,7 @@ class _StreamSearcherGetxBuilderBase<T, S>
   }
 
   @override
-  void didUpdateWidget(StreamSearcherGetxBuilderBase<T, S> oldWidget) {
+  void didUpdateWidget(StreamSearcherBuilderBase<T, S> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.stream != widget.stream) {
       if (_subscription != null) {
@@ -113,6 +113,18 @@ class _StreamSearcherGetxBuilderBase<T, S>
       }
 
       _subscribeStream();
+    }
+
+    if (oldWidget.haveInitialData != widget.haveInitialData) {
+      _initialData = widget.haveInitialData;
+      _haveInitialData = _initialData != null;
+
+      if (_haveInitialData) {
+        downConnectyWithoutData = false;
+        _summary = widget.initial();
+        widget.searcher.wrabListSearch(_initialData as List);
+        _unsubscribeConnecty();
+      }
     }
   }
 
@@ -164,12 +176,12 @@ class _StreamSearcherGetxBuilderBase<T, S>
   void _subscribeConnecty() {
     _subscriptionConnecty =
         _connectyController.connectyStream.listen((bool isConnected) {
-      if (!isConnected && (!_haveData)) {
+      if (!isConnected && (!_haveInitialData)) {
         //lançar _widgetConnecty
         setState(() {
           downConnectyWithoutData = true;
         });
-      } else if (isConnected && (!_haveData)) {
+      } else if (isConnected && (!_haveInitialData)) {
         setState(() {
           downConnectyWithoutData = false;
           _summary = widget.afterConnected(_summary);

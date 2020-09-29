@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get_state_manager/get_state_manager.dart';
 
 import 'controller/searcher_page_controller.dart';
-import 'filters/filter.dart';
+import 'filters/functions_filters.dart';
 import 'filters/filters_type.dart';
 import 'search_app_bar/search_app_bar.dart';
 
@@ -51,6 +51,7 @@ class SearchAppBarPage<T> extends StatefulWidget {
 
   /// [listFull] List to be filtered by Search.
   final List<T> listFull;
+
   /// [filtersType] These are the filters that the Controller uses to
   /// filter the list. Divide the filters into three types:
   ///  enum FiltersTypes { startsWith, equals, contains }
@@ -172,7 +173,7 @@ class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
             keyboardType: widget.searchAppBarKeyboardType,
             magnifyinGlassColor: widget.magnifyinGlassColor),
         body: Obx(() => widget.listBuilder(
-            _controller.listSearch, _controller.isModSearch)),
+            context, _controller.listSearch, _controller.isModSearch)),
         floatingActionButton: widget.searchePageFloaActionButton,
         floatingActionButtonLocation:
             widget.searchePageFloatingActionButtonLocation,

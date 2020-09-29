@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get_state_manager/get_state_manager.dart';
 
 import '../controller/searcher_page_stream_controller.dart';
-import '../filters/filter.dart';
+import '../filters/functions_filters.dart';
 import 'stream_seacher_builde_base.dart';
 
 class StreamSearchBuilder<
         T> //extends StreamBuilderBase<List<T>, AsyncSnapshot<List<T>>> {
-    extends StreamSearcherGetxBuilderBase<List<T>, AsyncSnapshot<List<T>>> {
+    extends StreamSearcherBuilderBase<List<T>, AsyncSnapshot<List<T>>> {
   const StreamSearchBuilder({
     Key key,
     this.searcher,
@@ -70,7 +70,7 @@ class StreamSearchBuilder<
       /// Para mostrar o botao de procurar no app bar a partir dai
       /// no método _buildAppBar - class SearchAppBar
       return Obx(() {
-        return listBuilder(searcher.listSearch, searcher.isModSearch);
+        return listBuilder(context, searcher.listSearch, searcher.isModSearch);
       });
     }
 
