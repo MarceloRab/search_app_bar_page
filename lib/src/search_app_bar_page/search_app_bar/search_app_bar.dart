@@ -129,7 +129,6 @@ class _SearchAppBarState extends State<SearchAppBar>
 
   void animationStatusListener(AnimationStatus animationStatus) {
     if (animationStatus == AnimationStatus.completed) {
-      //widget.searcher.setSearchMode(true);
       widget.controller.isModSearch = true;
 
       if (widget.flattenOnSearch) _elevation = 0.0;

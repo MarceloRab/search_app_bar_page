@@ -138,6 +138,7 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
   @override
   Widget build(BuildContext context) {
     return SearchAppBarPageStream<Person>(
+      //initialData: dataListPerson0,
       magnifyinGlassColor: Colors.white,
       searchAppBarcenterTitle: true,
       searchAppBarhintText: 'Pesquise um Nome',
@@ -209,7 +210,7 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
   }
 
   Stream<List<Person>> _streamListPerson = (() async* {
-    await Future<void>.delayed(Duration(seconds: 4));
+    await Future<void>.delayed(Duration(seconds: 20));
     yield dataListPerson;
     await Future<void>.delayed(Duration(seconds: 8));
     yield dataListPerson2;
@@ -217,6 +218,11 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
     yield dataListPerson3;
   })();
 }
+
+final dataListPerson0 = <Person>[
+  Person(name: 'Rafaela Pinho', age: 30),
+  Person(name: 'Paulo Emilio Silva', age: 45),
+];
 
 final dataListPerson = <Person>[
   Person(name: 'Rafaela Pinho', age: 30),

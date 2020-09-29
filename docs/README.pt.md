@@ -1,4 +1,3 @@
-
 # search_app_bar_page 
 
 Um pacote em Flutter para lhe dar uma search page.
@@ -22,6 +21,8 @@ O projeto dele esta parado há mais de 01 ano.
 
 ## Parâmetros necessários
 
+![](lib/img/example_video.mp4)
+
 Temos duas páginas: <blockquote> SearchAppBarPage e SearchAppBarPageStream.</blockquote>
 
 🔎 <p> SearchAppBarPage precisa de uma lista que é a lista completa a ser filtrada e uma função que é repassada 
@@ -30,21 +31,14 @@ Temos duas páginas: <blockquote> SearchAppBarPage e SearchAppBarPageStream.</bl
        do objeto. Como no exemplo abaixo. Foi tipada como Person e retornou o person.name. Este será usado para filtrar pelo query do search.
 
 ```dart
-class SearchAppBarPage<T> extends StatefulWidget {
-          //...
-
-SearchAppBarPage(
-       //..
+SearchAppBarPage({ 
+       Key key,
        /// Parametros para o SearcherGetController
-       /// final List<T> listFull;
        @required this.listFull, 
-        /// [listBuilder] Funcao aplicada quando a lista é filtrada pelo search.
        @required this.listBuilder,
-        /// [stringFilter] Precisa se tipada. 
-       ///Deve, pelo menos tipar com String.
-       this.stringFilter, )
-          //..
-}
+       this. StringFilter,    /// If not, it is understood that the type will be String. 
+      /// Caso não tipe, subtendem-se String por padrão.
+             ...
 ```
 
 🔎 <p> SearchAppBarPageStream precisa de um stream que já é trabalhado, ou seja, já existe um Widget por 
@@ -52,25 +46,14 @@ SearchAppBarPage(
        para montar o Widget que será apresentado no Body, a depender da lista filtrada. Esta é renovada pelo 
        fluxo natural do stream e também pelo filtragem do Search. 
 
-```dart
-class SearchAppBarPageStream<T> extends StatefulWidget {
-      //...
-
-SearchAppBarPageStream(
-   //...
-    /// final Stream<List<T>> listStream;
-    @required this.listStream, 
-    ///final FunctionList<T> listBuilder; 
-    /// Funcao aplicado quando recebe algo sa stream ou quando é 
-    /// filtrada pelo search.
-    @required this.listBuilder
-        // ...
-    )
-
-   }  
-      //...
+```dart 
+SearchAppBarPageStream({
+    Key key,
+    /// Parametros para o SearcherGetController
+    @required this.listStream, /// final Stream<List<T>> listStream;
+    @required this.listBuilder,
+             ...
 ```
-
 
 ## Exemplo 
 ###### See [Example](https://pub.dev/packages/search_app_bar_page/example) para mais detalhes.
@@ -292,13 +275,11 @@ Aqui [search_app_bar paremetros](https://pub.dev/packages/search_app_bar#paramet
 no pacote base, você pode entender cado compenente.
 <blockquote> Componentes NOVOS </blockquote>
 
-`[iconConnectyOffAppBar]`  Aparece quando o status da conexão está desligado. Já existe um ícone padrão.
-Se você não quiser apresentar uma escolha  `[hideDefaultConnectyIconOffAppBar]` = true; Se você quiser 
-ter um ícone personalizado, faça `[hideDefaultConnectyIconOffAppBar]` = true; e configure um `[iconConnectyOffAppBar]`.
+``` [iconConnectyOffAppBar]``` Aparece quando o status da conexao é off. Já existe um icone default. Caso nao queira apresentar escolha
+``` [showIconConnectyOffAppBar]```  = false; default = true.
 
-`[widgetOffConnectyWaiting]` Apenas mostra algo quando esta sem conexao e ainda nao tem o primeiro 
-valor da stream. Se a conexao voltar passa a mostrar o [widgetWaiting]`  até apresentar o primeiro 
-dado. Todos já vem com widgets default.
+``` [widgetConnecty]``` Apenas mostra algo quando esta sem conexao e ainda nao tem o primeiro valor da stream. Se a conexao voltar passa a mostrar o 
+``` [widgetWaiting]```  até apresentar o primeiro dado. Todos já vem com widgets default.
 
 ## Disclaimer
 

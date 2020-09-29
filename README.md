@@ -34,8 +34,8 @@ as Person and returned person.name. This will be used to filter by the search qu
 class SearchAppBarPage<T> extends StatefulWidget {
           //...
 
-SearchAppBarPage({ 
-       Key key,
+SearchAppBarPage(
+                       //...
        /// Parametros para o SearcherGetController
        /// final List<T> listFull;
        @required this.listFull, 
@@ -43,8 +43,9 @@ SearchAppBarPage({
        @required this.listBuilder,
         /// [stringFilter] Required if you type. 
        ///You should at least type with String.
-       this.stringFilter,
-          //..
+       this.stringFilter
+                  //...
+    )
 }
 ```
 
@@ -57,15 +58,18 @@ and also by the search filtering.
 class SearchAppBarPageStream<T> extends StatefulWidget {
       //...
 
-SearchAppBarPageStream({
-    Key key,
+SearchAppBarPageStream(
+        //...
     /// final Stream<List<T>> listStream;
     @required this.listStream, 
     ///final FunctionList<T> listBuilder; 
     /// Function applied when receiving data through Stream or filtering in search.
-    @required this.listBuilder
+    @required this.listBuilder,
+    /// [stringFilter] Required if you type. 
+       ///You should at least type with String.
+    this.stringFilter
         // ...
-   }  
+   ) 
       //...
 }
 ```
@@ -93,8 +97,7 @@ class SearchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     //return SearchAppBarPage<String>(
     return SearchAppBarPage<Person>(
-      searchAppBariconTheme:
-          Theme.of(context).iconTheme.copyWith(color: Colors.white),
+      magnifyinGlassColor: Colors.white,
       searchAppBarcenterTitle: true,
       searchAppBarhintText: 'Pesquise um Nome',
       searchAppBartitle: Text(
@@ -182,8 +185,7 @@ class SearchAppBarStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SearchAppBarPageStream<Person>(
-      searchAppBariconTheme:
-          Theme.of(context).iconTheme.copyWith(color: Colors.white),
+      magnifyinGlassColor: Colors.white,
       searchAppBarcenterTitle: true,
       searchAppBarhintText: 'Pesquise um Nome',
       searchAppBartitle: Text(
@@ -294,9 +296,9 @@ in the base package, you can understand each component.
 If you don't want to present a choice `[hideDefaultConnectyIconOffAppBar]` = true; If you want to have a custom icon,
 do `[hideDefaultConnectyIconOffAppBar]` = true; and set the `[iconConnectyOffAppBar]`.
 
-`[widgetConnecty]` Only shows something when it is disconnected and does not yet have the first value of the stream. 
-If the connection goes back to show the `[widgetWaiting]` until you receive the first data. Everyone already comes 
-with They all come with default widgets.
+`[widgetOffConnectyWaiting]` Only shows something when it is disconnected and does not yet have the 
+first value of the stream. If the connection goes back to show the `[widgetWaiting]` until you 
+receive the first data. Everyone already comes with They all come with default widgets.
 
 
 ## Disclaimer
@@ -305,5 +307,3 @@ The initial design of this package has an animation provided in a tutorial by Ni
 at: https://blog.usejournal.com/change-app-bar-in-flutter-with-animation-cfffb3413e8a
 
 All merits for Rodolfo (rodolfoggp@gmail.com) and Nishant Desai.
-
-       

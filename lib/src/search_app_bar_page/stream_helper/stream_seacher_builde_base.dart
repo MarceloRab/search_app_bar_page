@@ -17,10 +17,13 @@ abstract class StreamSearcherGetxBuilderBase<T, S> extends StatefulWidget {
 
   // nao de pode colocar final. Após um setState precisa refaze-la
   // vide o metodo didUpdateWidget
+  // T as List
   final Stream<T> stream;
   final SearcherPageStreamController searcher;
 
   S initial();
+
+  T get haveInitialData;
 
   S afterConnected(S current) => current;
 
@@ -49,7 +52,9 @@ class _StreamSearcherGetxBuilderBase<T, S>
   StreamSubscription _subscriptionConnecty;
   S _summary;
 
+  // T as List
   T _data;
+  bool _haveData;
 
   ConnectyController _connectyController;
   bool downConnectyWithoutData = false;
@@ -59,10 +64,16 @@ class _StreamSearcherGetxBuilderBase<T, S>
   @override
   void initState() {
     super.initState();
-    _connectyController = ConnectyController();
+    _data = widget.haveInitialData;
+    _haveData = _data != null;
     _summary = widget.initial();
-    _subscribe();
-    _subscribeConnecty();
+    _subscribeStream();
+    if (!_haveData) {
+      _connectyController = ConnectyController();
+      _subscribeConnecty();
+    } else {
+      widget.searcher.wrabListSearch(_data as List);
+    }
 
     if (widget.widgetConnecty == null) {
       _widgetConnecty = Center(
@@ -95,13 +106,13 @@ class _StreamSearcherGetxBuilderBase<T, S>
     super.didUpdateWidget(oldWidget);
     if (oldWidget.stream != widget.stream) {
       if (_subscription != null) {
-        _unsubscribe();
+        _unsubscribeStream();
         //Necessário para resolver após o setState
         //widget.stream = oldWidget.stream.asBroadcastStream();
         _summary = widget.afterDisconnected(_summary);
       }
 
-      _subscribe();
+      _subscribeStream();
     }
   }
 
@@ -117,19 +128,20 @@ class _StreamSearcherGetxBuilderBase<T, S>
 
   @override
   void dispose() {
-    _unsubscribe();
+    _unsubscribeStream();
     _unsubscribeConnecty();
     widget.searcher.onClose();
     super.dispose();
   }
 
-  void _subscribe() {
+  void _subscribeStream() {
     _subscription = widget.stream.listen((data) {
       downConnectyWithoutData = false;
-      _data = data;
+      _unsubscribeConnecty();
       // reflexo no searchList
       widget.searcher.wrabListSearch(data as List);
-      // reflexo no searchList
+      // quando haveInitialData = true a mudança é assumida pelo Obx
+      // na classe StreamSearchBuilder
       if (!widget.searcher.haveInitialData) {
         setState(() {
           _summary = widget.afterData(_summary, data);
@@ -149,34 +161,19 @@ class _StreamSearcherGetxBuilderBase<T, S>
     _summary = widget.afterConnected(_summary);
   }
 
-  /*void _wrabListSearch(List<T> listData) {
-    if (widget.searcher.bancoInit) {
-      // Fica negativo dentro do StreamBuilder
-      // Após apresentar o primeiro Obx(())
-      widget.searcher.listFull = listData;
-      if (widget.searcher.rxSearch.value.isNotEmpty) {
-        widget.searcher.refreshSeachList(widget.searcher.rxSearch.value);
-      } else {
-        widget.searcher.sortCompareList(listData);
-        widget.searcher.onSearchFilter(listData);
-      }
-    } else {
-      widget.searcher.initialChangeList = listData;
-    }
-  }*/
-
   void _subscribeConnecty() {
-    if (_subscriptionConnecty != null) {
-      _unsubscribeConnecty();
-    }
     _subscriptionConnecty =
         _connectyController.connectyStream.listen((bool isConnected) {
-      if (!isConnected && (_data == null)) {
-        downConnectyWithoutData = true;
-        setState(() {});
-      }
-      if (_data != null) {
-        _unsubscribeConnecty();
+      if (!isConnected && (!_haveData)) {
+        //lançar _widgetConnecty
+        setState(() {
+          downConnectyWithoutData = true;
+        });
+      } else if (isConnected && (!_haveData)) {
+        setState(() {
+          downConnectyWithoutData = false;
+          _summary = widget.afterConnected(_summary);
+        });
       }
     });
   }
@@ -185,12 +182,11 @@ class _StreamSearcherGetxBuilderBase<T, S>
     if (_subscriptionConnecty != null) {
       _subscriptionConnecty.cancel();
       _subscriptionConnecty = null;
+      _connectyController.onClose();
     }
-
-    _connectyController.onClose();
   }
 
-  void _unsubscribe() {
+  void _unsubscribeStream() {
     if (_subscription != null) {
       _subscription.cancel();
       _subscription = null;

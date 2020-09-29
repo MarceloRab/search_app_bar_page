@@ -49,12 +49,26 @@ class SearchAppBarPage<T> extends StatefulWidget {
 
   /// Parametros para o SearcherGetController
 
+  /// [listFull] List to be filtered by Search.
   final List<T> listFull;
+  /// [filtersType] These are the filters that the Controller uses to
+  /// filter the list. Divide the filters into three types:
+  ///  enum FiltersTypes { startsWith, equals, contains }
+  /// Default = FiltersTypes.contains;
   final FiltersTypes filtersType;
 
   /// [listBuilder] Function applied when it is filtered.
   final FunctionList<T> listBuilder;
+
+  /// [stringFilter] Required if you type.
+  ///If not, it is understood that the type will be String.
+  /// ex.: stringFilter: (Person person) => person.name,
+  /// The list will be filtered by the person.name contains (default) a query.
   final StringFilter<T> stringFilter;
+
+  ///[compareSort] If you want your list to be sorted, pass the function on.
+  /// Example: (Person a, Person b) => a.name.compareTo(b.name),
+  /// This list will be ordered by the object name parameter.
   final Compare<T> compareSort;
 
   const SearchAppBarPage({
@@ -65,11 +79,6 @@ class SearchAppBarPage<T> extends StatefulWidget {
     @required this.listBuilder,
     this.compareSort,
     this.filtersType,
-
-    /// [stringFilter] Required if you type.
-    ///If not, it is understood that the type will be String.
-    /// ex.: stringFilter: (Person person) => person.name,
-    /// The list will be filtered by the person.name contains (default) a query.
     this.stringFilter,
 
     /// Paramentros do SearchAppBar

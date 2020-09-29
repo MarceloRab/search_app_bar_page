@@ -32,6 +32,9 @@ class StreamSearchBuilder<
   final Widget widgetConnecty;
 
   @override
+  List<T> get haveInitialData => initialData;
+
+  @override
   AsyncSnapshot<List<T>> initial() =>
       AsyncSnapshot<List<T>>.withData(ConnectionState.none, initialData);
 
@@ -66,7 +69,6 @@ class StreamSearchBuilder<
 
       /// Para mostrar o botao de procurar no app bar a partir dai
       /// no método _buildAppBar - class SearchAppBar
-
       return Obx(() {
         return listBuilder(searcher.listSearch, searcher.isModSearch);
       });
