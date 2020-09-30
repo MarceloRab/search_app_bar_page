@@ -25,7 +25,7 @@ class StreamSearchBuilder<
 
   final AsyncWidgetBuilder<List<T>> builder;
   final List<T> initialData;
-  final FunctionList<T> listBuilder;
+  final WidgetsListBuilder<T> listBuilder;
   @override
   final SearcherPageStreamController<T> searcher;
   @override

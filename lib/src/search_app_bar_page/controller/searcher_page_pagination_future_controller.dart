@@ -1,13 +1,12 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
+
 import 'package:get_state_manager/get_state_manager.dart';
-import 'package:meta/meta.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/filters/filters_type.dart';
 
 import '../filters/functions_filters.dart';
 
-class SearcherPageController<T> extends SeacherBase {
+class SearcherPagePaginationFutureController<T> extends SeacherBase {
   final RxBool _isModSearch = false.obs;
 
   @override
@@ -18,32 +17,38 @@ class SearcherPageController<T> extends SeacherBase {
 
   @override
   // ignore: overridden_fields
-  final RxString rxSearch = ''.obs;
+  final rxSearch = ''.obs;
 
-  final listSearch = <T>[].obs;
-  final List<T> listFull;
+  final RxList<T> listSearch = <T>[].obs;
 
   Function(Iterable<T>) get onSearchList => listSearch.assignAll;
 
   final FiltersTypes filtersType;
   Filter<String> _filters;
   StringFilter<T> stringFilter;
+
   final Compare<T> compareSort;
+  bool haveInitialData = false;
 
   Worker _worker;
 
-  final RxBool _bancoInit = true.obs;
+  int page = 0;
+  int pageSearch = 0;
 
-  @override
-  set bancoInit(bool value) => _bancoInit.value = value;
+  int numPageItems = 0;
 
-  @override
-  bool get bancoInit => _bancoInit.value;
+  //int numPageItemsCurrent = 0;
+
+  //bool haveMore = false;
+
+  //final Stream<List<T>> listStream;
+
+  //StreamSubscription _streamSubscription;
 
   StringFilter<T> get _defaultFilter => (T value) => value as String;
 
-  SearcherPageController({
-    @required this.listFull,
+  SearcherPagePaginationFutureController({
+    //@required this.listStream,
     this.stringFilter,
     this.compareSort,
     this.filtersType = FiltersTypes.contains,
@@ -56,9 +61,30 @@ class SearcherPageController<T> extends SeacherBase {
             'Voce precisa tipar sua página ou deverá ser tipada como String');
       }
     }
-    _bancoInit.close();
-    onSearchList(listFull);
   }
+
+  var listFull = <T>[];
+  //var listFullSearch = <T>[];
+  final RxList<T> listSearchFilter = <T>[].obs;
+
+  set initialChangeList(List<T> list) {
+    if (!bancoInit) {
+      bancoInit = true;
+      _bancoInit.close();
+    }
+
+    listFull.addAll(list);
+    onSearchList(listFull);
+    rxSearch('');
+  }
+
+  final RxBool _bancoInit = false.obs;
+
+  @override
+  set bancoInit(bool value) => _bancoInit.value = value;
+
+  @override
+  bool get bancoInit => _bancoInit.value;
 
   void onInit() {
     if (filtersType.toString() == FiltersTypes.startsWith.toString()) {
@@ -70,16 +96,51 @@ class SearcherPageController<T> extends SeacherBase {
     }
   }
 
-  void onReady() {
+  void wrabListSearch(List<T> listData) {
+    if (bancoInit) {
+      // Fica negativo dentro do StreamBuilder
+      // Após apresentar o primeiro Obx(())
+      listFull = listData;
+      if (rxSearch.value.isNotEmpty) {
+        refreshSeachFullList(rxSearch.value);
+      } else {
+        sortCompareList(listData);
+        onSearchList(listData);
+      }
+    } else {
+      initialChangeList = listData;
+    }
+  }
+
+  void subscribeWorker() {
     _worker = ever(rxSearch, (String value) {
-      refreshSeachList(value);
+      if (value.isEmpty) {
+        pageSearch = 0;
+        refreshSeachFullList(value);
+      }
+
+      // se nao vazia vide stream no initState da classe
+      //_SearchAppBarPageFutureBuilderState
     });
   }
 
-  void refreshSeachList(String value) {
+  void refreshSeachFullList(String value) {
     final list = listFull
         .where((element) => _filters(stringFilter(element), value))
         .toList();
+
+    //numPageItemsCurrent = list.length;
+
+    sortCompareList(list);
+    onSearchList(list);
+  }
+
+  void refreshSeachList(String value) {
+    final list = listSearchFilter
+        .where((element) => _filters(stringFilter(element), value))
+        .toList();
+
+    //numPageItemsCurrent = list.length;
 
     sortCompareList(list);
     onSearchList(list);
@@ -96,5 +157,6 @@ class SearcherPageController<T> extends SeacherBase {
     _isModSearch.close();
     rxSearch.close();
     listSearch.close();
+    listSearchFilter.close();
   }
 }

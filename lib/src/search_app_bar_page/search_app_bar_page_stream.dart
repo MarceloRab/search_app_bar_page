@@ -104,7 +104,7 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
 
   /// [listBuilder] Function applied when receiving data
   /// through Stream or filtering in search.
-  final FunctionList<T> listBuilder;
+  final WidgetsListBuilder<T> listBuilder;
 
   /// [stringFilter] Required if you type.
   ///If not, it is understood that the type will be String.

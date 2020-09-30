@@ -59,7 +59,7 @@ class SearchAppBarPage<T> extends StatefulWidget {
   final FiltersTypes filtersType;
 
   /// [listBuilder] Function applied when it is filtered.
-  final FunctionList<T> listBuilder;
+  final WidgetsListBuilder<T> listBuilder;
 
   /// [stringFilter] Required if you type.
   ///If not, it is understood that the type will be String.

@@ -19,9 +19,9 @@ class SearcherPageStreamController<T> extends SeacherBase {
   // ignore: overridden_fields
   final rxSearch = ''.obs;
 
-  final listSearch = <T>[].obs;
+  final RxList<T> listSearch = <T>[].obs;
 
-  Function(Iterable<T>) get onSearchFilter => listSearch.assignAll;
+  Function(Iterable<T>) get onSearchList => listSearch.assignAll;
 
   final FiltersTypes filtersType;
   Filter<String> _filters;
@@ -63,7 +63,7 @@ class SearcherPageStreamController<T> extends SeacherBase {
     }
 
     listFull = list;
-    onSearchFilter(list);
+    onSearchList(list);
     rxSearch('');
   }
 
@@ -108,7 +108,7 @@ class SearcherPageStreamController<T> extends SeacherBase {
         refreshSeachList(rxSearch.value);
       } else {
         sortCompareList(listData);
-        onSearchFilter(listData);
+        onSearchList(listData);
       }
     } else {
       initialChangeList = listData;
@@ -127,7 +127,7 @@ class SearcherPageStreamController<T> extends SeacherBase {
         .toList();
 
     sortCompareList(list);
-    onSearchFilter(list);
+    onSearchList(list);
   }
 
   void sortCompareList(List<T> list) {
