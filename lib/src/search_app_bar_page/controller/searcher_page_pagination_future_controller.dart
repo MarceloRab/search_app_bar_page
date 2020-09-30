@@ -37,13 +37,8 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
 
   int numPageItems = 0;
 
-  //int numPageItemsCurrent = 0;
-
-  //bool haveMore = false;
-
-  //final Stream<List<T>> listStream;
-
-  //StreamSubscription _streamSubscription;
+  Future<List<T>> functionFuturePageItems(FutureFetchPageItems<T> func) =>
+      func(page, rxSearch.value);
 
   StringFilter<T> get _defaultFilter => (T value) => value as String;
 
@@ -64,6 +59,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
   }
 
   var listFull = <T>[];
+
   //var listFullSearch = <T>[];
   final RxList<T> listSearchFilter = <T>[].obs;
 

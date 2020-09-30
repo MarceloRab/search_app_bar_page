@@ -11,6 +11,8 @@ import 'package:rxdart/rxdart.dart';
 class SearchAppBarPageFutureBuilder<T> extends StatefulWidget {
   final FutureFetchPageItems<T> futureFetchPageItems;
 
+  final Future<List<T>> futureInitialList;
+
   final AsyncWidgetBuilder<List<T>> builder;
 
   final List<T> initialData;
@@ -25,13 +27,14 @@ class SearchAppBarPageFutureBuilder<T> extends StatefulWidget {
 
   const SearchAppBarPageFutureBuilder(
       {Key key,
-      this.futureFetchPageItems,
+      @required this.futureFetchPageItems,
       this.builder,
       this.initialData,
       this.searcher,
       this.paginationItemBuilder,
       this.widgetConnecty,
-      this.numPageItems})
+      this.numPageItems,
+      @required this.futureInitialList})
       : super(key: key);
 
   @override
@@ -54,8 +57,6 @@ class _SearchAppBarPageFutureBuilderState<T>
   Widget _widgetConnecty;
 
   ScrollController _scrollController;
-
-  //Future<List<T>> _future;
 
   //bool haveMore = false;
 
@@ -137,7 +138,7 @@ class _SearchAppBarPageFutureBuilderState<T>
   @override
   void didUpdateWidget(SearchAppBarPageFutureBuilder<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.futureFetchPageItems != widget.futureFetchPageItems) {
+    if (oldWidget.futureInitialList != widget.futureInitialList) {
       if (_activeCallbackIdentity != null) {
         _unsubscribe();
         _snapshot = _snapshot.inState(ConnectionState.none);
@@ -189,10 +190,7 @@ class _SearchAppBarPageFutureBuilderState<T>
     final Object callbackIdentity = Object();
     _activeCallbackIdentity = callbackIdentity;
     //widget.futureFetchPageItems(widget.searcher.page).then<void>(
-    widget
-        .futureFetchPageItems(
-            widget.searcher.page, widget.searcher.rxSearch.value)
-        .then<void>((List<T> data) {
+    widget.futureInitialList.then<void>((List<T> data) {
       if (widget.searcher.numPageItems == 0) {
         widget.searcher.numPageItems = data.length;
       }
@@ -223,23 +221,24 @@ class _SearchAppBarPageFutureBuilderState<T>
   }
 
   void _subscribeSearhQuery() {
-    if (_activeCallbackIdentity != null) {
-      _unsubscribe();
-      _snapshot = _snapshot.inState(ConnectionState.none);
-      //widget.searcher.wrabListSearch(widget.initialData);
-    }
-
-    final Object callbackIdentity = Object();
-    _activeCallbackIdentity = callbackIdentity;
-
     _subscriptionSearch = widget.searcher.rxSearch.stream
         .distinct()
         .debounceTime(const Duration(milliseconds: 350))
         .listen((query) {
       if (query.isNotEmpty) {
-        widget
-            .futureFetchPageItems(widget.searcher.pageSearch, query)
-            .then((data) {
+        if (_activeCallbackIdentity != null) {
+          _unsubscribe();
+          _snapshot = _snapshot.inState(ConnectionState.none);
+          //widget.searcher.wrabListSearch(widget.initialData);
+        }
+        final Object callbackIdentity = Object();
+        _activeCallbackIdentity = callbackIdentity;
+
+        setState(() {
+          _snapshot = _snapshot.inState(ConnectionState.waiting);
+        });
+        widget.futureFetchPageItems(widget.searcher.pageSearch, query).then(
+            (data) {
           widget.searcher.listSearchFilter.assignAll(data);
 
           if (_activeCallbackIdentity == callbackIdentity) {
@@ -248,13 +247,18 @@ class _SearchAppBarPageFutureBuilderState<T>
                   AsyncSnapshot<List<T>>.withData(ConnectionState.done, data);
             });
           }
+        }, onError: (Object error) {
+          if (_activeCallbackIdentity == callbackIdentity) {
+            setState(() {
+              _snapshot =
+                  AsyncSnapshot<List<T>>.withError(ConnectionState.done, error);
+            });
+          }
         });
-      }
-    }, onError: (Object error) {
-      if (_activeCallbackIdentity == callbackIdentity) {
+      } else {
         setState(() {
-          _snapshot =
-              AsyncSnapshot<List<T>>.withError(ConnectionState.done, error);
+          _snapshot = AsyncSnapshot<List<T>>.withData(
+              ConnectionState.done, widget.searcher.listFull);
         });
       }
     });

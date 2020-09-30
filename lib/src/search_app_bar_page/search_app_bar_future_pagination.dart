@@ -89,6 +89,8 @@ class SearchAppBarPageFuturePagination<T> extends StatefulWidget {
   /// [widgetWaiting]
   final List<T> initialData;
 
+  final FutureFetchPageItems<T> futureFetchPageItems;
+
   final int numPageItems;
 
   /// [filtersType] These are the filters that the Controller uses to
@@ -155,6 +157,7 @@ class SearchAppBarPageFuturePagination<T> extends StatefulWidget {
     this.stringFilter,
     this.compareSort,
     this.numPageItems,
+    this.futureFetchPageItems,
   }) : super(key: key);
 
   @override
@@ -165,6 +168,7 @@ class SearchAppBarPageFuturePagination<T> extends StatefulWidget {
 class _SearchAppBarPageFuturePaginationState<T>
     extends State<SearchAppBarPageFuturePagination<T>> {
   SearcherPagePaginationFutureController<T> _controller;
+  Future<List<T>> _future;
 
   @override
   void initState() {
@@ -177,6 +181,7 @@ class _SearchAppBarPageFuturePaginationState<T>
       ..onInit()
       ..subscribeWorker();
     //_subscribeListStream();
+    _future = widget.futureFetchPageItems(_controller.page, '');
   }
 
   @override
@@ -203,50 +208,53 @@ class _SearchAppBarPageFuturePaginationState<T>
             keyboardType: widget.searchAppBarKeyboardType,
             magnifyinGlassColor: widget.magnifyinGlassColor),
         body: SearchAppBarPageFutureBuilder(
-            initialData: widget.initialData,
-            numPageItems: widget.numPageItems,
-            searcher: _controller,
-            paginationItemBuilder: widget.paginationItemBuilder,
-            widgetConnecty: widget.widgetOffConnectyWaiting,
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                if (widget.widgetError == null)
-                  return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        const Icon(
-                          Icons.error_outline,
-                          color: Colors.red,
-                          size: 60,
+          initialData: widget.initialData,
+          futureFetchPageItems: widget.futureFetchPageItems,
+          futureInitialList: _future,
+          numPageItems: widget.numPageItems,
+          searcher: _controller,
+          paginationItemBuilder: widget.paginationItemBuilder,
+          widgetConnecty: widget.widgetOffConnectyWaiting,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              if (widget.widgetError == null)
+                return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      const Icon(
+                        Icons.error_outline,
+                        color: Colors.red,
+                        size: 60,
+                      ),
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 16),
+                          child: Text('Temos um erro: ${snapshot.error}'),
                         ),
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: Text('Temos um erro: ${snapshot.error}'),
-                          ),
-                        )
-                      ]);
-                else
-                  return widget.widgetError;
-              } else {
-                if (widget.widgetWaiting == null)
-                  return Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: CircularProgressIndicator(),
-                        ),
-                      ],
-                    ),
-                  );
-                else
-                  return widget.widgetWaiting;
-              }
-            }),
+                      )
+                    ]);
+              else
+                return widget.widgetError;
+            } else {
+              if (widget.widgetWaiting == null)
+                return Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      SizedBox(
+                        width: 60,
+                        height: 60,
+                        child: CircularProgressIndicator(),
+                      ),
+                    ],
+                  ),
+                );
+              else
+                return widget.widgetWaiting;
+            }
+          },
+        ),
         floatingActionButton: widget.searchePageFloaActionButton,
         floatingActionButtonLocation:
             widget.searchePageFloatingActionButtonLocation,
