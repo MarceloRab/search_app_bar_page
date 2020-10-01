@@ -6,12 +6,12 @@ import 'package:search_app_bar_page/src/search_app_bar_page/controller/connecty_
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_page_pagination_future_controller.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/filters/functions_filters.dart';
 
-import 'package:rxdart/rxdart.dart';
+//import 'package:rxdart/rxdart.dart';
 
 class SearchAppBarPageFutureBuilder<T> extends StatefulWidget {
   final FutureFetchPageItems<T> futureFetchPageItems;
 
-  final Future<List<T>> futureInitialList;
+  //final Future<List<T>> futureInitialList;
 
   final AsyncWidgetBuilder<List<T>> builder;
 
@@ -25,17 +25,17 @@ class SearchAppBarPageFutureBuilder<T> extends StatefulWidget {
 
   final int numPageItems;
 
-  const SearchAppBarPageFutureBuilder(
-      {Key key,
-      @required this.futureFetchPageItems,
-      this.builder,
-      this.initialData,
-      this.searcher,
-      this.paginationItemBuilder,
-      this.widgetConnecty,
-      this.numPageItems,
-      @required this.futureInitialList})
-      : super(key: key);
+  const SearchAppBarPageFutureBuilder({
+    Key key,
+    @required this.futureFetchPageItems,
+    this.builder,
+    this.initialData,
+    this.searcher,
+    this.paginationItemBuilder,
+    this.widgetConnecty,
+    this.numPageItems,
+    //@required this.futureInitialList
+  }) : super(key: key);
 
   @override
   _SearchAppBarPageFutureBuilderState createState() =>
@@ -49,7 +49,7 @@ class _SearchAppBarPageFutureBuilderState<T>
   ConnectyController _connectyController;
   StreamSubscription _subscriptionConnecty;
 
-  StreamSubscription _subscriptionSearch;
+  //StreamSubscription _subscriptionSearch;
 
   bool _haveInitialData;
   bool downConnectyWithoutData = false;
@@ -57,6 +57,8 @@ class _SearchAppBarPageFutureBuilderState<T>
   Widget _widgetConnecty;
 
   ScrollController _scrollController;
+
+  Worker _worker;
 
   //bool haveMore = false;
 
@@ -74,14 +76,15 @@ class _SearchAppBarPageFutureBuilderState<T>
     _snapshot = AsyncSnapshot<List<T>>.withData(
         ConnectionState.none, widget.initialData);
     if (_haveInitialData) {
-      widget.searcher.wrabListSearch(widget.initialData);
+      widget.searcher.listFull.addAll(widget.initialData);
+      widget.searcher.onSearchList(widget.initialData);
     } else {
       _connectyController = ConnectyController();
       _subscribeConnecty();
     }
 
     _subscribeSearhQuery();
-    _subscribe();
+    _firstFuturePageSubscribe();
 
     if (widget.widgetConnecty == null) {
       _widgetConnecty = Center(
@@ -107,6 +110,65 @@ class _SearchAppBarPageFutureBuilderState<T>
     } else {
       _widgetConnecty = widget.widgetConnecty;
     }
+  }
+
+  void _futureSearchPageQuery(String query) {
+    if (_activeCallbackIdentity != null) {
+      _unsubscribe();
+      _snapshot = _snapshot.inState(ConnectionState.none);
+      //widget.searcher.wrabListSearch(widget.initialData);
+    }
+    final Object callbackIdentity = Object();
+    _activeCallbackIdentity = callbackIdentity;
+
+    setState(() {
+      _snapshot = _snapshot.inState(ConnectionState.waiting);
+    });
+    widget.futureFetchPageItems(widget.searcher.pageSearch, query).then((data) {
+      if (_activeCallbackIdentity == callbackIdentity) {
+        _snapshot = AsyncSnapshot<List<T>>.withData(ConnectionState.done, data);
+        widget.searcher.listSearchFilter.assignAll(data);
+
+      }
+    }, onError: (Object error) {
+      if (_activeCallbackIdentity == callbackIdentity) {
+        setState(() {
+          _snapshot =
+              AsyncSnapshot<List<T>>.withError(ConnectionState.done, error);
+        });
+      }
+    });
+  }
+
+  void _firstFuturePageSubscribe() {
+    final Object callbackIdentity = Object();
+    _activeCallbackIdentity = callbackIdentity;
+    widget.futureFetchPageItems(widget.searcher.page, '').then<void>(
+        (List<T> data) {
+      //widget.futureInitialList.then<void>((List<T> data) {
+      if (widget.searcher.numPageItems == 0) {
+        widget.searcher.numPageItems = data.length;
+      }
+
+      if (_activeCallbackIdentity == callbackIdentity) {
+        downConnectyWithoutData = false;
+        _unsubscribeConnecty();
+
+        widget.searcher.wrabListSearch(data);
+        setState(() {
+          _snapshot =
+              AsyncSnapshot<List<T>>.withData(ConnectionState.done, data);
+        });
+      }
+    }, onError: (Object error) {
+      if (_activeCallbackIdentity == callbackIdentity) {
+        setState(() {
+          _snapshot =
+              AsyncSnapshot<List<T>>.withError(ConnectionState.done, error);
+        });
+      }
+    });
+    _snapshot = _snapshot.inState(ConnectionState.waiting);
   }
 
   void pagesListener() {
@@ -138,13 +200,13 @@ class _SearchAppBarPageFutureBuilderState<T>
   @override
   void didUpdateWidget(SearchAppBarPageFutureBuilder<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.futureInitialList != widget.futureInitialList) {
+    if (oldWidget.futureFetchPageItems != widget.futureFetchPageItems) {
       if (_activeCallbackIdentity != null) {
         _unsubscribe();
         _snapshot = _snapshot.inState(ConnectionState.none);
         //widget.searcher.wrabListSearch(widget.initialData);
       }
-      _subscribe();
+      _firstFuturePageSubscribe();
     }
 
     if (oldWidget.initialData != widget.initialData) {
@@ -165,110 +227,49 @@ class _SearchAppBarPageFutureBuilderState<T>
       // Apenas anuncia quando nao tem a primeira data e esta sem conexao
       return _widgetConnecty;
     }
-    if (_snapshot.hasData) {
-      widget.searcher.haveInitialData = true;
 
-      /// Para mostrar o botao de procurar no app bar a partir dai
-      /// no método _buildAppBar - class SearchAppBar
-      return Obx(() {
-        return ListView.builder(
-          controller: _scrollController,
-          itemCount: widget.searcher.rxSearch.value.isEmpty
-              ? widget.searcher.listSearch.length
-              : widget.searcher.listSearchFilter.length,
-          itemBuilder: (ctx, i) {
-            return widget.paginationItemBuilder(context, i);
-          },
-        );
-      });
+    if (_snapshot.connectionState == ConnectionState.waiting ||
+        _snapshot.hasError) {
+
+
+      return widget.builder(context, _snapshot);
     }
+    //if (_snapshot.hasData) {
+    //widget.searcher.haveInitialData = true;
 
-    return widget.builder(context, _snapshot);
-  }
-
-  void _subscribe() {
-    final Object callbackIdentity = Object();
-    _activeCallbackIdentity = callbackIdentity;
-    //widget.futureFetchPageItems(widget.searcher.page).then<void>(
-    widget.futureInitialList.then<void>((List<T> data) {
-      if (widget.searcher.numPageItems == 0) {
-        widget.searcher.numPageItems = data.length;
-      }
-
-      if (_activeCallbackIdentity == callbackIdentity) {
-        downConnectyWithoutData = false;
-        _unsubscribeConnecty();
-
-        widget.searcher.wrabListSearch(data);
-        setState(() {
-          _snapshot =
-              AsyncSnapshot<List<T>>.withData(ConnectionState.done, data);
-        });
-      }
-    }, onError: (Object error) {
-      if (_activeCallbackIdentity == callbackIdentity) {
-        setState(() {
-          _snapshot =
-              AsyncSnapshot<List<T>>.withError(ConnectionState.done, error);
-        });
-      }
+    /// Para mostrar o botao de procurar no app bar a partir dai
+    /// no método _buildAppBar - class SearchAppBar
+    return Obx(() {
+      return ListView.builder(
+        controller: _scrollController,
+        itemCount: widget.searcher.rxSearch.value.isEmpty
+            ? widget.searcher.listSearch.length
+            : widget.searcher.listSearchFilter.length,
+        itemBuilder: (ctx, index) {
+          return widget.paginationItemBuilder(context, index);
+        },
+      );
     });
-    _snapshot = _snapshot.inState(ConnectionState.waiting);
+
+    //return widget.builder(context, _snapshot);
   }
 
-  void _unsubscribe() {
-    _activeCallbackIdentity = null;
-  }
+
 
   void _subscribeSearhQuery() {
-    _subscriptionSearch = widget.searcher.rxSearch.stream
+    _worker = debounce(widget.searcher.rxSearch, (String query) {
+      if (query.isNotEmpty)
+        _futureSearchPageQuery(query);
+      else {
+        widget.searcher.wrabListSearch(widget.searcher.listFull);
+      }
+
+    }, time: const Duration(milliseconds: 350));
+
+    /*_subscriptionSearch = widget.searcher.rxSearch.stream
         .distinct()
         .debounceTime(const Duration(milliseconds: 350))
-        .listen((query) {
-      if (query.isNotEmpty) {
-        if (_activeCallbackIdentity != null) {
-          _unsubscribe();
-          _snapshot = _snapshot.inState(ConnectionState.none);
-          //widget.searcher.wrabListSearch(widget.initialData);
-        }
-        final Object callbackIdentity = Object();
-        _activeCallbackIdentity = callbackIdentity;
-
-        setState(() {
-          _snapshot = _snapshot.inState(ConnectionState.waiting);
-        });
-        widget.futureFetchPageItems(widget.searcher.pageSearch, query).then(
-            (data) {
-          widget.searcher.listSearchFilter.assignAll(data);
-
-          if (_activeCallbackIdentity == callbackIdentity) {
-            setState(() {
-              _snapshot =
-                  AsyncSnapshot<List<T>>.withData(ConnectionState.done, data);
-            });
-          }
-        }, onError: (Object error) {
-          if (_activeCallbackIdentity == callbackIdentity) {
-            setState(() {
-              _snapshot =
-                  AsyncSnapshot<List<T>>.withError(ConnectionState.done, error);
-            });
-          }
-        });
-      } else {
-        setState(() {
-          _snapshot = AsyncSnapshot<List<T>>.withData(
-              ConnectionState.done, widget.searcher.listFull);
-        });
-      }
-    });
-  }
-
-  void _unsubscribeSearhQuery() {
-    if (_subscriptionSearch != null) {
-      _subscriptionSearch.cancel();
-      _subscriptionSearch = null;
-    }
+        .listen((query) {});*/
   }
 
   @override
@@ -278,7 +279,8 @@ class _SearchAppBarPageFutureBuilderState<T>
     _scrollController.removeListener(pagesListener);
     _scrollController.dispose();
     _unsubscribeConnecty();
-    _unsubscribeSearhQuery();
+    //_unsubscribeSearhQuery();
+    _worker?.dispose();
     super.dispose();
   }
 
@@ -299,6 +301,10 @@ class _SearchAppBarPageFutureBuilderState<T>
     });
   }
 
+  void _unsubscribe() {
+    _activeCallbackIdentity = null;
+  }
+
   void _unsubscribeConnecty() {
     if (_subscriptionConnecty != null) {
       _subscriptionConnecty.cancel();
@@ -306,4 +312,11 @@ class _SearchAppBarPageFutureBuilderState<T>
       _connectyController.onClose();
     }
   }
+
+/* void _unsubscribeSearhQuery() {
+    if (_subscriptionSearch != null) {
+      _subscriptionSearch.cancel();
+      _subscriptionSearch = null;
+    }
+  }*/
 }

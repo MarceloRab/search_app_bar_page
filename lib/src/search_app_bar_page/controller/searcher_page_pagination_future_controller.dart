@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:get_state_manager/get_state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/filters/filters_type.dart';
@@ -15,6 +16,13 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
   @override
   set isModSearch(bool value) => _isModSearch.value = value;
 
+  final Rx<AsyncSnapshot<List<T>>> _snapshot =
+      AsyncSnapshot<List<T>>.withData(ConnectionState.done, null).obs;
+
+  AsyncSnapshot<List<T>> get snapshot => _snapshot.value;
+
+  set snapshot(AsyncSnapshot<List<T>> value) => _snapshot.value = value;
+
   @override
   // ignore: overridden_fields
   final rxSearch = ''.obs;
@@ -28,7 +36,8 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
   StringFilter<T> stringFilter;
 
   final Compare<T> compareSort;
-  bool haveInitialData = false;
+
+  //bool haveInitialData = false;
 
   Worker _worker;
 

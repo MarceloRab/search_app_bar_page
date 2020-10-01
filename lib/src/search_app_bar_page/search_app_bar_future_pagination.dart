@@ -168,7 +168,7 @@ class SearchAppBarPageFuturePagination<T> extends StatefulWidget {
 class _SearchAppBarPageFuturePaginationState<T>
     extends State<SearchAppBarPageFuturePagination<T>> {
   SearcherPagePaginationFutureController<T> _controller;
-  Future<List<T>> _future;
+  //Future<List<T>> _future;
 
   @override
   void initState() {
@@ -181,7 +181,7 @@ class _SearchAppBarPageFuturePaginationState<T>
       ..onInit()
       ..subscribeWorker();
     //_subscribeListStream();
-    _future = widget.futureFetchPageItems(_controller.page, '');
+    //_future = widget.futureFetchPageItems(_controller.page, '');
   }
 
   @override
@@ -210,7 +210,7 @@ class _SearchAppBarPageFuturePaginationState<T>
         body: SearchAppBarPageFutureBuilder(
           initialData: widget.initialData,
           futureFetchPageItems: widget.futureFetchPageItems,
-          futureInitialList: _future,
+          //futureInitialList: _future,
           numPageItems: widget.numPageItems,
           searcher: _controller,
           paginationItemBuilder: widget.paginationItemBuilder,

@@ -72,7 +72,8 @@ class _StreamSearcherGetxBuilderBase<T, S>
       _connectyController = ConnectyController();
       _subscribeConnecty();
     } else {
-      widget.searcher.wrabListSearch(_initialData as List);
+      widget.searcher.listFull.addAll(_initialData as List);
+      widget.searcher.onSearchList(_initialData as List);
     }
 
     if (widget.widgetConnecty == null) {
