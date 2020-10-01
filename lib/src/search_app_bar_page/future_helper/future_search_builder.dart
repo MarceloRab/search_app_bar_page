@@ -87,8 +87,11 @@ class _SearchAppBarPageFutureBuilderState<T>
       //widget.searcher.snapshot.inState(ConnectionState.none);
 
       widget.searcher.listFull.addAll(widget.initialData);
-      widget.searcher.snapshot = AsyncSnapshot<List<T>>.withData(
-          ConnectionState.none, widget.initialData);
+      widget.searcher.snapshot = AsyncSnapshotScrollPage<T>(
+          snapshot: AsyncSnapshot<List<T>>.withData(
+              ConnectionState.none, widget.initialData));
+      /* widget.searcher.snapshot = AsyncSnapshot<List<T>>.withData(
+          ConnectionState.none, widget.initialData);*/
 
       widget.searcher.onSearchList(widget.initialData);
     } else {
@@ -125,34 +128,36 @@ class _SearchAppBarPageFutureBuilderState<T>
     }
   }
 
-  void _futureSearchPageQuery(String query, {bool endPage = false}) {
+  void _futureSearchPageQuery(String query, {bool scroollEndPage = false}) {
     if (_activeCallbackIdentity != null) {
       _unsubscribe();
 
-      widget.searcher.snapshot =
-          widget.searcher.snapshot.inState(ConnectionState.none);
+      widget.searcher.snapshotScroolPage = AsyncSnapshotScrollPage<T>(
+          snapshot: widget.searcher.snapshotScroolPage.snapshot
+              .inState(ConnectionState.none));
     }
     final Object callbackIdentity = Object();
     _activeCallbackIdentity = callbackIdentity;
 
-    widget.searcher.snapshot =
-        widget.searcher.snapshot.inState(ConnectionState.waiting);
+    widget.searcher.snapshotScroolPage =
+
+        AsyncSnapshotScrollPage<T>(
+            snapshot: widget.searcher.snapshotScroolPage.snapshot
+                .inState(ConnectionState.waiting));
+        //widget.searcher.snapshot.inState(ConnectionState.waiting);
 
     /*setState(() {
       _snapshot = _snapshot.inState(ConnectionState.waiting);
     });*/
     widget.futureFetchPageItems(widget.searcher.pageSearch, query).then((data) {
       if (_activeCallbackIdentity == callbackIdentity) {
-        if (!endPage) {
+        if (!scroollEndPage) {
           widget.searcher.listFullSearchQuery.clear();
         }
-
+        widget.searcher.endSearchPage = false;
         widget.searcher.listFullSearchQuery.addAll(data);
         widget.searcher.snapshot = AsyncSnapshot<List<T>>.withData(
             ConnectionState.done, widget.searcher.listFullSearchQuery);
-        // _snapshot = AsyncSnapshot<List<T>>
-        // .withData(ConnectionState.done, data);
-
       } else {
         if (widget.searcher.pageSearch > 0) {
           widget.searcher.pageSearch--;
@@ -186,6 +191,7 @@ class _SearchAppBarPageFutureBuilderState<T>
           downConnectyWithoutData = false;
           _unsubscribeConnecty();
         }
+        widget.searcher.endPage = false;
         widget.searcher.wrabListSearch(data);
         widget.searcher.snapshot = AsyncSnapshot<List<T>>.withData(
             ConnectionState.done, widget.searcher.listFull);
@@ -220,43 +226,35 @@ class _SearchAppBarPageFutureBuilderState<T>
 
       if (_activeCallbackIdentity != null) {
         if (widget.searcher.rxSearch.value.isNotEmpty) {
-          widget.searcher.pageSearch++;
-          _futureSearchPageQuery(widget.searcher.rxSearch.value, endPage: true);
-        } else {
-          if (_activeCallbackIdentity != null) {
-            _unsubscribe();
-
-            widget.searcher.snapshot =
-                widget.searcher.snapshot.inState(ConnectionState.none);
+          if (widget.searcher.listFullSearchQuery.length ~/
+                  widget.searcher.numPageItems !=
+              0) {
+            widget.searcher.endSearchPage = false;
+            widget.searcher.pageSearchFinish = true;
+          } else {
+            widget.searcher.endSearchPage = true;
+            widget.searcher.pageSearch++;
+            _futureSearchPageQuery(widget.searcher.rxSearch.value,
+                scroollEndPage: true);
           }
-          widget.searcher.page++;
-          _firstFuturePageSubscribe();
+        } else {
+          if (widget.searcher.listFull.length ~/ widget.searcher.numPageItems !=
+              0) {
+            widget.searcher.endPage = false;
+            widget.searcher.pageFinish = true;
+          } else {
+            if (_activeCallbackIdentity != null) {
+              _unsubscribe();
+
+              widget.searcher.snapshot =
+                  widget.searcher.snapshot.inState(ConnectionState.none);
+            }
+            widget.searcher.endPage = true;
+            widget.searcher.page++;
+            _firstFuturePageSubscribe();
+          }
         }
       }
-    }
-  }
-
-  @override
-  void didUpdateWidget(SearchAppBarPageFutureBuilder<T> oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.futureFetchPageItems != widget.futureFetchPageItems) {
-      widget.searcher.listFull.clear();
-      if (oldWidget.initialData != widget.initialData) {
-        _haveInitialData = widget.initialData != null;
-
-        if (_haveInitialData) {
-          widget.searcher.listFull.addAll(widget.initialData);
-        }
-      }
-      if (_activeCallbackIdentity != null) {
-        _unsubscribe();
-        //_snapshot = _snapshot.inState(ConnectionState.none);
-        //widget.searcher.wrabListSearch(widget.initialData);
-        widget.searcher.snapshot =
-            widget.searcher.snapshot.inState(ConnectionState.none);
-      }
-
-      _firstFuturePageSubscribe();
     }
   }
 
@@ -310,8 +308,21 @@ class _SearchAppBarPageFutureBuilderState<T>
       //final isListFull = widget.searcher.rxSearch.value.isEmpty;
       return ListView.builder(
         controller: _scrollController,
-        itemCount: widget.searcher.snapshot.data.length,
+        itemCount: ((widget.searcher.endPage && !widget.searcher.pageFinish) ||
+                (widget.searcher.endSearchPage &&
+                    !widget.searcher.pageSearchFinish))
+            ? widget.searcher.snapshot.data.length + 1
+            : widget.searcher.snapshot.data.length,
         itemBuilder: (ctx, index) {
+          if (index == widget.searcher.snapshot.data.length) {
+            return const Center(
+              child: SizedBox(
+                width: 30,
+                height: 30,
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
           return widget.paginationItemBuilder(
               context, index, widget.searcher.snapshot.data[index]);
         },
@@ -325,7 +336,10 @@ class _SearchAppBarPageFutureBuilderState<T>
     _worker = debounce(widget.searcher.rxSearch, (String query) {
       if (query.isNotEmpty) {
         widget.searcher.pageSearch = 0;
+        widget.searcher.pageSearchFinish = false;
+
         final list = widget.searcher.haveSearchQueryPage(query);
+
         if (list.isNotEmpty) {
           widget.searcher.listFullSearchQuery.clear();
           widget.searcher.listFullSearchQuery.addAll(list);
@@ -344,6 +358,31 @@ class _SearchAppBarPageFutureBuilderState<T>
         .distinct()
         .debounceTime(const Duration(milliseconds: 350))
         .listen((query) {});*/
+  }
+
+  @override
+  void didUpdateWidget(SearchAppBarPageFutureBuilder<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.futureFetchPageItems != widget.futureFetchPageItems) {
+      widget.searcher.listFull.clear();
+      if (oldWidget.initialData != widget.initialData) {
+        _haveInitialData = widget.initialData != null;
+
+        if (_haveInitialData) {
+          widget.searcher.listFull.addAll(widget.initialData);
+        }
+      }
+      if (_activeCallbackIdentity != null) {
+        _unsubscribe();
+        //_snapshot = _snapshot.inState(ConnectionState.none);
+        //widget.searcher.wrabListSearch(widget.initialData);
+        widget.searcher.snapshot =
+            widget.searcher.snapshot.inState(ConnectionState.none);
+      }
+
+      widget.searcher.pageFinish = false;
+      _firstFuturePageSubscribe();
+    }
   }
 
   @override

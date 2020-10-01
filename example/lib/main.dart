@@ -207,27 +207,53 @@ class _SearchAppBarFuturePaginationState
     final fistElement = (page - 1) * size;
     final lastElement = page * size;
 
-    int totalPages = (dataListPerson3.length / size).ceil();
-    totalPages = totalPages == 0 ? 1 : totalPages;
+    print('fistElement = ' + fistElement.toString());
+    print('lastElement = ' + lastElement.toString());
+    print('--------');
 
-    await Future<void>.delayed(Duration(seconds: 6));
+    dataListPerson3.sort((a, b) => a.name.compareTo(b.name));
+
+    await Future<void>.delayed(Duration(seconds: 2));
 
     if (query.isEmpty) {
+      int totalPages = (dataListPerson3.length / size).ceil();
+      totalPages = totalPages == 0 ? 1 : totalPages;
+
+      print('TotalPages = ' + totalPages.toString());
+      if (page > totalPages) {
+        print('--TEM--nada');
+        return list;
+      }
+
       list = dataListPerson3.sublist(
           fistElement,
           lastElement > dataListPerson3.length
               ? dataListPerson3.length
               : lastElement);
+      if (list.length < size) {
+        print('-###-  Last  ---Page --- Full');
+      }
     } else {
-      list = dataListPerson3
-          .where((element) => contains(element, query))
-          .toList()
-          .sublist(
-              fistElement,
-              lastElement > dataListPerson3.length
-                  ? dataListPerson3.length
-                  : lastElement);
+      final listQuery =
+      dataListPerson3.where((element) => contains(element, query)).toList();
       ;
+
+      int totalQueryPages = (listQuery.length / size).ceil();
+      totalQueryPages = totalQueryPages == 0 ? 1 : totalQueryPages;
+
+      print('TotalQueryPages = ' + totalQueryPages.toString());
+
+      if (page > totalQueryPages) {
+        print('--TEM---nada');
+        return list;
+      }
+
+      list = listQuery.sublist(fistElement,
+          lastElement > listQuery.length ? listQuery.length : lastElement);
+
+      if (list.length < size) {
+        print('-###-  LAst -- Page --- Search');
+      }
     }
 
     return list;
@@ -387,11 +413,13 @@ final dataListPerson3 = <Person>[
   Person(name: 'Paulo Emilio Silva', age: 45),
   Person(name: 'Pedro Gomes', age: 18),
   Person(name: 'Orlando Guerra', age: 23),
+  Person(name: 'Ana Pereira', age: 23),
   Person(name: 'Zacarias Triste', age: 15),
   Person(name: 'Antonio Rabelo', age: 33),
   Person(name: 'Leticia Maciel', age: 47),
   Person(name: 'Patricia Oliveira', age: 19),
   Person(name: 'Pedro Lima', age: 15),
+  Person(name: 'Fabio Melo', age: 51),
   Person(name: 'Junior Rabelo', age: 33),
   Person(name: 'Lucia Maciel', age: 47),
   Person(name: 'Ana Oliveira', age: 19),
@@ -403,11 +431,27 @@ final dataListPerson3 = <Person>[
   Person(name: 'Joaquim Gomes', age: 18),
   Person(name: 'Esther Guerra', age: 23),
   Person(name: 'Pedro Braga', age: 19),
-  Person(name: 'Milu Silva', age: 33),
+  Person(name: 'Milu Silva', age: 17),
   Person(name: 'William Ristow', age: 47),
-  Person(name: 'Elias Tato', age: 19),
-  Person(name: 'Dada Istomesmo', age: 15),
-  Person(name: 'Nome Incomum', age: 33),
+  Person(name: 'Elias Tato', age: 22),
+  Person(name: 'Dada Istomesmo', age: 44),
+  Person(name: 'Nome Incomum', age: 52),
+  Person(name: 'Qualquer Nome', age: 9),
+  Person(name: 'First Last', age: 11),
+  Person(name: 'Bom Dia', age: 23),
+  Person(name: 'Bem Mequiz', age: 13),
+  Person(name: 'Mal Mequer', age: 71),
+  Person(name: 'Quem Sabe', age: 35),
+  Person(name: 'Miriam Leitao', age: 33),
+  Person(name: 'Gabriel Mentiroso', age: 19),
+  Person(name: 'Caio Petro', age: 27),
+  Person(name: 'Mae Queida', age: 5),
+  Person(name: 'Tanto Nome', age: 66),
+  Person(name: 'Nao Diga', age: 33),
+  Person(name: 'Fique Queto', age: 11),
+  Person(name: 'Cicero Gome', age: 37),
+  Person(name: 'Mae Querida', age: 45),
+  Person(name: 'Exausto Nome', age: 81),
 ];
 
 class Person {

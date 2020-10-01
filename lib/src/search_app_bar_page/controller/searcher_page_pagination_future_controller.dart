@@ -17,12 +17,24 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
   @override
   set isModSearch(bool value) => _isModSearch.value = value;
 
-  final Rx<AsyncSnapshot<List<T>>> _snapshot =
+  /*final Rx<AsyncSnapshot<List<T>>> _snapshot =
       AsyncSnapshot<List<T>>.withData(ConnectionState.done, null).obs;
 
   AsyncSnapshot<List<T>> get snapshot => _snapshot.value;
 
-  set snapshot(AsyncSnapshot<List<T>> value) => _snapshot.value = value;
+  set snapshot(AsyncSnapshot<List<T>> value) => _snapshot.value = value;*/
+
+  final Rx<AsyncSnapshotScrollPage<T>> _snapshotScroolPage =
+      AsyncSnapshotScrollPage(
+              snapshot:
+                  AsyncSnapshot<List<T>>.withData(ConnectionState.done, null))
+          .obs;
+
+  AsyncSnapshotScrollPage<T> get snapshotScroolPage =>
+      _snapshotScroolPage.value;
+
+  set snapshotScroolPage(AsyncSnapshotScrollPage<T> value) =>
+      _snapshotScroolPage.value = value;
 
   @override
   // ignore: overridden_fields
@@ -39,6 +51,21 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
   final Compare<T> compareSort;
 
   //bool haveInitialData = false;
+
+  final RxBool _endPage = false.obs;
+
+  bool get endPage => _isModSearch.value;
+
+  bool pageFinish = false;
+  bool pageSearchFinish = false;
+
+  set endPage(bool value) => _isModSearch.value = value;
+
+  final RxBool _endSearchPage = false.obs;
+
+  bool get endSearchPage => _isModSearch.value;
+
+  set endSearchPage(bool value) => _isModSearch.value = value;
 
   Worker _worker;
 
@@ -174,11 +201,24 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
   }
 
   FutureOr onClose() {
-    _snapshot.close();
+    _snapshotScroolPage.close();
     _worker?.dispose();
     _isModSearch.close();
     rxSearch.close();
     listSearch.close();
+
+    _endSearchPage.close();
+    _endPage.close();
     //listSearchFilter.close();
   }
+}
+
+//AsyncSnapshot
+class AsyncSnapshotScrollPage<T> {
+  AsyncSnapshot<List<T>> snapshot;
+  bool endPage;
+  bool finishPage;
+
+  AsyncSnapshotScrollPage(
+      {this.snapshot, this.endPage = false, this.finishPage = false});
 }

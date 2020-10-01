@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/filters/filters_type.dart';
+
 //import 'package:search_app_bar_page/src/search_app_bar_page/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/filters/functions_filters.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/search_app_bar/search_app_bar.dart';
@@ -175,6 +176,12 @@ class _SearchAppBarPageFuturePaginationState<T>
   @override
   void initState() {
     super.initState();
+
+    if (widget.initialData != null && widget.numPageItems == null) {
+      throw Exception(
+          'Necessario passar o numero de itens por página para que '
+              'possa calcular a pagina inicial');
+    }
     _controller = SearcherPagePaginationFutureController<T>(
         //listStream: widget._stream,
         stringFilter: widget.stringFilter,
