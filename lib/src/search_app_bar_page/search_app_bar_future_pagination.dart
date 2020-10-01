@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/filters/filters_type.dart';
+//import 'package:search_app_bar_page/src/search_app_bar_page/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/filters/functions_filters.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/search_app_bar/search_app_bar.dart';
 

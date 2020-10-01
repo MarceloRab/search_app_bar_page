@@ -4,6 +4,7 @@ import 'package:get_state_manager/get_state_manager.dart';
 import 'package:meta/meta.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/filters/filters_type.dart';
+//import 'package:search_app_bar_page/src/search_app_bar_page/filters/filters_type.dart';
 
 import '../filters/functions_filters.dart';
 

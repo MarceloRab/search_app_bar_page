@@ -1,3 +1,4 @@
+import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:search_app_bar_page/search_app_bar_page.dart';
@@ -16,6 +17,7 @@ abstract class Routes {
   static const HOME = '/home';
   static const PAGE_1 = '/page-1';
   static const PAGE_2 = '/page-2';
+  static const PAGE_3 = '/page-3';
 }
 
 class AppPages {
@@ -25,6 +27,7 @@ class AppPages {
     GetPage(name: Routes.HOME, page: () => HomePage()),
     GetPage(name: Routes.PAGE_1, page: () => SearchAppBarStream()),
     GetPage(name: Routes.PAGE_2, page: () => SearchPage()),
+    GetPage(name: Routes.PAGE_3, page: () => SearchPage()),
   ];
 }
 
@@ -128,6 +131,117 @@ class SearchPage extends StatelessWidget {
     'Flavio Assunção',
     'Zenilda Cardoso'
   ];*/
+}
+
+// ignore: must_be_immutable
+class SearchAppBarFuturePagination extends StatefulWidget {
+  const SearchAppBarFuturePagination({Key key}) : super(key: key);
+
+  @override
+  _SearchAppBarFuturePaginationState createState() =>
+      _SearchAppBarFuturePaginationState();
+}
+
+class _SearchAppBarFuturePaginationState
+    extends State<SearchAppBarFuturePagination> {
+  //var _initialData;
+
+  /*@override
+  void initState() {
+    Future.delayed(Duration(seconds: 6), () {
+      setState(() {
+        _initialData = dataListPerson0;
+      });
+    });
+    super.initState();
+  }*/
+
+  @override
+  Widget build(BuildContext context) {
+    return SearchAppBarPageFuturePagination<Person>(
+        //initialData: _initialData,
+        magnifyinGlassColor: Colors.white,
+        searchAppBarcenterTitle: true,
+        searchAppBarhintText: 'Pesquise um Nome',
+        searchAppBartitle: Text(
+          'Search Stream Page',
+          style: TextStyle(fontSize: 20),
+        ),
+        futureFetchPageItems: _futureListPerson,
+        stringFilter: (Person person) => person.name,
+        compareSort: (Person a, Person b) => a.name.compareTo(b.name),
+        filtersType: FiltersTypes.contains,
+        paginationItemBuilder:
+            (BuildContext context, int index, Person objectIndex) {
+          return Card(
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4)),
+              // color: Theme.of(context).primaryColorDark,
+              child: Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Name: ${objectIndex.name}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Age: ${objectIndex.age.toStringAsFixed(2)}',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    )
+                  ],
+                ),
+              ));
+        });
+  }
+
+  Future<List<Person>> _futureListPerson(int page, String query) async {
+    final size = 8;
+    List<Person> list = [];
+
+    final fistElement = (page - 1) * size;
+    final lastElement = page * size;
+
+    int totalPages = (dataListPerson3.length / size).ceil();
+    totalPages = totalPages == 0 ? 1 : totalPages;
+
+    await Future<void>.delayed(Duration(seconds: 6));
+
+    if (query.isEmpty) {
+      list = dataListPerson3.sublist(
+          fistElement,
+          lastElement > dataListPerson3.length
+              ? dataListPerson3.length
+              : lastElement);
+    } else {
+      list = dataListPerson3
+          .where((element) => contains(element, query))
+          .toList()
+          .sublist(
+              fistElement,
+              lastElement > dataListPerson3.length
+                  ? dataListPerson3.length
+                  : lastElement);
+      ;
+    }
+
+    return list;
+  }
+
+  static bool Function(Person person, String query) contains =
+      (Person test, query) {
+    final realTest = _prepareString(test.name);
+    final realQuery = _prepareString(query);
+    return realTest.contains(realQuery);
+  };
+
+  static String _prepareString(String string) =>
+      removeDiacritics(string).toLowerCase();
 }
 
 // ignore: must_be_immutable
@@ -288,6 +402,12 @@ final dataListPerson3 = <Person>[
   Person(name: 'Thiago Ferreira', age: 33),
   Person(name: 'Joaquim Gomes', age: 18),
   Person(name: 'Esther Guerra', age: 23),
+  Person(name: 'Pedro Braga', age: 19),
+  Person(name: 'Milu Silva', age: 33),
+  Person(name: 'William Ristow', age: 47),
+  Person(name: 'Elias Tato', age: 19),
+  Person(name: 'Dada Istomesmo', age: 15),
+  Person(name: 'Nome Incomum', age: 33),
 ];
 
 class Person {

@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get_state_manager/get_state_manager.dart';
 
 import 'controller/searcher_page_controller.dart';
-import 'filters/functions_filters.dart';
+
 import 'filters/filters_type.dart';
+import 'filters/functions_filters.dart';
 import 'search_app_bar/search_app_bar.dart';
 
 class SearchAppBarPage<T> extends StatefulWidget {
