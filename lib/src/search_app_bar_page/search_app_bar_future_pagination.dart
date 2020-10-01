@@ -168,6 +168,7 @@ class SearchAppBarPageFuturePagination<T> extends StatefulWidget {
 class _SearchAppBarPageFuturePaginationState<T>
     extends State<SearchAppBarPageFuturePagination<T>> {
   SearcherPagePaginationFutureController<T> _controller;
+
   //Future<List<T>> _future;
 
   @override
@@ -215,45 +216,8 @@ class _SearchAppBarPageFuturePaginationState<T>
           searcher: _controller,
           paginationItemBuilder: widget.paginationItemBuilder,
           widgetConnecty: widget.widgetOffConnectyWaiting,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              if (widget.widgetError == null)
-                return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      const Icon(
-                        Icons.error_outline,
-                        color: Colors.red,
-                        size: 60,
-                      ),
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 16),
-                          child: Text('Temos um erro: ${snapshot.error}'),
-                        ),
-                      )
-                    ]);
-              else
-                return widget.widgetError;
-            } else {
-              if (widget.widgetWaiting == null)
-                return Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      SizedBox(
-                        width: 60,
-                        height: 60,
-                        child: CircularProgressIndicator(),
-                      ),
-                    ],
-                  ),
-                );
-              else
-                return widget.widgetWaiting;
-            }
-          },
+          widgetError: widget.widgetError,
+          widgetWaiting: widget.widgetWaiting,
         ),
         floatingActionButton: widget.searchePageFloaActionButton,
         floatingActionButtonLocation:

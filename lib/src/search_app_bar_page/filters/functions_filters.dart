@@ -12,7 +12,7 @@ typedef WidgetsListBuilder<T> = Widget Function(
     BuildContext context, RxList<T> list, bool isModSearch);
 
 typedef WidgetsPaginationItemBuilder<T> = Widget Function(
-    BuildContext context, int index);
+    BuildContext context, int index, T objectIndex);
 
 typedef FutureFetchPageItems<T> = Future<List<T>> Function(
     int page, String query);

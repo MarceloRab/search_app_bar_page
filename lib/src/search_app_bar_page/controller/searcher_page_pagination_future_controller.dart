@@ -69,8 +69,22 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
 
   var listFull = <T>[];
 
-  //var listFullSearch = <T>[];
-  final RxList<T> listSearchFilter = <T>[].obs;
+  var listFullSearchQuery = <T>[];
+
+  List<T> haveSearchQueryPage(String query) {
+    final list = listFull
+        .where((element) => _filters(stringFilter(element), query))
+        .toList();
+
+    final temPage = list.length >= page;
+
+    if (temPage)
+      return list;
+    else
+      return <T>[];
+  }
+
+  //final RxList<T> listSearchFilter = <T>[].obs;
 
   set initialChangeList(List<T> list) {
     if (!bancoInit) {
@@ -105,7 +119,8 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
     if (bancoInit) {
       // Fica negativo dentro do StreamBuilder
       // Após apresentar o primeiro Obx(())
-      listFull = listData;
+      //listFull = listData;
+      listFull.addAll(listData);
       if (rxSearch.value.isNotEmpty) {
         refreshSeachFullList(rxSearch.value);
       } else {
@@ -141,7 +156,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
   }
 
   void refreshSeachList(String value) {
-    final list = listSearchFilter
+    final list = listFullSearchQuery
         .where((element) => _filters(stringFilter(element), value))
         .toList();
 
@@ -158,10 +173,11 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
   }
 
   FutureOr onClose() {
+    _snapshot.close();
     _worker?.dispose();
     _isModSearch.close();
     rxSearch.close();
     listSearch.close();
-    listSearchFilter.close();
+    //listSearchFilter.close();
   }
 }

@@ -14,7 +14,7 @@ dependencies:
   get_state_manager: ">=3.10.2 <4.0.0"
   meta: ^1.1.8
   connectivity: ">=0.4.9+3 <5.0.0"
-  rxdart: ">=0.24.1 <2.0.0"
+  ##rxdart: ">=0.24.1 <2.0.0"
 
 
 dev_dependencies:
