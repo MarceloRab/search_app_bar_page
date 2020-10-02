@@ -216,6 +216,7 @@ class _SearchAppBarPageFutureBuilderState<T>
                   endSearchPage: false, finishSearchPage: true);
           return;
         }
+        //
         if (!scroollEndPage) {
           widget.searcher.listFullSearchQuery.clear();
         }
