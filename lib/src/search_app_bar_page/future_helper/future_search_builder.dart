@@ -169,7 +169,10 @@ class _SearchAppBarPageFutureBuilderState<T>
       } else {
         if (widget.searcher.pageSearch > 0) {
           widget.searcher.pageSearch--;
-          if (widget.searcher.pageSearch == 0) widget.searcher.pageSearch = 1;
+          // ignore: invariant_booleans
+          if (widget.searcher.pageSearch == 0) {
+            widget.searcher.pageSearch = 1;
+          }
         }
       }
     }, onError: (Object error) {
@@ -200,6 +203,14 @@ class _SearchAppBarPageFutureBuilderState<T>
           }
 
           if (_activeCallbackIdentity == callbackIdentity) {
+            if (scroollEndPage) {
+              if (data.isEmpty) {
+                widget.searcher.snapshotScroolPage = widget
+                    .searcher.snapshotScroolPage
+                    .copyWith(endPage: false, finishPage: true);
+              }
+            }
+
             if (downConnectyWithoutData) {
               downConnectyWithoutData = false;
               _unsubscribeConnecty();
@@ -221,7 +232,10 @@ class _SearchAppBarPageFutureBuilderState<T>
           } else {
             if (widget.searcher.page > 0) {
               widget.searcher.page--;
-              if (widget.searcher.page == 0) widget.searcher.page = 1;
+              // ignore: invariant_booleans
+              if (widget.searcher.page == 0) {
+                widget.searcher.page = 1;
+              }
             }
           }
         }, onError: (Object error) {
@@ -279,14 +293,14 @@ class _SearchAppBarPageFutureBuilderState<T>
               widget.searcher.numPageItems !=
               0;
 
-          if (!inteiro) {
+          if (!inteiro && !widget.searcher.snapshotScroolPage.finishPage) {
             //widget.searcher.endPage = false;
             //widget.searcher.pageFinish = true;
 
             widget.searcher.snapshotScroolPage = widget
                 .searcher.snapshotScroolPage
                 .copyWith(endPage: false, finishPage: true);
-          } else {
+          } else if(!widget.searcher.snapshotScroolPage.finishPage) {
             if (_activeCallbackIdentity != null) {
               _unsubscribe();
 
@@ -452,8 +466,8 @@ class _SearchAppBarPageFutureBuilderState<T>
         // widget.searcher.snapshot.inState(ConnectionState.none);
       }
 
-      widget.searcher.snapshotScroolPage =
-          widget.searcher.snapshotScroolPage.copyWith(finishPage: false);
+      //widget.searcher.snapshotScroolPage =
+         // widget.searcher.snapshotScroolPage.copyWith(finishPage: false);
       //widget.searcher.pageFinish = false;
       _firstFuturePageSubscribe();
     }
