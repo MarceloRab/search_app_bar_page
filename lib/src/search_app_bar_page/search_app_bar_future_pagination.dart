@@ -117,21 +117,21 @@ class SearchAppBarPageFuturePagination<T> extends StatefulWidget {
     Key key,
     @required this.paginationItemBuilder,
     this.searchAppBartitle,
-    this.searchAppBarcenterTitle,
+    this.searchAppBarcenterTitle = false,
     this.searchAppBariconTheme,
     this.searchAppBarbackgroundColor,
     this.searchAppBarModeSearchBackgroundColor,
     this.searchAppBarElementsColor,
-    this.searchAppBarIconConnectyOffAppBarColor,
+    this.searchAppBarIconConnectyOffAppBarColor = Colors.redAccent,
     this.searchAppBarhintText,
-    this.searchAppBarflattenOnSearch,
-    this.searchAppBarcapitalization,
-    this.searchAppBaractions,
-    this.searchAppBarelevation,
+    this.searchAppBarflattenOnSearch = false,
+    this.searchAppBarcapitalization = TextCapitalization.none,
+    this.searchAppBaractions = const <Widget>[],
+    this.searchAppBarelevation = 4.0,
+    this.hideDefaultConnectyIconOffAppBar = false,
+    this.iconConnectyOffAppBar,
     this.searchAppBarKeyboardType,
     this.magnifyinGlassColor,
-    this.hideDefaultConnectyIconOffAppBar,
-    this.iconConnectyOffAppBar,
     this.widgetWaiting,
     this.widgetOffConnectyWaiting,
     this.widgetError,
@@ -146,14 +146,14 @@ class SearchAppBarPageFuturePagination<T> extends StatefulWidget {
     this.searchPageBackgroundColor,
     this.resizeToAvoidBottomPadding,
     this.resizeToAvoidBottomInset,
-    this.primary,
-    this.drawerDragStartBehavior,
-    this.extendBody,
-    this.extendBodyBehindAppBar,
+    this.primary = true,
+    this.drawerDragStartBehavior = DragStartBehavior.start,
+    this.extendBody = false,
+    this.extendBodyBehindAppBar = false,
     this.drawerScrimColor,
     this.drawerEdgeDragWidth,
-    this.drawerEnableOpenDragGesture,
-    this.endDrawerEnableOpenDragGesture,
+    this.drawerEnableOpenDragGesture = true,
+    this.endDrawerEnableOpenDragGesture = true,
     this.initialData,
     this.filtersType,
     this.stringFilter,
@@ -178,9 +178,8 @@ class _SearchAppBarPageFuturePaginationState<T>
     super.initState();
 
     if (widget.initialData != null && widget.numPageItems == null) {
-      throw Exception(
-          'Necessario passar o numero de itens por página para que '
-              'possa calcular a pagina inicial');
+      throw Exception('Necessario passar o numero de itens por página para que '
+          'possa calcular a pagina inicial');
     }
     _controller = SearcherPagePaginationFutureController<T>(
         //listStream: widget._stream,
@@ -216,7 +215,7 @@ class _SearchAppBarPageFuturePaginationState<T>
             iconConnectyOffAppBar: widget.iconConnectyOffAppBar,
             keyboardType: widget.searchAppBarKeyboardType,
             magnifyinGlassColor: widget.magnifyinGlassColor),
-        body: SearchAppBarPageFutureBuilder(
+        body: SearchAppBarPageFutureBuilder<T>(
           initialData: widget.initialData,
           futureFetchPageItems: widget.futureFetchPageItems,
           //futureInitialList: _future,

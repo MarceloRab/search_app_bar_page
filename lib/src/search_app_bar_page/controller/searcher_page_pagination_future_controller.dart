@@ -25,15 +25,16 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
   set snapshot(AsyncSnapshot<List<T>> value) => _snapshot.value = value;*/
 
   final Rx<AsyncSnapshotScrollPage<T>> _snapshotScroolPage =
-      AsyncSnapshotScrollPage(
+      AsyncSnapshotScrollPage<T>(
               snapshot:
                   AsyncSnapshot<List<T>>.withData(ConnectionState.done, null))
           .obs;
 
   AsyncSnapshotScrollPage<T> get snapshotScroolPage =>
-      _snapshotScroolPage.value;
+      _snapshotScroolPage.value ;
 
-  set snapshotScroolPage(AsyncSnapshotScrollPage<T> value) =>
+   set snapshotScroolPage(
+          AsyncSnapshotScrollPage<T> value) =>
       _snapshotScroolPage.value = value;
 
   @override
@@ -52,25 +53,25 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
 
   //bool haveInitialData = false;
 
-  final RxBool _endPage = false.obs;
+  //final RxBool _endPage = false.obs;
 
-  bool get endPage => _isModSearch.value;
+  //bool get endPage => _isModSearch.value;
 
-  bool pageFinish = false;
-  bool pageSearchFinish = false;
+  //bool pageFinish = false;
+  //bool pageSearchFinish = false;
 
-  set endPage(bool value) => _isModSearch.value = value;
+  /*set endPage(bool value) => _isModSearch.value = value;
 
   final RxBool _endSearchPage = false.obs;
 
-  bool get endSearchPage => _isModSearch.value;
+  bool get endSearchPage => _isModSearch.value;*/
 
-  set endSearchPage(bool value) => _isModSearch.value = value;
+  //set endSearchPage(bool value) => _isModSearch.value = value;
 
   Worker _worker;
 
-  int page = 0;
-  int pageSearch = 0;
+  int page = 1;
+  int pageSearch = 1;
 
   int numPageItems = 0;
 
@@ -104,7 +105,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
         .where((element) => _filters(stringFilter(element), query))
         .toList();
 
-    final temPage = list.length >= page;
+    final temPage = list.length >= numPageItems;
 
     if (temPage)
       return list;
@@ -163,7 +164,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
   void subscribeWorker() {
     _worker = ever(rxSearch, (String value) {
       if (value.isEmpty) {
-        pageSearch = 0;
+        pageSearch = 1;
         refreshSeachFullList(value);
       }
 
@@ -207,8 +208,8 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
     rxSearch.close();
     listSearch.close();
 
-    _endSearchPage.close();
-    _endPage.close();
+    //_endSearchPage.close();
+    //_endPage.close();
     //listSearchFilter.close();
   }
 }
@@ -217,8 +218,30 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
 class AsyncSnapshotScrollPage<T> {
   AsyncSnapshot<List<T>> snapshot;
   bool endPage;
+  bool endSearchPage;
   bool finishPage;
+  bool finishSearchPage;
 
   AsyncSnapshotScrollPage(
-      {this.snapshot, this.endPage = false, this.finishPage = false});
+      {this.snapshot,
+      this.endPage = false,
+      this.finishPage = false,
+      this.finishSearchPage = false,
+      this.endSearchPage = false});
+
+  AsyncSnapshotScrollPage<T> copyWith({
+    AsyncSnapshot<List<T>> snapshot,
+    bool endPage,
+    bool endSearchPage,
+    bool finishPage,
+    bool finishSearchPage,
+  }) {
+    return AsyncSnapshotScrollPage<T>(
+      snapshot: snapshot ?? this.snapshot,
+      endPage: endPage ?? this.endPage,
+      endSearchPage: endSearchPage ?? this.endSearchPage,
+      finishPage: finishPage ?? this.finishPage,
+      finishSearchPage: finishSearchPage ?? this.finishSearchPage,
+    );
+  }
 }

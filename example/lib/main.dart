@@ -27,7 +27,7 @@ class AppPages {
     GetPage(name: Routes.HOME, page: () => HomePage()),
     GetPage(name: Routes.PAGE_1, page: () => SearchAppBarStream()),
     GetPage(name: Routes.PAGE_2, page: () => SearchPage()),
-    GetPage(name: Routes.PAGE_3, page: () => SearchPage()),
+    GetPage(name: Routes.PAGE_3, page: () => SearchAppBarFuturePagination()),
   ];
 }
 
@@ -58,6 +58,14 @@ class HomePage extends StatelessWidget {
                 },
                 child: Text(
                   'Ir para SearchPage',
+                  style: TextStyle(fontSize: 20),
+                )),
+            MaterialButton(
+                onPressed: () {
+                  Get.toNamed(Routes.PAGE_3);
+                },
+                child: Text(
+                  'Ir para SearchAppBarFuturePagination',
                   style: TextStyle(fontSize: 20),
                 )),
           ],
@@ -179,7 +187,8 @@ class _SearchAppBarFuturePaginationState
                   borderRadius: BorderRadius.circular(4)),
               // color: Theme.of(context).primaryColorDark,
               child: Padding(
-                padding: const EdgeInsets.all(14.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14.0, vertical: 20),
                 child: Row(
                   children: [
                     Expanded(
@@ -201,7 +210,7 @@ class _SearchAppBarFuturePaginationState
   }
 
   Future<List<Person>> _futureListPerson(int page, String query) async {
-    final size = 8;
+    final size = 12;
     List<Person> list = [];
 
     final fistElement = (page - 1) * size;
@@ -213,7 +222,7 @@ class _SearchAppBarFuturePaginationState
 
     dataListPerson3.sort((a, b) => a.name.compareTo(b.name));
 
-    await Future<void>.delayed(Duration(seconds: 2));
+    await Future<void>.delayed(Duration(seconds: 3));
 
     if (query.isEmpty) {
       int totalPages = (dataListPerson3.length / size).ceil();
@@ -235,7 +244,7 @@ class _SearchAppBarFuturePaginationState
       }
     } else {
       final listQuery =
-      dataListPerson3.where((element) => contains(element, query)).toList();
+          dataListPerson3.where((element) => contains(element, query)).toList();
       ;
 
       int totalQueryPages = (listQuery.length / size).ceil();
