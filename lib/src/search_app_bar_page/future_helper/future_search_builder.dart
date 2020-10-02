@@ -66,6 +66,9 @@ class _SearchAppBarPageFutureBuilderState<T>
 
   Worker _worker;
 
+  Widget _widgetWaiting;
+  Widget _widgetError;
+
   //bool haveMore = false;
 
   @override
@@ -83,8 +86,10 @@ class _SearchAppBarPageFutureBuilderState<T>
     // ConnectionState.none, widget.initialData);
 
     if (_haveInitialData) {
-      // widget.searcher.snapshot =
-      //widget.searcher.snapshot.inState(ConnectionState.none);
+      if (widget.searcher.numPageItems != 0) {
+        widget.searcher.page =
+            (widget.initialData.length / widget.numPageItems).ceil();
+      }
 
       widget.searcher.listFull.addAll(widget.initialData);
       widget.searcher.snapshotScroolPage = AsyncSnapshotScrollPage<T>(
@@ -126,6 +131,47 @@ class _SearchAppBarPageFutureBuilderState<T>
     } else {
       _widgetConnecty = widget.widgetConnecty;
     }
+
+    if (widget.widgetWaiting == null) {
+      _widgetWaiting = Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            SizedBox(
+              width: 60,
+              height: 60,
+              child: CircularProgressIndicator(),
+            ),
+          ],
+        ),
+      );
+    } else {
+      _widgetWaiting = widget.widgetWaiting;
+    }
+
+    if (widget.widgetError == null) {
+      _widgetError = Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Icon(
+              Icons.error_outline,
+              color: Colors.red,
+              size: 60,
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text(
+                  'Temos um erro: '
+                      '${widget.searcher.snapshotScroolPage.snapshot.error}',
+                ),
+              ),
+            )
+          ]);
+    } else {
+      _widgetError = widget.widgetError;
+    }
   }
 
   void _futureSearchPageQuery(String query, {bool scroollEndPage = false}) {
@@ -134,8 +180,8 @@ class _SearchAppBarPageFutureBuilderState<T>
 
       widget.searcher.snapshotScroolPage = widget.searcher.snapshotScroolPage
           .copyWith(
-              snapshot: widget.searcher.snapshotScroolPage.snapshot
-                  .inState(ConnectionState.none));
+          snapshot: widget.searcher.snapshotScroolPage.snapshot
+              .inState(ConnectionState.none));
 
       //widget.searcher.snapshotScroolPage = AsyncSnapshotScrollPage<T>(
       //snapshot: widget.searcher.snapshotScroolPage.snapshot
@@ -146,12 +192,30 @@ class _SearchAppBarPageFutureBuilderState<T>
     if (!scroollEndPage) {
       widget.searcher.snapshotScroolPage = widget.searcher.snapshotScroolPage
           .copyWith(
-              snapshot: widget.searcher.snapshotScroolPage.snapshot
-                  .inState(ConnectionState.waiting));
+          snapshot: widget.searcher.snapshotScroolPage.snapshot
+              .inState(ConnectionState.waiting));
     }
 
     widget.futureFetchPageItems(widget.searcher.pageSearch, query).then((data) {
       if (_activeCallbackIdentity == callbackIdentity) {
+        if (data.isEmpty) {
+          widget.searcher.snapshotScroolPage = widget
+              .searcher.snapshotScroolPage
+              .copyWith(endSearchPage: false, finishSearchPage: true);
+          return;
+        }
+
+        if (data.length - widget.searcher.numPageItems < 0) {
+          widget.searcher.listFullSearchQuery.addAll(data);
+          widget.searcher.snapshotScroolPage =
+              widget.searcher.snapshotScroolPage
+                  .copyWith(
+                  snapshot: AsyncSnapshot<List<T>>.withData(
+                      ConnectionState.done,
+                      widget.searcher.listFullSearchQuery),
+                  endSearchPage: false, finishSearchPage: true);
+          return;
+        }
         if (!scroollEndPage) {
           widget.searcher.listFullSearchQuery.clear();
         }
@@ -160,33 +224,31 @@ class _SearchAppBarPageFutureBuilderState<T>
         widget.searcher.listFullSearchQuery.addAll(data);
         widget.searcher.snapshotScroolPage = widget.searcher.snapshotScroolPage
             .copyWith(
-                snapshot: AsyncSnapshot<List<T>>.withData(
-                    ConnectionState.done, widget.searcher.listFullSearchQuery),
-                endSearchPage: false);
+            snapshot: AsyncSnapshot<List<T>>.withData(
+                ConnectionState.done, widget.searcher.listFullSearchQuery),
+            endSearchPage: false);
 
         //widget.searcher.snapshot = AsyncSnapshot<List<T>>.withData(
         //ConnectionState.done, widget.searcher.listFullSearchQuery);
       } else {
-        if (widget.searcher.pageSearch > 0) {
-          widget.searcher.pageSearch--;
-          // ignore: invariant_booleans
-          if (widget.searcher.pageSearch == 0) {
-            widget.searcher.pageSearch = 1;
+        if (widget.searcher.snapshotScroolPage.loadingScroll) {
+          if (widget.searcher.pageSearch > 0) {
+            widget.searcher.pageSearch--;
+            // ignore: invariant_booleans
+            if (widget.searcher.pageSearch == 0) {
+              widget.searcher.pageSearch = 1;
+            }
           }
+
+          widget.searcher.snapshotScroolPage =
+              widget.searcher.snapshotScroolPage.copyWith(loadingScroll: false);
         }
       }
     }, onError: (Object error) {
       if (_activeCallbackIdentity == callbackIdentity) {
         widget.searcher.snapshotScroolPage = AsyncSnapshotScrollPage<T>(
             snapshot:
-                AsyncSnapshot<List<T>>.withError(ConnectionState.done, error));
-
-        //widget.searcher.snapshot =
-        // AsyncSnapshot<List<T>>.withError(ConnectionState.done, error);
-        /*setState(() {
-          _snapshot =
-              AsyncSnapshot<List<T>>.withError(ConnectionState.done, error);
-        });*/
+            AsyncSnapshot<List<T>>.withError(ConnectionState.done, error));
       }
     });
   }
@@ -196,120 +258,105 @@ class _SearchAppBarPageFutureBuilderState<T>
     _activeCallbackIdentity = callbackIdentity;
 
     widget.futureFetchPageItems(widget.searcher.page, '').then<void>(
-        (List<T> data) {
-      //widget.futureInitialList.then<void>((List<T> data) {
-      if (widget.searcher.numPageItems == 0) {
-        widget.searcher.numPageItems = data.length;
-      }
-
-      if (_activeCallbackIdentity == callbackIdentity) {
-        if (scroollEndPage) {
-          if (data.isEmpty) {
-            widget.searcher.snapshotScroolPage = widget
-                .searcher.snapshotScroolPage
-                .copyWith(endPage: false, finishPage: true);
+            (List<T> data) {
+          //widget.futureInitialList.then<void>((List<T> data) {
+          if (widget.searcher.numPageItems == 0) {
+            widget.searcher.numPageItems = data.length;
           }
-        }
 
-        if (downConnectyWithoutData) {
-          downConnectyWithoutData = false;
-          _unsubscribeConnecty();
-        }
+          if (_activeCallbackIdentity == callbackIdentity) {
+            if (downConnectyWithoutData) {
+              downConnectyWithoutData = false;
+              _unsubscribeConnecty();
+            }
 
-        //widget.searcher.endPage = false;
-        widget.searcher.wrabListSearch(data);
+            if (data.isEmpty) {
+              widget.searcher.snapshotScroolPage = widget
+                  .searcher.snapshotScroolPage
+                  .copyWith(endPage: false, finishPage: true);
+              return;
+            }
 
-        widget.searcher.snapshotScroolPage = widget.searcher.snapshotScroolPage
-            .copyWith(
-                snapshot: AsyncSnapshot<List<T>>.withData(
-                    ConnectionState.done, widget.searcher.listFull),
-                endPage: false);
+            if (data.length - widget.searcher.numPageItems < 0) {
+              widget.searcher.wrabListSearch(data);
 
-        //widget.searcher.snapshot = AsyncSnapshot<List<T>>.withData(
-        // ConnectionState.done, widget.searcher.listFull);
+              widget.searcher.snapshotScroolPage =
+                  widget.searcher.snapshotScroolPage
+                      .copyWith(
+                      snapshot: AsyncSnapshot<List<T>>.withData(
+                          ConnectionState.done, widget.searcher.listFull),
+                      endPage: false, finishPage: true);
+              return;
+            }
 
-      } else {
-        if (widget.searcher.page > 0) {
-          widget.searcher.page--;
-          // ignore: invariant_booleans
-          if (widget.searcher.page == 0) {
-            widget.searcher.page = 1;
+            widget.searcher.wrabListSearch(data);
+
+            widget.searcher.snapshotScroolPage =
+                widget.searcher.snapshotScroolPage
+                    .copyWith(
+                    snapshot: AsyncSnapshot<List<T>>.withData(
+                        ConnectionState.done, widget.searcher.listFull),
+                    endPage: false);
+          } else {
+            if (widget.searcher.snapshotScroolPage.loadingScroll) {
+              if (widget.searcher.page > 0) {
+                widget.searcher.page--;
+                // ignore: invariant_booleans
+                if (widget.searcher.page == 0) {
+                  widget.searcher.page = 1;
+                }
+              }
+
+              widget.searcher.snapshotScroolPage =
+                  widget.searcher.snapshotScroolPage.copyWith(
+                      loadingScroll: false);
+            }
           }
-        }
-      }
-    }, onError: (Object error) {
+        }, onError: (Object error) {
       if (_activeCallbackIdentity == callbackIdentity) {
         widget.searcher.snapshotScroolPage = AsyncSnapshotScrollPage<T>(
             snapshot:
-                AsyncSnapshot<List<T>>.withError(ConnectionState.done, error));
-        //widget.searcher.snapshot =
-        // AsyncSnapshot<List<T>>.withError(ConnectionState.done, error);
-        /*setState(() {
-          _snapshot =
-              AsyncSnapshot<List<T>>.withError(ConnectionState.done, error);
-        });*/
+            AsyncSnapshot<List<T>>.withError(ConnectionState.done, error));
       }
     });
 
     if (!scroollEndPage) {
       widget.searcher.snapshotScroolPage = widget.searcher.snapshotScroolPage
           .copyWith(
-              snapshot: widget.searcher.snapshotScroolPage.snapshot
-                  .inState(ConnectionState.waiting));
+          snapshot: widget.searcher.snapshotScroolPage.snapshot
+              .inState(ConnectionState.waiting));
     }
-
-    //widget.searcher.snapshot =
-    // widget.searcher.snapshot.inState(ConnectionState.waiting);
-    //_snapshot = _snapshot.inState(ConnectionState.waiting);
   }
 
   void pagesListener() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 3) {
-      //_paginationBloc.event.add(null);
-
       if (_activeCallbackIdentity != null) {
         if (widget.searcher.rxSearch.value.isNotEmpty) {
-          if (widget.searcher.listFullSearchQuery.length ~/
-                  widget.searcher.numPageItems !=
-              0) {
-            //widget.searcher.endSearchPage = false;
-            //widget.searcher.pageSearchFinish = true;
-            widget.searcher.snapshotScroolPage = widget
-                .searcher.snapshotScroolPage
-                .copyWith(endSearchPage: false, finishSearchPage: true);
-          } else {
-            widget.searcher.snapshotScroolPage = widget
-                .searcher.snapshotScroolPage
-                .copyWith(endSearchPage: true);
-            // widget.searcher.endSearchPage = true;
-            widget.searcher.pageSearch++;
-            _futureSearchPageQuery(widget.searcher.rxSearch.value,
-                scroollEndPage: true);
+          if (!widget.searcher.snapshotScroolPage.finishSearchPage) {
+            final list = widget.searcher
+                .haveSearchQueryPage(widget.searcher.rxSearch.value);
+
+            if (list.isNotEmpty) {
+              widget.searcher.listFullSearchQuery.addAll(list);
+
+              widget.searcher.snapshotScroolPage = AsyncSnapshotScrollPage<T>(
+                  snapshot: AsyncSnapshot<List<T>>.withData(
+                      ConnectionState.done,
+                      widget.searcher.listFullSearchQuery));
+            } else {
+              widget.searcher.snapshotScroolPage = widget
+                  .searcher.snapshotScroolPage
+                  .copyWith(endSearchPage: true);
+              // widget.searcher.endSearchPage = true;
+
+              widget.searcher.pageSearch++;
+              _futureSearchPageQuery(widget.searcher.rxSearch.value,
+                  scroollEndPage: true);
+            }
           }
         } else {
-          final inteiro =
-              widget.searcher.listFull.length ~/ widget.searcher.numPageItems !=
-                  0;
-
-          if (!inteiro && !widget.searcher.snapshotScroolPage.finishPage) {
-            //widget.searcher.endPage = false;
-            //widget.searcher.pageFinish = true;
-
-            widget.searcher.snapshotScroolPage = widget
-                .searcher.snapshotScroolPage
-                .copyWith(endPage: false, finishPage: true);
-          } else if (!widget.searcher.snapshotScroolPage.finishPage) {
-            if (_activeCallbackIdentity != null) {
-              _unsubscribe();
-
-              widget.searcher.snapshotScroolPage.snapshot = widget
-                  .searcher.snapshotScroolPage.snapshot
-                  .inState(ConnectionState.none);
-              //widget.searcher.snapshot =
-              // widget.searcher.snapshot.inState(ConnectionState.none);
-            }
-            //widget.searcher.endPage = true;
+          if (!widget.searcher.snapshotScroolPage.finishPage) {
             widget.searcher.snapshotScroolPage =
                 widget.searcher.snapshotScroolPage.copyWith(endPage: true);
             widget.searcher.page++;
@@ -328,72 +375,40 @@ class _SearchAppBarPageFutureBuilderState<T>
     }
 
     return Obx(() {
-      print(widget.searcher.snapshotScroolPage.snapshot.connectionState
-          .toString());
+      //print(widget.searcher.snapshotScroolPage.snapshot.connectionState
+      //.toString());
       if (widget.searcher.snapshotScroolPage.snapshot.connectionState ==
           ConnectionState.waiting) {
-        if (widget.widgetWaiting == null)
-          return Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                SizedBox(
-                  width: 60,
-                  height: 60,
-                  child: CircularProgressIndicator(),
-                ),
-              ],
-            ),
-          );
-        else
-          return widget.widgetWaiting;
+        return _widgetWaiting;
       }
 
       if (widget.searcher.snapshotScroolPage.snapshot.hasError) {
-        if (widget.widgetError == null)
-          return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Icon(
-                  Icons.error_outline,
-                  color: Colors.red,
-                  size: 60,
-                ),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: Text(
-                      'Temos um erro: '
-                      '${widget.searcher.snapshotScroolPage.snapshot.error}',
-                    ),
-                  ),
-                )
-              ]);
-        else
-          return widget.widgetError;
+        return _widgetError;
       }
 
       //final isListFull = widget.searcher.rxSearch.value.isEmpty;
       return ListView.builder(
         controller: _scrollController,
         itemCount: ((widget.searcher.snapshotScroolPage.endPage &&
-                    !widget.searcher.snapshotScroolPage.finishPage) ||
-                (widget.searcher.snapshotScroolPage.endSearchPage &&
-                    !widget.searcher.snapshotScroolPage.finishPage))
+            !widget.searcher.snapshotScroolPage.finishPage) ||
+            (widget.searcher.snapshotScroolPage.endSearchPage &&
+                !widget.searcher.snapshotScroolPage.finishPage))
             ? widget.searcher.snapshotScroolPage.snapshot.data.length + 1
             : widget.searcher.snapshotScroolPage.snapshot.data.length,
         itemBuilder: (ctx, index) {
           if (index ==
               widget.searcher.snapshotScroolPage.snapshot.data.length) {
-            return const Center(
-              child: SizedBox(
+            widget.searcher.snapshotScroolPage.loadingScroll = true;
+            return Center(
+              child: Container(
+                margin: const EdgeInsets.only(bottom: 20, top: 10),
                 width: 30,
                 height: 30,
-                child: CircularProgressIndicator(),
+                child: const CircularProgressIndicator(),
               ),
             );
           }
+          widget.searcher.snapshotScroolPage.loadingScroll = false;
           return widget.paginationItemBuilder(context, index,
               widget.searcher.snapshotScroolPage.snapshot.data[index]);
         },
@@ -407,9 +422,10 @@ class _SearchAppBarPageFutureBuilderState<T>
     _worker = debounce(widget.searcher.rxSearch, (String query) {
       if (query.isNotEmpty) {
         widget.searcher.pageSearch = 1;
+        widget.searcher.snapshotScroolPage.finishSearchPage = false;
         //widget.searcher.pageSearchFinish = false;
-        widget.searcher.snapshotScroolPage =
-            widget.searcher.snapshotScroolPage.copyWith(finishSearchPage: true);
+        /* widget.searcher.snapshotScroolPage =
+            widget.searcher.snapshotScroolPage.copyWith(finishSearchPage: true);*/
 
         final list = widget.searcher.haveSearchQueryPage(query);
 
@@ -446,10 +462,19 @@ class _SearchAppBarPageFutureBuilderState<T>
     if (oldWidget.futureFetchPageItems != widget.futureFetchPageItems) {
       widget.searcher.listFull.clear();
       if (oldWidget.initialData != widget.initialData) {
-        _haveInitialData = widget.initialData != null;
+        if (widget.initialData != null && widget.numPageItems == null) {
+          throw Exception(
+              'Necessario passar o numero de itens por página para que '
+                  'possa calcular a pagina inicial');
+        } else {
+          _haveInitialData = widget.initialData != null;
 
-        if (_haveInitialData) {
-          widget.searcher.listFull.addAll(widget.initialData);
+          if (_haveInitialData) {
+            widget.searcher.page =
+                (widget.initialData.length / widget.numPageItems).ceil();
+
+            widget.searcher.listFull.addAll(widget.initialData);
+          }
         }
       }
       if (_activeCallbackIdentity != null) {
@@ -486,26 +511,27 @@ class _SearchAppBarPageFutureBuilderState<T>
   void _subscribeConnecty() {
     _subscriptionConnecty =
         _connectyController.connectyStream.listen((bool isConnected) {
-      if (!isConnected && (!_haveInitialData)) {
-        //lançar _widgetConnecty
-        setState(() {
-          downConnectyWithoutData = true;
-        });
-      } else if (isConnected && (!_haveInitialData)) {
-        widget.searcher.snapshotScroolPage = widget.searcher.snapshotScroolPage
-            .copyWith(
-                snapshot: widget.searcher.snapshotScroolPage.snapshot
-                    .inState(ConnectionState.waiting));
+          if (!isConnected && (!_haveInitialData)) {
+            //lançar _widgetConnecty
+            setState(() {
+              downConnectyWithoutData = true;
+            });
+          } else if (isConnected && (!_haveInitialData)) {
+            widget.searcher.snapshotScroolPage =
+                widget.searcher.snapshotScroolPage
+                    .copyWith(
+                    snapshot: widget.searcher.snapshotScroolPage.snapshot
+                        .inState(ConnectionState.waiting));
 
-        // widget.searcher.snapshot =
-        //  widget.searcher.snapshot.inState(ConnectionState.waiting);
+            // widget.searcher.snapshot =
+            //  widget.searcher.snapshot.inState(ConnectionState.waiting);
 
-        /* setState(() {
+            /* setState(() {
           downConnectyWithoutData = false;
           _snapshot = _snapshot.inState(ConnectionState.waiting);
         });*/
-      }
-    });
+          }
+        });
   }
 
   void _unsubscribe() {

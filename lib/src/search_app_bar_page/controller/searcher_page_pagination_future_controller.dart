@@ -26,15 +26,14 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
 
   final Rx<AsyncSnapshotScrollPage<T>> _snapshotScroolPage =
       AsyncSnapshotScrollPage<T>(
-              snapshot:
-                  AsyncSnapshot<List<T>>.withData(ConnectionState.done, null))
+          snapshot:
+          AsyncSnapshot<List<T>>.withData(ConnectionState.done, null))
           .obs;
 
   AsyncSnapshotScrollPage<T> get snapshotScroolPage =>
-      _snapshotScroolPage.value ;
+      _snapshotScroolPage.value;
 
-   set snapshotScroolPage(
-          AsyncSnapshotScrollPage<T> value) =>
+  set snapshotScroolPage(AsyncSnapshotScrollPage<T> value) =>
       _snapshotScroolPage.value = value;
 
   @override
@@ -69,6 +68,8 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
   //set endSearchPage(bool value) => _isModSearch.value = value;
 
   Worker _worker;
+
+  //bool loadingScroll = false;
 
   int page = 1;
   int pageSearch = 1;
@@ -105,7 +106,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
         .where((element) => _filters(stringFilter(element), query))
         .toList();
 
-    final temPage = list.length >= numPageItems;
+    final temPage = list.length >= numPageItems * pageSearch;
 
     if (temPage)
       return list;
@@ -221,13 +222,14 @@ class AsyncSnapshotScrollPage<T> {
   bool endSearchPage;
   bool finishPage;
   bool finishSearchPage;
+  bool loadingScroll;
 
-  AsyncSnapshotScrollPage(
-      {this.snapshot,
-      this.endPage = false,
-      this.finishPage = false,
-      this.finishSearchPage = false,
-      this.endSearchPage = false});
+  AsyncSnapshotScrollPage({this.snapshot,
+    this.endPage = false,
+    this.finishPage = false,
+    this.finishSearchPage = false,
+    this.loadingScroll = false,
+    this.endSearchPage = false});
 
   AsyncSnapshotScrollPage<T> copyWith({
     AsyncSnapshot<List<T>> snapshot,
@@ -235,6 +237,7 @@ class AsyncSnapshotScrollPage<T> {
     bool endSearchPage,
     bool finishPage,
     bool finishSearchPage,
+    bool loadingScroll,
   }) {
     return AsyncSnapshotScrollPage<T>(
       snapshot: snapshot ?? this.snapshot,
@@ -242,6 +245,7 @@ class AsyncSnapshotScrollPage<T> {
       endSearchPage: endSearchPage ?? this.endSearchPage,
       finishPage: finishPage ?? this.finishPage,
       finishSearchPage: finishSearchPage ?? this.finishSearchPage,
+      loadingScroll: loadingScroll ?? this.loadingScroll,
     );
   }
 }

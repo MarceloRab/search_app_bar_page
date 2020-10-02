@@ -27,7 +27,7 @@ class AppPages {
     GetPage(name: Routes.HOME, page: () => HomePage()),
     GetPage(name: Routes.PAGE_1, page: () => SearchAppBarStream()),
     GetPage(name: Routes.PAGE_2, page: () => SearchPage()),
-    GetPage(name: Routes.PAGE_3, page: () => SearchAppBarFuturePagination()),
+    GetPage(name: Routes.PAGE_3, page: () => SearchAppBarPaginationTest()),
   ];
 }
 
@@ -142,16 +142,16 @@ class SearchPage extends StatelessWidget {
 }
 
 // ignore: must_be_immutable
-class SearchAppBarFuturePagination extends StatefulWidget {
-  const SearchAppBarFuturePagination({Key key}) : super(key: key);
+class SearchAppBarPaginationTest extends StatefulWidget {
+  const SearchAppBarPaginationTest({Key key}) : super(key: key);
 
   @override
-  _SearchAppBarFuturePaginationState createState() =>
-      _SearchAppBarFuturePaginationState();
+  _SearchAppBarPaginationTestState createState() =>
+      _SearchAppBarPaginationTestState();
 }
 
-class _SearchAppBarFuturePaginationState
-    extends State<SearchAppBarFuturePagination> {
+class _SearchAppBarPaginationTestState
+    extends State<SearchAppBarPaginationTest> {
   //var _initialData;
 
   /*@override
@@ -166,7 +166,7 @@ class _SearchAppBarFuturePaginationState
 
   @override
   Widget build(BuildContext context) {
-    return SearchAppBarPageFuturePagination<Person>(
+    return SearchAppBarPagination<Person>(
         //initialData: _initialData,
         magnifyinGlassColor: Colors.white,
         searchAppBarcenterTitle: true,
@@ -188,7 +188,7 @@ class _SearchAppBarFuturePaginationState
               // color: Theme.of(context).primaryColorDark,
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 14.0, vertical: 20),
+                    const EdgeInsets.symmetric(horizontal: 130.0, vertical: 20),
                 child: Row(
                   children: [
                     Expanded(
@@ -210,7 +210,7 @@ class _SearchAppBarFuturePaginationState
   }
 
   Future<List<Person>> _futureListPerson(int page, String query) async {
-    final size = 12;
+    final size = 8;
     List<Person> list = [];
 
     final fistElement = (page - 1) * size;

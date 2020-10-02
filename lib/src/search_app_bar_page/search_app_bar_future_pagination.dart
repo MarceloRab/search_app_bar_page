@@ -1,15 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/filters/filters_type.dart';
-
-//import 'package:search_app_bar_page/src/search_app_bar_page/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/filters/functions_filters.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/search_app_bar/search_app_bar.dart';
 
 import 'controller/searcher_page_pagination_future_controller.dart';
 import 'future_helper/future_search_builder.dart';
 
-class SearchAppBarPageFuturePagination<T> extends StatefulWidget {
+class SearchAppBarPagination<T> extends StatefulWidget {
   /// Paramentros do SearchAppBar
 
   final Widget searchAppBartitle;
@@ -113,7 +111,7 @@ class SearchAppBarPageFuturePagination<T> extends StatefulWidget {
   /// This list will be ordered by the object name parameter.
   final Compare<T> compareSort;
 
-  const SearchAppBarPageFuturePagination({
+  const SearchAppBarPagination({
     Key key,
     @required this.paginationItemBuilder,
     this.searchAppBartitle,
@@ -163,12 +161,11 @@ class SearchAppBarPageFuturePagination<T> extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _SearchAppBarPageFuturePaginationState<T> createState() =>
-      _SearchAppBarPageFuturePaginationState<T>();
+  _SearchAppBarPaginationState<T> createState() =>
+      _SearchAppBarPaginationState<T>();
 }
 
-class _SearchAppBarPageFuturePaginationState<T>
-    extends State<SearchAppBarPageFuturePagination<T>> {
+class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
   SearcherPagePaginationFutureController<T> _controller;
 
   //Future<List<T>> _future;
