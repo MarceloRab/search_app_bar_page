@@ -134,8 +134,8 @@ class _SearchAppBarPageFutureBuilderState<T>
 
       widget.searcher.snapshotScroolPage = widget.searcher.snapshotScroolPage
           .copyWith(
-          snapshot: widget.searcher.snapshotScroolPage.snapshot
-              .inState(ConnectionState.none));
+              snapshot: widget.searcher.snapshotScroolPage.snapshot
+                  .inState(ConnectionState.none));
 
       //widget.searcher.snapshotScroolPage = AsyncSnapshotScrollPage<T>(
       //snapshot: widget.searcher.snapshotScroolPage.snapshot
@@ -146,8 +146,8 @@ class _SearchAppBarPageFutureBuilderState<T>
     if (!scroollEndPage) {
       widget.searcher.snapshotScroolPage = widget.searcher.snapshotScroolPage
           .copyWith(
-          snapshot: widget.searcher.snapshotScroolPage.snapshot
-              .inState(ConnectionState.waiting));
+              snapshot: widget.searcher.snapshotScroolPage.snapshot
+                  .inState(ConnectionState.waiting));
     }
 
     widget.futureFetchPageItems(widget.searcher.pageSearch, query).then((data) {
@@ -160,9 +160,9 @@ class _SearchAppBarPageFutureBuilderState<T>
         widget.searcher.listFullSearchQuery.addAll(data);
         widget.searcher.snapshotScroolPage = widget.searcher.snapshotScroolPage
             .copyWith(
-            snapshot: AsyncSnapshot<List<T>>.withData(
-                ConnectionState.done, widget.searcher.listFullSearchQuery),
-            endSearchPage: false);
+                snapshot: AsyncSnapshot<List<T>>.withData(
+                    ConnectionState.done, widget.searcher.listFullSearchQuery),
+                endSearchPage: false);
 
         //widget.searcher.snapshot = AsyncSnapshot<List<T>>.withData(
         //ConnectionState.done, widget.searcher.listFullSearchQuery);
@@ -179,7 +179,7 @@ class _SearchAppBarPageFutureBuilderState<T>
       if (_activeCallbackIdentity == callbackIdentity) {
         widget.searcher.snapshotScroolPage = AsyncSnapshotScrollPage<T>(
             snapshot:
-            AsyncSnapshot<List<T>>.withError(ConnectionState.done, error));
+                AsyncSnapshot<List<T>>.withError(ConnectionState.done, error));
 
         //widget.searcher.snapshot =
         // AsyncSnapshot<List<T>>.withError(ConnectionState.done, error);
@@ -196,53 +196,52 @@ class _SearchAppBarPageFutureBuilderState<T>
     _activeCallbackIdentity = callbackIdentity;
 
     widget.futureFetchPageItems(widget.searcher.page, '').then<void>(
-            (List<T> data) {
-          //widget.futureInitialList.then<void>((List<T> data) {
-          if (widget.searcher.numPageItems == 0) {
-            widget.searcher.numPageItems = data.length;
+        (List<T> data) {
+      //widget.futureInitialList.then<void>((List<T> data) {
+      if (widget.searcher.numPageItems == 0) {
+        widget.searcher.numPageItems = data.length;
+      }
+
+      if (_activeCallbackIdentity == callbackIdentity) {
+        if (scroollEndPage) {
+          if (data.isEmpty) {
+            widget.searcher.snapshotScroolPage = widget
+                .searcher.snapshotScroolPage
+                .copyWith(endPage: false, finishPage: true);
           }
+        }
 
-          if (_activeCallbackIdentity == callbackIdentity) {
-            if (scroollEndPage) {
-              if (data.isEmpty) {
-                widget.searcher.snapshotScroolPage = widget
-                    .searcher.snapshotScroolPage
-                    .copyWith(endPage: false, finishPage: true);
-              }
-            }
+        if (downConnectyWithoutData) {
+          downConnectyWithoutData = false;
+          _unsubscribeConnecty();
+        }
 
-            if (downConnectyWithoutData) {
-              downConnectyWithoutData = false;
-              _unsubscribeConnecty();
-            }
+        //widget.searcher.endPage = false;
+        widget.searcher.wrabListSearch(data);
 
-            //widget.searcher.endPage = false;
-            widget.searcher.wrabListSearch(data);
+        widget.searcher.snapshotScroolPage = widget.searcher.snapshotScroolPage
+            .copyWith(
+                snapshot: AsyncSnapshot<List<T>>.withData(
+                    ConnectionState.done, widget.searcher.listFull),
+                endPage: false);
 
-            widget.searcher.snapshotScroolPage =
-                widget.searcher.snapshotScroolPage
-                    .copyWith(
-                    snapshot: AsyncSnapshot<List<T>>.withData(
-                        ConnectionState.done, widget.searcher.listFull),
-                    endPage: false);
+        //widget.searcher.snapshot = AsyncSnapshot<List<T>>.withData(
+        // ConnectionState.done, widget.searcher.listFull);
 
-            //widget.searcher.snapshot = AsyncSnapshot<List<T>>.withData(
-            // ConnectionState.done, widget.searcher.listFull);
-
-          } else {
-            if (widget.searcher.page > 0) {
-              widget.searcher.page--;
-              // ignore: invariant_booleans
-              if (widget.searcher.page == 0) {
-                widget.searcher.page = 1;
-              }
-            }
+      } else {
+        if (widget.searcher.page > 0) {
+          widget.searcher.page--;
+          // ignore: invariant_booleans
+          if (widget.searcher.page == 0) {
+            widget.searcher.page = 1;
           }
-        }, onError: (Object error) {
+        }
+      }
+    }, onError: (Object error) {
       if (_activeCallbackIdentity == callbackIdentity) {
         widget.searcher.snapshotScroolPage = AsyncSnapshotScrollPage<T>(
             snapshot:
-            AsyncSnapshot<List<T>>.withError(ConnectionState.done, error));
+                AsyncSnapshot<List<T>>.withError(ConnectionState.done, error));
         //widget.searcher.snapshot =
         // AsyncSnapshot<List<T>>.withError(ConnectionState.done, error);
         /*setState(() {
@@ -255,8 +254,8 @@ class _SearchAppBarPageFutureBuilderState<T>
     if (!scroollEndPage) {
       widget.searcher.snapshotScroolPage = widget.searcher.snapshotScroolPage
           .copyWith(
-          snapshot: widget.searcher.snapshotScroolPage.snapshot
-              .inState(ConnectionState.waiting));
+              snapshot: widget.searcher.snapshotScroolPage.snapshot
+                  .inState(ConnectionState.waiting));
     }
 
     //widget.searcher.snapshot =
@@ -272,7 +271,7 @@ class _SearchAppBarPageFutureBuilderState<T>
       if (_activeCallbackIdentity != null) {
         if (widget.searcher.rxSearch.value.isNotEmpty) {
           if (widget.searcher.listFullSearchQuery.length ~/
-              widget.searcher.numPageItems !=
+                  widget.searcher.numPageItems !=
               0) {
             //widget.searcher.endSearchPage = false;
             //widget.searcher.pageSearchFinish = true;
@@ -289,9 +288,9 @@ class _SearchAppBarPageFutureBuilderState<T>
                 scroollEndPage: true);
           }
         } else {
-          final inteiro = widget.searcher.listFull.length ~/
-              widget.searcher.numPageItems !=
-              0;
+          final inteiro =
+              widget.searcher.listFull.length ~/ widget.searcher.numPageItems !=
+                  0;
 
           if (!inteiro && !widget.searcher.snapshotScroolPage.finishPage) {
             //widget.searcher.endPage = false;
@@ -300,7 +299,7 @@ class _SearchAppBarPageFutureBuilderState<T>
             widget.searcher.snapshotScroolPage = widget
                 .searcher.snapshotScroolPage
                 .copyWith(endPage: false, finishPage: true);
-          } else if(!widget.searcher.snapshotScroolPage.finishPage) {
+          } else if (!widget.searcher.snapshotScroolPage.finishPage) {
             if (_activeCallbackIdentity != null) {
               _unsubscribe();
 
@@ -366,8 +365,7 @@ class _SearchAppBarPageFutureBuilderState<T>
                     padding: const EdgeInsets.only(top: 16),
                     child: Text(
                       'Temos um erro: '
-                          '${widget.searcher.snapshotScroolPage.snapshot
-                          .error}',
+                      '${widget.searcher.snapshotScroolPage.snapshot.error}',
                     ),
                   ),
                 )
@@ -380,9 +378,9 @@ class _SearchAppBarPageFutureBuilderState<T>
       return ListView.builder(
         controller: _scrollController,
         itemCount: ((widget.searcher.snapshotScroolPage.endPage &&
-            !widget.searcher.snapshotScroolPage.finishPage) ||
-            (widget.searcher.snapshotScroolPage.endSearchPage &&
-                !widget.searcher.snapshotScroolPage.finishPage))
+                    !widget.searcher.snapshotScroolPage.finishPage) ||
+                (widget.searcher.snapshotScroolPage.endSearchPage &&
+                    !widget.searcher.snapshotScroolPage.finishPage))
             ? widget.searcher.snapshotScroolPage.snapshot.data.length + 1
             : widget.searcher.snapshotScroolPage.snapshot.data.length,
         itemBuilder: (ctx, index) {
@@ -467,7 +465,7 @@ class _SearchAppBarPageFutureBuilderState<T>
       }
 
       //widget.searcher.snapshotScroolPage =
-         // widget.searcher.snapshotScroolPage.copyWith(finishPage: false);
+      // widget.searcher.snapshotScroolPage.copyWith(finishPage: false);
       //widget.searcher.pageFinish = false;
       _firstFuturePageSubscribe();
     }
@@ -488,27 +486,26 @@ class _SearchAppBarPageFutureBuilderState<T>
   void _subscribeConnecty() {
     _subscriptionConnecty =
         _connectyController.connectyStream.listen((bool isConnected) {
-          if (!isConnected && (!_haveInitialData)) {
-            //lançar _widgetConnecty
-            setState(() {
-              downConnectyWithoutData = true;
-            });
-          } else if (isConnected && (!_haveInitialData)) {
-            widget.searcher.snapshotScroolPage =
-                widget.searcher.snapshotScroolPage
-                    .copyWith(
-                    snapshot: widget.searcher.snapshotScroolPage.snapshot
-                        .inState(ConnectionState.waiting));
+      if (!isConnected && (!_haveInitialData)) {
+        //lançar _widgetConnecty
+        setState(() {
+          downConnectyWithoutData = true;
+        });
+      } else if (isConnected && (!_haveInitialData)) {
+        widget.searcher.snapshotScroolPage = widget.searcher.snapshotScroolPage
+            .copyWith(
+                snapshot: widget.searcher.snapshotScroolPage.snapshot
+                    .inState(ConnectionState.waiting));
 
-            // widget.searcher.snapshot =
-            //  widget.searcher.snapshot.inState(ConnectionState.waiting);
+        // widget.searcher.snapshot =
+        //  widget.searcher.snapshot.inState(ConnectionState.waiting);
 
-            /* setState(() {
+        /* setState(() {
           downConnectyWithoutData = false;
           _snapshot = _snapshot.inState(ConnectionState.waiting);
         });*/
-          }
-        });
+      }
+    });
   }
 
   void _unsubscribe() {
