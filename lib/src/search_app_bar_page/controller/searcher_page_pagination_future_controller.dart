@@ -26,8 +26,8 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
 
   final Rx<AsyncSnapshotScrollPage<T>> _snapshotScroolPage =
       AsyncSnapshotScrollPage<T>(
-          snapshot:
-          AsyncSnapshot<List<T>>.withData(ConnectionState.none, null))
+              snapshot:
+                  AsyncSnapshot<List<T>>.withData(ConnectionState.none, null))
           .obs;
 
   AsyncSnapshotScrollPage<T> get snapshotScroolPage =>
@@ -109,9 +109,9 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
     if (snapshotScroolPage.finishPage) {
       pageSearch = (list.length / numPageItems).ceil();
       snapshotScroolPage.finishSearchPage = true;
-      print(' SearcherPagePaginationFutureController '
+      debugPrint(' SearcherPagePaginationFutureController '
           'PAGE SEARCH DEPOIS== $pageSearch');
-      print('SearcherPagePaginationFutureController - finalizou '
+      debugPrint('SearcherPagePaginationFutureController - finalizou '
           'pagian search chamadas api'
           ' ${snapshotScroolPage.finishSearchPage}');
       return list;
@@ -122,22 +122,22 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
       return list;
     } else if (list.length > numPageItems * pageSearch) {
       pageSearch = (list.length / numPageItems).ceil();
-      print('SearcherPagePaginationFutureController '
+      debugPrint('SearcherPagePaginationFutureController '
           '--- Divisao == ${(list.length / numPageItems).toString()}');
-      print('SearcherPagePaginationFutureController '
+      debugPrint('SearcherPagePaginationFutureController '
           '---- SEARCH PAGE DEPOIS== $pageSearch');
-      print('SearcherPagePaginationFutureController '
+      debugPrint('SearcherPagePaginationFutureController '
           '---- list Search filtrada length == ${list.length}');
-      print('--------');
+      debugPrint('--------');
       return list;
     } else if (list.length < numPageItems) {
-      print('SearcherPagePaginationFutureController '
+      debugPrint('SearcherPagePaginationFutureController '
           '--- Divisao == ${(list.length / numPageItems).toString()}');
-      print('SearcherPagePaginationFutureController '
+      debugPrint('SearcherPagePaginationFutureController '
           '---- SEARCH PAGE DEPOIS== $pageSearch');
-      print('SearcherPagePaginationFutureController '
+      debugPrint('SearcherPagePaginationFutureController '
           '---- list Search filtrada length == ${list.length}');
-      print('--------');
+      debugPrint('--------');
       return list;
     }
     return <T>[];
@@ -266,12 +266,13 @@ class AsyncSnapshotScrollPage<T> {
   bool finishSearchPage;
   bool loadingScroll;
 
-  AsyncSnapshotScrollPage({this.snapshot,
-    this.endPage = false,
-    this.finishPage = false,
-    this.finishSearchPage = false,
-    this.loadingScroll = false,
-    this.endSearchPage = false});
+  AsyncSnapshotScrollPage(
+      {this.snapshot,
+      this.endPage = false,
+      this.finishPage = false,
+      this.finishSearchPage = false,
+      this.loadingScroll = false,
+      this.endSearchPage = false});
 
   AsyncSnapshotScrollPage<T> copyWith({
     AsyncSnapshot<List<T>> snapshot,

@@ -147,6 +147,10 @@ class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
   @override
   void didUpdateWidget(SearchAppBarPage<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.listFull != widget.listFull) {
+      _controller.onSearchList(widget.listFull);
+    }
   }
 
   @override
