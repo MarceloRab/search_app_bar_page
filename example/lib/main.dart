@@ -209,6 +209,9 @@ class _SearchAppBarPaginationTestState
         });
   }
 
+  ///Example of server side function. Return the list in parts or parts by
+  ///query String. We make the necessary changes on the device side to update
+  ///the page to be requested.
   Future<List<Person>> _futureListPerson(int page, String query) async {
     final size = 8;
     List<Person> list = [];
@@ -219,10 +222,12 @@ class _SearchAppBarPaginationTestState
     print('fistElement = ' + fistElement.toString());
     print('lastElement = ' + lastElement.toString());
     print('--------');
+    print('page pedida = ' + page.toString());
+    print('--------');
 
     dataListPerson3.sort((a, b) => a.name.compareTo(b.name));
 
-    await Future<void>.delayed(Duration(seconds: 3));
+    await Future<void>.delayed(Duration(seconds: 6));
 
     if (query.isEmpty) {
       int totalPages = (dataListPerson3.length / size).ceil();

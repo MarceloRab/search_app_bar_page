@@ -17,7 +17,6 @@ typedef WidgetsPaginationItemBuilder<T> = Widget Function(
 typedef FutureFetchPageItems<T> = Future<List<T>> Function(
     int page, String query);
 
-
 class Filters {
   static Filter<String> startsWith = (test, query) {
     final realTest = _prepareString(test);

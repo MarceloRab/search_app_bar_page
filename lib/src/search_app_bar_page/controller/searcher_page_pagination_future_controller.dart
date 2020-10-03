@@ -27,7 +27,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
   final Rx<AsyncSnapshotScrollPage<T>> _snapshotScroolPage =
       AsyncSnapshotScrollPage<T>(
           snapshot:
-          AsyncSnapshot<List<T>>.withData(ConnectionState.done, null))
+          AsyncSnapshot<List<T>>.withData(ConnectionState.none, null))
           .obs;
 
   AsyncSnapshotScrollPage<T> get snapshotScroolPage =>
@@ -106,13 +106,55 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
         .where((element) => _filters(stringFilter(element), query))
         .toList();
 
+    if (snapshotScroolPage.finishPage) {
+      pageSearch = (list.length / numPageItems).ceil();
+      snapshotScroolPage.finishSearchPage = true;
+      print(' SearcherPagePaginationFutureController '
+          'PAGE SEARCH DEPOIS== $pageSearch');
+      print('SearcherPagePaginationFutureController - finalizou '
+          'pagian search chamadas api'
+          ' ${snapshotScroolPage.finishSearchPage}');
+      return list;
+    }
+
+    // virificar se a paginaFinish?
+    if (list.length == numPageItems * pageSearch) {
+      return list;
+    } else if (list.length > numPageItems * pageSearch) {
+      pageSearch = (list.length / numPageItems).ceil();
+      print('SearcherPagePaginationFutureController '
+          '--- Divisao == ${(list.length / numPageItems).toString()}');
+      print('SearcherPagePaginationFutureController '
+          '---- SEARCH PAGE DEPOIS== $pageSearch');
+      print('SearcherPagePaginationFutureController '
+          '---- list Search filtrada length == ${list.length}');
+      print('--------');
+      return list;
+    } else if (list.length < numPageItems) {
+      print('SearcherPagePaginationFutureController '
+          '--- Divisao == ${(list.length / numPageItems).toString()}');
+      print('SearcherPagePaginationFutureController '
+          '---- SEARCH PAGE DEPOIS== $pageSearch');
+      print('SearcherPagePaginationFutureController '
+          '---- list Search filtrada length == ${list.length}');
+      print('--------');
+      return list;
+    }
+    return <T>[];
+  }
+
+  /*List<T> haveSearchQueryPage(String query) {
+    final list = listFull
+        .where((element) => _filters(stringFilter(element), query))
+        .toList();
+
     final temPage = list.length >= numPageItems * pageSearch;
 
     if (temPage)
       return list;
     else
       return <T>[];
-  }
+  }*/
 
   //final RxList<T> listSearchFilter = <T>[].obs;
 
