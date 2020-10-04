@@ -82,7 +82,7 @@ class SearchPage extends StatelessWidget {
     return SearchAppBarPage<Person>(
       magnifyinGlassColor: Colors.white,
       searchAppBarcenterTitle: true,
-      searchAppBarhintText: 'Pesquise um Nome',
+      searchAppBarhintText: 'Search for a name',
       searchAppBartitle: Text(
         'Search Page',
         style: TextStyle(fontSize: 20),
@@ -97,6 +97,13 @@ class SearchPage extends StatelessWidget {
       listBuilder: (context, list, isModSearch) {
         // Rertorne seu widget com a lista para o body da page
         // Pode alterar a tela relacionando o tipo de procura
+        if (list.isEmpty) {
+          return Center(
+              child: Text(
+            'NOTHING FOUND',
+            style: TextStyle(fontSize: 14),
+          ));
+        }
         return ListView.builder(
           itemCount: list.length,
           itemBuilder: (_, index) {
@@ -172,7 +179,7 @@ class _SearchAppBarPaginationTestState
         searchAppBarcenterTitle: true,
         searchAppBarhintText: 'Pesquise um Nome',
         searchAppBartitle: Text(
-          'Search Stream Page',
+          'Search Pagination',
           style: TextStyle(fontSize: 20),
         ),
         futureFetchPageItems: _futureListPerson,
@@ -211,7 +218,9 @@ class _SearchAppBarPaginationTestState
 
   ///Example of server side function. Return the list in parts or parts by
   ///query String. We make the necessary changes on the device side to update
-  ///the page to be requested.
+  ///the page to be requested. Ex.: If numItemsPage = 6 and you receive
+  ///05 or 11 or send empty, = >>> it means that the data is over.
+
   Future<List<Person>> _futureListPerson(int page, String query) async {
     final size = 8;
     List<Person> list = [];
@@ -227,7 +236,7 @@ class _SearchAppBarPaginationTestState
 
     dataListPerson3.sort((a, b) => a.name.compareTo(b.name));
 
-    await Future<void>.delayed(Duration(seconds: 6));
+    await Future<void>.delayed(Duration(seconds: 3));
 
     if (query.isEmpty) {
       int totalPages = (dataListPerson3.length / size).ceil();
@@ -311,7 +320,7 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
       //initialData: _initialData,
       magnifyinGlassColor: Colors.white,
       searchAppBarcenterTitle: true,
-      searchAppBarhintText: 'Pesquise um Nome',
+      searchAppBarhintText: 'Search for a name',
       searchAppBartitle: Text(
         'Search Stream Page',
         style: TextStyle(fontSize: 20),
@@ -323,6 +332,13 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
       listBuilder: (context, list, isModSearch) {
         // Rertorne seu widget com a lista para o body da page
         // Pode alterar a tela relacionando o tipo de procura
+        if (list.isEmpty) {
+          return Center(
+              child: Text(
+                'NOTHING FOUND',
+                style: TextStyle(fontSize: 14),
+              ));
+        }
         return Column(
           children: [
             Expanded(
@@ -464,6 +480,7 @@ final dataListPerson3 = <Person>[
   Person(name: 'Nao Diga', age: 33),
   Person(name: 'Fique Queto', age: 11),
   Person(name: 'Cicero Gome', age: 37),
+  Person(name: 'Carlos Gome', age: 48),
   Person(name: 'Mae Querida', age: 45),
   Person(name: 'Exausto Nome', age: 81),
 ];
@@ -474,4 +491,9 @@ class Person {
   final int age;
 
   Person({this.name, this.age});
+
+  @override
+  String toString() {
+    return 'Person{name: $name, age: $age}';
+  }
 }

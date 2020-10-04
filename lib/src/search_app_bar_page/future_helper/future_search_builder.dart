@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get_state_manager/get_state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/connecty_controller.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_page_pagination_future_controller.dart';
@@ -27,6 +28,7 @@ class SearchAppBarPageFutureBuilder<T> extends StatefulWidget {
 
   final Widget widgetError;
   final Widget widgetWaiting;
+  final Widget widgetNothingFound;
 
   const SearchAppBarPageFutureBuilder({
     Key key,
@@ -39,6 +41,7 @@ class SearchAppBarPageFutureBuilder<T> extends StatefulWidget {
     this.numPageItems,
     this.widgetError,
     this.widgetWaiting,
+    this.widgetNothingFound,
     //@required this.futureInitialList
   }) : super(key: key);
 
@@ -68,6 +71,7 @@ class _SearchAppBarPageFutureBuilderState<T>
 
   Widget _widgetWaiting;
   Widget _widgetError;
+  Widget _widgetNothingFound;
 
   //bool haveMore = false;
 
@@ -174,6 +178,16 @@ class _SearchAppBarPageFutureBuilderState<T>
     } else {
       _widgetError = widget.widgetError;
     }
+
+    if (widget.widgetNothingFound == null) {
+      _widgetNothingFound = const Center(
+          child: Text(
+        'NOTHING FOUND',
+        style: TextStyle(fontSize: 14),
+      ));
+    } else {
+      _widgetNothingFound = widget.widgetNothingFound;
+    }
   }
 
   void _futureSearchPageQuery(String query, {bool scroollEndPage = false}) {
@@ -203,9 +217,14 @@ class _SearchAppBarPageFutureBuilderState<T>
         widget.searcher.snapshotScroolPage.loadingScroll = false;
         // Recebeu lista vazia - encerrou
         if (data.isEmpty) {
-          widget.searcher.snapshotScroolPage = widget
-              .searcher.snapshotScroolPage
-              .copyWith(endSearchPage: false, finishSearchPage: true);
+          // widget.searcher.listFullSearchQuery.clear();
+          widget.searcher.snapshotScroolPage =
+              widget.searcher.snapshotScroolPage.copyWith(
+                  snapshot: AsyncSnapshot<List<T>>.withData(
+                      ConnectionState.done,
+                      widget.searcher.listFullSearchQuery),
+                  endSearchPage: false,
+                  finishSearchPage: true);
           return;
         }
 
@@ -227,6 +246,7 @@ class _SearchAppBarPageFutureBuilderState<T>
         //widget.searcher.endSearchPage = false;
 
         widget.searcher.listFullSearchQuery.addAll(data);
+        //widget.searcher.listFullSearchQuery.toSet().toList();
         widget.searcher.snapshotScroolPage = widget.searcher.snapshotScroolPage
             .copyWith(
                 snapshot: AsyncSnapshot<List<T>>.withData(
@@ -319,16 +339,19 @@ class _SearchAppBarPageFutureBuilderState<T>
 
   void pagesListener() {
     if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 3) {
+            _scrollController.position.maxScrollExtent - 3 &&
+        _scrollController.position.userScrollDirection ==
+            ScrollDirection.reverse) {
       if (_activeCallbackIdentity != null) {
         if (widget.searcher.rxSearch.value.isNotEmpty) {
           if (!widget.searcher.snapshotScroolPage.finishSearchPage) {
             if (!widget.searcher.snapshotScroolPage.loadingScroll) {
+              widget.searcher.snapshotScroolPage.loadingScroll = true;
               final list = widget.searcher
                   .haveSearchQueryPage(widget.searcher.rxSearch.value);
 
-              if (list.isNotEmpty) {
-                widget.searcher.listFullSearchQuery.addAll(list);
+              if (list.listSearch.isNotEmpty) {
+                widget.searcher.listFullSearchQuery.addAll(list.listSearch);
 
                 widget.searcher.snapshotScroolPage =
                     widget.searcher.snapshotScroolPage.copyWith(
@@ -336,12 +359,13 @@ class _SearchAppBarPageFutureBuilderState<T>
                             ConnectionState.done,
                             widget.searcher.listFullSearchQuery));
               } else {
+                print(
+                    'listFullSearchQuery ${widget.searcher.listFullSearchQuery.toString()}');
                 widget.searcher.snapshotScroolPage = widget
                     .searcher.snapshotScroolPage
                     .copyWith(endSearchPage: true);
                 // widget.searcher.endSearchPage = true;
 
-                widget.searcher.snapshotScroolPage.loadingScroll = true;
                 widget.searcher.pageSearch++;
                 _futureSearchPageQuery(widget.searcher.rxSearch.value,
                     scroollEndPage: true);
@@ -382,6 +406,9 @@ class _SearchAppBarPageFutureBuilderState<T>
         return _widgetError;
       }
 
+      if (widget.searcher.snapshotScroolPage.snapshot.data.isEmpty) {
+        return _widgetNothingFound;
+      }
       //final isListFull = widget.searcher.rxSearch.value.isEmpty;
       return ListView.builder(
         controller: _scrollController,
@@ -417,27 +444,46 @@ class _SearchAppBarPageFutureBuilderState<T>
     _worker = debounce(widget.searcher.rxSearch, (String query) {
       if (query.isNotEmpty) {
         widget.searcher.pageSearch = 1;
-        widget.searcher.snapshotScroolPage.finishSearchPage = false;
+        //widget.searcher.snapshotScroolPage.finishSearchPage = false;
+        //widget.searcher.listFullSearchQuery.clear();
 
-        final list = widget.searcher.haveSearchQueryPage(query);
+        //TODO: evitar de apagar a listSearch quando estiver
 
-        if (list.isNotEmpty) {
-          widget.searcher.listFullSearchQuery.clear();
-          widget.searcher.listFullSearchQuery.addAll(list);
+        final listSearchBuild = widget.searcher.haveSearchQueryPage(query);
+
+        if (listSearchBuild.listSearch.isNotEmpty) {
+          if (!listSearchBuild.isListSearchFull) {
+            widget.searcher.listFullSearchQuery.clear();
+            widget.searcher.listFullSearchQuery
+                .addAll(listSearchBuild.listSearch);
+          }
 
           widget.searcher.snapshotScroolPage =
               widget.searcher.snapshotScroolPage.copyWith(
                   snapshot: AsyncSnapshot<List<T>>.withData(
-                      ConnectionState.done,
-                      widget.searcher.listFullSearchQuery));
+                      ConnectionState.done, listSearchBuild.listSearch));
+
+          if (!widget.searcher.snapshotScroolPage.finishSearchPage) {
+            // Quando sao o ultimos Componentes da lista e a lista ainda
+            // nao foi baixada completa, precisa pedir mais. Acaba duplicando
+            _futureSearchPageQuery(query);
+          }
 
           /*widget.searcher.snapshotScroolPage = AsyncSnapshotScrollPage<T>(
               snapshot: AsyncSnapshot<List<T>>.withData(
                   ConnectionState.done, widget.searcher.listFullSearchQuery));*/
+        } else if (listSearchBuild.listSearch.isEmpty &&
+            listSearchBuild.isListSearchFull) {
+          //widget.searcher.listFullSearchQuery.clear();
+          widget.searcher.snapshotScroolPage =
+              widget.searcher.snapshotScroolPage.copyWith(
+                  snapshot: AsyncSnapshot<List<T>>.withData(
+                      ConnectionState.done, listSearchBuild.listSearch));
         } else {
           _futureSearchPageQuery(query);
         }
       } else {
+        //widget.searcher.listFullSearchQuery.clear();
         widget.searcher.snapshotScroolPage = widget.searcher.snapshotScroolPage
             .copyWith(
                 snapshot: AsyncSnapshot<List<T>>.withData(
@@ -480,15 +526,16 @@ class _SearchAppBarPageFutureBuilderState<T>
           final list = widget.searcher
               .haveSearchQueryPage(widget.searcher.rxSearch.value);
 
-          if (list.isNotEmpty) {
-            widget.searcher.listFullSearchQuery.addAll(list);
-
-            widget.searcher.snapshotScroolPage =
-                widget.searcher.snapshotScroolPage.copyWith(
-                    snapshot: AsyncSnapshot<List<T>>.withData(
-                        ConnectionState.none,
-                        widget.searcher.listFullSearchQuery));
+          if (list.listSearch.isNotEmpty) {
+            widget.searcher.listFullSearchQuery.clear();
+            widget.searcher.listFullSearchQuery.addAll(list.listSearch);
           }
+
+          widget.searcher.snapshotScroolPage =
+              widget.searcher.snapshotScroolPage.copyWith(
+                  snapshot: AsyncSnapshot<List<T>>.withData(
+                      ConnectionState.none,
+                      widget.searcher.listFullSearchQuery));
         }
       }
     }

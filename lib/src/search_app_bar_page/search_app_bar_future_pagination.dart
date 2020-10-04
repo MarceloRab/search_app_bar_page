@@ -59,6 +59,8 @@ class SearchAppBarPagination<T> extends StatefulWidget {
   /// in the stream.
   final Widget widgetError;
 
+  final Widget widgetNothingFound;
+
   /// [searchePageFloaActionButton] , [searchePageFloaActionButton] ,
   /// [searchePageFloatingActionButtonLocation] ,
   /// [searchePageFloatingActionButtonAnimator]  ...
@@ -133,6 +135,7 @@ class SearchAppBarPagination<T> extends StatefulWidget {
     this.widgetWaiting,
     this.widgetOffConnectyWaiting,
     this.widgetError,
+    this.widgetNothingFound,
     this.searchePageFloaActionButton,
     this.searchePageFloatingActionButtonLocation,
     this.searchePageFloatingActionButtonAnimator,
@@ -221,6 +224,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
           paginationItemBuilder: widget.paginationItemBuilder,
           widgetConnecty: widget.widgetOffConnectyWaiting,
           widgetError: widget.widgetError,
+          widgetNothingFound: widget.widgetNothingFound,
           widgetWaiting: widget.widgetWaiting,
         ),
         floatingActionButton: widget.searchePageFloaActionButton,

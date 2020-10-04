@@ -107,46 +107,85 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
 
   var listFullSearchQuery = <T>[];
 
-  List<T> haveSearchQueryPage(String query) {
-    final list = listFull
+  ListSearchBuild<T> haveSearchQueryPage(String query) {
+    var listSearchBuild = <T>[];
+    if (query.length > 1) {
+      if (snapshotScroolPage.finishSearchPage) {
+        debugPrint(' TESTE -- listFullSearchQuery '
+            '-${listFullSearchQuery.toString()}-  ');
+        listSearchBuild = listFullSearchQuery
+            .where((element) => _filters(stringFilter(element), query))
+            //query.replaceRange(query.length - 1, query.length, '')))
+            .toList();
+
+        // para buscar em sublistas
+        return ListSearchBuild<T>(
+            listSearch: listSearchBuild, isListSearchFull: true);
+      } else {
+        //listFullSearchQuery.clear();
+        snapshotScroolPage.finishSearchPage = false;
+        listSearchBuild = listFull
+            .where((element) => _filters(stringFilter(element), query))
+            .toList();
+      }
+    } else {
+      //listFullSearchQuery.clear();
+      snapshotScroolPage.finishSearchPage = false;
+      listSearchBuild = listFull
+          .where((element) => _filters(stringFilter(element), query))
+          .toList();
+    }
+
+    /*listSearchBuild = listFull
         .where((element) => _filters(stringFilter(element), query))
-        .toList();
+        .toList();*/
 
     if (snapshotScroolPage.finishPage) {
-      pageSearch = (list.length / numPageItems).ceil();
+      pageSearch = (listSearchBuild.length / numPageItems).ceil();
+      if (pageSearch == 0) {
+        pageSearch = 1;
+      }
       snapshotScroolPage.finishSearchPage = true;
       debugPrint(' SearcherPagePaginationFutureController '
           'PAGE SEARCH DEPOIS== $pageSearch');
       debugPrint('SearcherPagePaginationFutureController - finalizou '
           'pagian search chamadas api'
           ' ${snapshotScroolPage.finishSearchPage}');
-      return list;
+      // return listSearchBuild;
+      return ListSearchBuild<T>(listSearch: listSearchBuild);
     }
 
     // virificar se a paginaFinish?
-    if (list.length == numPageItems * pageSearch) {
-      return list;
-    } else if (list.length > numPageItems * pageSearch) {
-      pageSearch = (list.length / numPageItems).ceil();
+    if (listSearchBuild.length == numPageItems * pageSearch) {
+      return ListSearchBuild<T>(listSearch: listSearchBuild);
+    } else if (listSearchBuild.length > numPageItems * pageSearch) {
+      pageSearch = (listSearchBuild.length / numPageItems).ceil();
       debugPrint('SearcherPagePaginationFutureController '
-          '--- Divisao == ${(list.length / numPageItems).toString()}');
-      debugPrint('SearcherPagePaginationFutureController '
-          '---- SEARCH PAGE DEPOIS== $pageSearch');
-      debugPrint('SearcherPagePaginationFutureController '
-          '---- list Search filtrada length == ${list.length}');
-      debugPrint('--------');
-      return list;
-    } else if (list.length < numPageItems) {
-      debugPrint('SearcherPagePaginationFutureController '
-          '--- Divisao == ${(list.length / numPageItems).toString()}');
+          '--- Divisao == '
+          '${(listSearchBuild.length / numPageItems).toString()}');
       debugPrint('SearcherPagePaginationFutureController '
           '---- SEARCH PAGE DEPOIS== $pageSearch');
       debugPrint('SearcherPagePaginationFutureController '
-          '---- list Search filtrada length == ${list.length}');
+          '---- listSearchBuild Search filtrada length '
+          '== ${listSearchBuild.length}');
       debugPrint('--------');
-      return list;
+      //return listSearchBuild;
+      return ListSearchBuild<T>(listSearch: listSearchBuild);
     }
-    return <T>[];
+
+    /*else if (listSearchBuild.length < numPageItems) {
+      debugPrint('SearcherPagePaginationFutureController '
+          '--- Divisao == ${(listSearchBuild.length / numPageItems).toString()}');
+      debugPrint('SearcherPagePaginationFutureController '
+          '---- SEARCH PAGE DEPOIS== $pageSearch');
+      debugPrint('SearcherPagePaginationFutureController '
+          '---- listSearchBuild Search filtrada length
+          == ${listSearchBuild.length}');
+      debugPrint('--------');
+      return listSearchBuild;
+    }*/
+    //return <T>[];
+    return ListSearchBuild<T>(listSearch: <T>[]);
   }
 
   /*List<T> haveSearchQueryPage(String query) {
@@ -295,4 +334,11 @@ class AsyncSnapshotScrollPage<T> {
       loadingScroll: loadingScroll ?? this.loadingScroll,
     );
   }
+}
+
+class ListSearchBuild<T> {
+  List<T> listSearch;
+  bool isListSearchFull;
+
+  ListSearchBuild({this.listSearch, this.isListSearchFull = false});
 }
