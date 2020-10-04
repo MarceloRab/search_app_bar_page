@@ -219,11 +219,11 @@ class _SearchAppBarPaginationTestState
     final fistElement = (page - 1) * size;
     final lastElement = page * size;
 
-    print('fistElement = ' + fistElement.toString());
+    /*print('fistElement = ' + fistElement.toString());
     print('lastElement = ' + lastElement.toString());
     print('--------');
     print('page pedida = ' + page.toString());
-    print('--------');
+    print('--------');*/
 
     dataListPerson3.sort((a, b) => a.name.compareTo(b.name));
 
@@ -233,9 +233,9 @@ class _SearchAppBarPaginationTestState
       int totalPages = (dataListPerson3.length / size).ceil();
       totalPages = totalPages == 0 ? 1 : totalPages;
 
-      print('TotalPages = ' + totalPages.toString());
+      //print('TotalPages = ' + totalPages.toString());
       if (page > totalPages) {
-        print('--TEM--nada');
+        //print('--TEM--nada');
         return list;
       }
 
@@ -244,9 +244,9 @@ class _SearchAppBarPaginationTestState
           lastElement > dataListPerson3.length
               ? dataListPerson3.length
               : lastElement);
-      if (list.length < size) {
+      /*if (list.length < size) {
         print('-###-  Last  ---Page --- Full');
-      }
+      }*/
     } else {
       final listQuery =
           dataListPerson3.where((element) => contains(element, query)).toList();
@@ -255,19 +255,19 @@ class _SearchAppBarPaginationTestState
       int totalQueryPages = (listQuery.length / size).ceil();
       totalQueryPages = totalQueryPages == 0 ? 1 : totalQueryPages;
 
-      print('TotalQueryPages = ' + totalQueryPages.toString());
+      //print('TotalQueryPages = ' + totalQueryPages.toString());
 
       if (page > totalQueryPages) {
-        print('--TEM---nada');
+        //print('--TEM---nada');
         return list;
       }
 
       list = listQuery.sublist(fistElement,
           lastElement > listQuery.length ? listQuery.length : lastElement);
 
-      if (list.length < size) {
+      /*if (list.length < size) {
         print('-###-  LAst -- Page --- Search');
-      }
+      }*/
     }
 
     return list;

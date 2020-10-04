@@ -23,7 +23,7 @@ abstract class StreamSearcherBuilderBase<T, S> extends StatefulWidget {
 
   S initial();
 
-  T get haveInitialData;
+  T get getInitialData;
 
   S afterConnected(S current) => current;
 
@@ -64,7 +64,7 @@ class _StreamSearcherGetxBuilderBase<T, S>
   @override
   void initState() {
     super.initState();
-    _initialData = widget.haveInitialData;
+    _initialData = widget.getInitialData;
     _haveInitialData = _initialData != null;
     _summary = widget.initial();
     _subscribeStream();
@@ -73,6 +73,7 @@ class _StreamSearcherGetxBuilderBase<T, S>
       _subscribeConnecty();
     } else {
       widget.searcher.listFull.addAll(_initialData as List);
+      widget.searcher.sortCompareList(widget.searcher.listFull);
       widget.searcher.onSearchList(_initialData as List);
     }
 
@@ -105,6 +106,21 @@ class _StreamSearcherGetxBuilderBase<T, S>
   @override
   void didUpdateWidget(StreamSearcherBuilderBase<T, S> oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.getInitialData != widget.getInitialData) {
+      _initialData = widget.getInitialData;
+      _haveInitialData = _initialData != null;
+
+      if (_haveInitialData) {
+        if (widget.searcher.haveInitialData) {
+          downConnectyWithoutData = false;
+        }
+        _summary = widget.initial();
+        widget.searcher.wrabListSearch(_initialData as List);
+        _unsubscribeConnecty();
+      }
+    }
+
     if (oldWidget.stream != widget.stream) {
       if (_subscription != null) {
         _unsubscribeStream();
@@ -114,18 +130,6 @@ class _StreamSearcherGetxBuilderBase<T, S>
       }
 
       _subscribeStream();
-    }
-
-    if (oldWidget.haveInitialData != widget.haveInitialData) {
-      _initialData = widget.haveInitialData;
-      _haveInitialData = _initialData != null;
-
-      if (_haveInitialData) {
-        downConnectyWithoutData = false;
-        _summary = widget.initial();
-        widget.searcher.wrabListSearch(_initialData as List);
-        _unsubscribeConnecty();
-      }
     }
   }
 

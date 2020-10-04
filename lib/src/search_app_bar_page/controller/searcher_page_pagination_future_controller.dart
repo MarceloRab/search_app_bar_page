@@ -165,6 +165,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
     }
 
     listFull.addAll(list);
+    sortCompareList(listFull);
     onSearchList(listFull);
     rxSearch('');
   }
@@ -193,10 +194,10 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
       // Após apresentar o primeiro Obx(())
       //listFull = listData;
       listFull.addAll(listData);
+      sortCompareList(listFull);
       if (rxSearch.value.isNotEmpty) {
         refreshSeachFullList(rxSearch.value);
       } else {
-        sortCompareList(listData);
         onSearchList(listData);
       }
     } else {
@@ -221,9 +222,6 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
         .where((element) => _filters(stringFilter(element), value))
         .toList();
 
-    //numPageItemsCurrent = list.length;
-
-    sortCompareList(list);
     onSearchList(list);
   }
 

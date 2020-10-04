@@ -63,6 +63,7 @@ class SearcherPageStreamController<T> extends SeacherBase {
     }
 
     listFull = list;
+    sortCompareList(listFull);
     onSearchList(list);
     rxSearch('');
   }
@@ -104,10 +105,10 @@ class SearcherPageStreamController<T> extends SeacherBase {
       // Fica negativo dentro do StreamBuilder
       // Após apresentar o primeiro Obx(())
       listFull = listData;
+      sortCompareList(listFull);
       if (rxSearch.value.isNotEmpty) {
         refreshSeachList(rxSearch.value);
       } else {
-        sortCompareList(listData);
         onSearchList(listData);
       }
     } else {
@@ -126,7 +127,7 @@ class SearcherPageStreamController<T> extends SeacherBase {
         .where((element) => _filters(stringFilter(element), value))
         .toList();
 
-    sortCompareList(list);
+    //sortCompareList(list);
     onSearchList(list);
   }
 

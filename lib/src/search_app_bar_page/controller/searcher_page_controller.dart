@@ -58,6 +58,7 @@ class SearcherPageController<T> extends SeacherBase {
       }
     }
     _bancoInit.close();
+    sortCompareList(listFull);
     onSearchList(listFull);
   }
 
@@ -82,7 +83,7 @@ class SearcherPageController<T> extends SeacherBase {
         .where((element) => _filters(stringFilter(element), value))
         .toList();
 
-    sortCompareList(list);
+    //sortCompareList(list);
     onSearchList(list);
   }
 

@@ -92,6 +92,8 @@ class _SearchAppBarPageFutureBuilderState<T>
       }
 
       widget.searcher.listFull.addAll(widget.initialData);
+      widget.searcher.sortCompareList(widget.searcher.listFull);
+
       widget.searcher.snapshotScroolPage = AsyncSnapshotScrollPage<T>(
           snapshot: AsyncSnapshot<List<T>>.withData(
               ConnectionState.none, widget.initialData));
@@ -198,6 +200,7 @@ class _SearchAppBarPageFutureBuilderState<T>
 
     widget.futureFetchPageItems(widget.searcher.pageSearch, query).then((data) {
       if (_activeCallbackIdentity == callbackIdentity) {
+        widget.searcher.snapshotScroolPage.loadingScroll = false;
         // Recebeu lista vazia - encerrou
         if (data.isEmpty) {
           widget.searcher.snapshotScroolPage = widget
@@ -205,7 +208,6 @@ class _SearchAppBarPageFutureBuilderState<T>
               .copyWith(endSearchPage: false, finishSearchPage: true);
           return;
         }
-        widget.searcher.snapshotScroolPage.loadingScroll = false;
 
         if (data.length - widget.searcher.numPageItems < 0) {
           widget.searcher.listFullSearchQuery.addAll(data);
@@ -264,6 +266,7 @@ class _SearchAppBarPageFutureBuilderState<T>
           downConnectyWithoutData = false;
           _unsubscribeConnecty();
         }
+        widget.searcher.snapshotScroolPage.loadingScroll = false;
         // Encerroou dados da API
         if (data.isEmpty) {
           widget.searcher.snapshotScroolPage = widget
@@ -272,7 +275,6 @@ class _SearchAppBarPageFutureBuilderState<T>
           return;
         }
 
-        widget.searcher.snapshotScroolPage.loadingScroll = false;
         // Ultima pagina
         if (data.length - widget.searcher.numPageItems < 0) {
           widget.searcher.wrabListSearch(data);
@@ -465,7 +467,8 @@ class _SearchAppBarPageFutureBuilderState<T>
           widget.searcher.page =
               (widget.initialData.length / widget.numPageItems).ceil();
           widget.searcher.listFull.clear();
-          widget.searcher.listFull.addAll(widget.initialData);
+          widget.searcher.wrabListSearch(widget.initialData);
+
           if (widget.searcher.rxSearch.value.isEmpty) {
             widget.searcher.snapshotScroolPage = AsyncSnapshotScrollPage<T>(
                 snapshot: AsyncSnapshot<List<T>>.withData(

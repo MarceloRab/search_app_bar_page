@@ -32,7 +32,7 @@ class StreamSearchBuilder<
   final Widget widgetConnecty;
 
   @override
-  List<T> get haveInitialData => initialData;
+  List<T> get getInitialData => initialData;
 
   @override
   AsyncSnapshot<List<T>> initial() =>
