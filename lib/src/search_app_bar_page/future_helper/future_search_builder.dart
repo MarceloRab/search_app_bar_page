@@ -100,7 +100,7 @@ class _SearchAppBarPageFutureBuilderState<T>
       /* widget.searcher.snapshot = AsyncSnapshot<List<T>>.withData(
           ConnectionState.none, widget.initialData);*/
 
-      widget.searcher.onSearchList(widget.initialData);
+      //widget.searcher.onSearchList(widget.initialData);
     } else {
       _connectyController = ConnectyController();
       _subscribeConnecty();

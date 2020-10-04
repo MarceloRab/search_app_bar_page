@@ -40,10 +40,16 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
   // ignore: overridden_fields
   final rxSearch = ''.obs;
 
-  final RxList<T> listSearch = <T>[].obs;
+  //List<T> listSearch = <T>[];
 
-  Function(Iterable<T>) get onSearchList => listSearch.assignAll;
+  //final RxList<T> listSearch = <T>[].obs;
 
+  //Function(Iterable<T>) get onSearchList => listSearch.assignAll;
+  /* Function(Iterable<T>) get onSearchList {
+    listSearch.clear();
+    return listSearch.addAll;
+  }
+*/
   final FiltersTypes filtersType;
   Filter<String> _filters;
   StringFilter<T> stringFilter;
@@ -166,7 +172,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
 
     listFull.addAll(list);
     sortCompareList(listFull);
-    onSearchList(listFull);
+    //onSearchList(listFull);
     rxSearch('');
   }
 
@@ -195,11 +201,11 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
       //listFull = listData;
       listFull.addAll(listData);
       sortCompareList(listFull);
-      if (rxSearch.value.isNotEmpty) {
+      /*if (rxSearch.value.isNotEmpty) {
         refreshSeachFullList(rxSearch.value);
       } else {
-        onSearchList(listData);
-      }
+        //onSearchList(listData);
+      }*/
     } else {
       initialChangeList = listData;
     }
@@ -209,7 +215,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
     _worker = ever(rxSearch, (String value) {
       if (value.isEmpty) {
         pageSearch = 1;
-        refreshSeachFullList(value);
+        //refreshSeachFullList(value);
       }
 
       // se nao vazia vide stream no initState da classe
@@ -217,13 +223,13 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
     });
   }
 
-  void refreshSeachFullList(String value) {
+  /*void refreshSeachFullList(String value) {
     final list = listFull
         .where((element) => _filters(stringFilter(element), value))
         .toList();
 
-    onSearchList(list);
-  }
+    //onSearchList(list);
+  }*/
 
   void refreshSeachList(String value) {
     final list = listFullSearchQuery
@@ -233,7 +239,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
     //numPageItemsCurrent = list.length;
 
     sortCompareList(list);
-    onSearchList(list);
+    //onSearchList(list);
   }
 
   void sortCompareList(List<T> list) {
@@ -247,7 +253,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
     _worker?.dispose();
     _isModSearch.close();
     rxSearch.close();
-    listSearch.close();
+    // listSearch.close();
 
     //_endSearchPage.close();
     //_endPage.close();
