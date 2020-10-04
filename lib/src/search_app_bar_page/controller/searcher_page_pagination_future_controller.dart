@@ -73,7 +73,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
 
   //set endSearchPage(bool value) => _isModSearch.value = value;
 
-  Worker _worker;
+  //Worker _worker;
 
   //bool loadingScroll = false;
 
@@ -86,6 +86,22 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
       func(page, rxSearch.value);
 
   StringFilter<T> get _defaultFilter => (T value) => value as String;
+
+  Map<String, ListSearchBuild<T>> mapsSearch = {};
+
+  String _query = '';
+
+  bool progide = false;
+
+  void queryProgride(String newQuery) {
+    progide = newQuery.length - _query.length > 0;
+    _query = newQuery;
+  }
+
+  void restartQuery() {
+    _query = '';
+    progide = false;
+  }
 
   SearcherPagePaginationFutureController({
     //@required this.listStream,
@@ -105,87 +121,110 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
 
   var listFull = <T>[];
 
-  var listFullSearchQuery = <T>[];
+  //var listFullSearchQuery = <T>[];
 
   ListSearchBuild<T> haveSearchQueryPage(String query) {
+    queryProgride(query);
+    pageSearch = 1;
     var listSearchBuild = <T>[];
+
     if (query.length > 1) {
-      if (snapshotScroolPage.finishSearchPage) {
-        debugPrint(' TESTE -- listFullSearchQuery '
-            '-${listFullSearchQuery.toString()}-  ');
-        listSearchBuild = listFullSearchQuery
+      // Pega da anterior que já esta completa
+
+      if (mapsSearch.containsKey(
+          query.replaceRange(query.length - 1, query.length, ''))) {
+        final listAnterior =
+            mapsSearch[query.replaceRange(query.length - 1, query.length, '')];
+
+        listSearchBuild = listAnterior.listSearch
             .where((element) => _filters(stringFilter(element), query))
             //query.replaceRange(query.length - 1, query.length, '')))
             .toList();
 
-        // para buscar em sublistas
-        return ListSearchBuild<T>(
-            listSearch: listSearchBuild, isListSearchFull: true);
+        if (mapsSearch.containsKey(query)) {
+          pageSearch = (listSearchBuild.length / numPageItems).ceil();
+          if (pageSearch == 0) {
+            pageSearch = 1;
+          }
+          if (mapsSearch[query].isListSearchFull) {
+            return mapsSearch[query];
+          }
+        }
+
+        mapsSearch[query] = ListSearchBuild<T>(
+            listSearch: listSearchBuild,
+            // se a anterior esta full a atual tb.
+            isListSearchFull: listAnterior.isListSearchFull);
       } else {
-        //listFullSearchQuery.clear();
-        snapshotScroolPage.finishSearchPage = false;
         listSearchBuild = listFull
             .where((element) => _filters(stringFilter(element), query))
+            //query.replaceRange(query.length - 1, query.length, '')))
             .toList();
+
+        mapsSearch[query] = ListSearchBuild<T>(
+            listSearch: listSearchBuild,
+            // se a anterior esta full a atual tb.
+            isListSearchFull: snapshotScroolPage.finishPage);
       }
-    } else {
-      //listFullSearchQuery.clear();
-      snapshotScroolPage.finishSearchPage = false;
-      listSearchBuild = listFull
-          .where((element) => _filters(stringFilter(element), query))
-          .toList();
-    }
 
-    /*listSearchBuild = listFull
-        .where((element) => _filters(stringFilter(element), query))
-        .toList();*/
-
-    if (snapshotScroolPage.finishPage) {
       pageSearch = (listSearchBuild.length / numPageItems).ceil();
       if (pageSearch == 0) {
         pageSearch = 1;
       }
-      snapshotScroolPage.finishSearchPage = true;
-      debugPrint(' SearcherPagePaginationFutureController '
-          'PAGE SEARCH DEPOIS== $pageSearch');
-      debugPrint('SearcherPagePaginationFutureController - finalizou '
-          'pagian search chamadas api'
-          ' ${snapshotScroolPage.finishSearchPage}');
-      // return listSearchBuild;
-      return ListSearchBuild<T>(listSearch: listSearchBuild);
+
+      if (mapsSearch[query].isListSearchFull) {
+        return mapsSearch[query];
+      }
+    } else {
+      if (mapsSearch.containsKey(query)) {
+        pageSearch =
+            (mapsSearch[query].listSearch.length / numPageItems).ceil();
+        if (pageSearch == 0) {
+          pageSearch = 1;
+        }
+        if (mapsSearch[query].isListSearchFull) {
+          return mapsSearch[query];
+        }
+      }
+
+      listSearchBuild = listFull
+          .where((element) => _filters(stringFilter(element), query))
+          .toList();
+
+      if (snapshotScroolPage.finishPage) {
+        //mapsSearch.clear();
+        pageSearch = (listSearchBuild.length / numPageItems).ceil();
+        if (pageSearch == 0) {
+          pageSearch = 1;
+        }
+        snapshotScroolPage.finishSearchPage = true;
+        debugPrint(' SearcherPagePaginationFutureController '
+            'PAGE SEARCH DEPOIS== $pageSearch');
+        debugPrint('SearcherPagePaginationFutureController - finalizou '
+            'pagian search chamadas api'
+            ' ${snapshotScroolPage.finishSearchPage}');
+
+        //finaliza a listSearch da query inicial
+        mapsSearch[query] = ListSearchBuild<T>(
+            listSearch: listSearchBuild, isListSearchFull: true);
+        return mapsSearch[query];
+      } else {
+        // Primeira adicao da key com query incial
+
+        snapshotScroolPage.finishSearchPage = false;
+        if (!mapsSearch.containsKey(query)) {
+          mapsSearch[query] = ListSearchBuild<T>(listSearch: listSearchBuild);
+        } else {
+          pageSearch =
+              (mapsSearch[query].listSearch.length / numPageItems).ceil();
+          if (pageSearch == 0) {
+            pageSearch = 1;
+          }
+        }
+      }
     }
 
-    // virificar se a paginaFinish?
-    if (listSearchBuild.length == numPageItems * pageSearch) {
-      return ListSearchBuild<T>(listSearch: listSearchBuild);
-    } else if (listSearchBuild.length > numPageItems * pageSearch) {
-      pageSearch = (listSearchBuild.length / numPageItems).ceil();
-      debugPrint('SearcherPagePaginationFutureController '
-          '--- Divisao == '
-          '${(listSearchBuild.length / numPageItems).toString()}');
-      debugPrint('SearcherPagePaginationFutureController '
-          '---- SEARCH PAGE DEPOIS== $pageSearch');
-      debugPrint('SearcherPagePaginationFutureController '
-          '---- listSearchBuild Search filtrada length '
-          '== ${listSearchBuild.length}');
-      debugPrint('--------');
-      //return listSearchBuild;
-      return ListSearchBuild<T>(listSearch: listSearchBuild);
-    }
-
-    /*else if (listSearchBuild.length < numPageItems) {
-      debugPrint('SearcherPagePaginationFutureController '
-          '--- Divisao == ${(listSearchBuild.length / numPageItems).toString()}');
-      debugPrint('SearcherPagePaginationFutureController '
-          '---- SEARCH PAGE DEPOIS== $pageSearch');
-      debugPrint('SearcherPagePaginationFutureController '
-          '---- listSearchBuild Search filtrada length
-          == ${listSearchBuild.length}');
-      debugPrint('--------');
-      return listSearchBuild;
-    }*/
-    //return <T>[];
-    return ListSearchBuild<T>(listSearch: <T>[]);
+    return mapsSearch[query];
   }
 
   /*List<T> haveSearchQueryPage(String query) {
@@ -250,7 +289,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
     }
   }
 
-  void subscribeWorker() {
+  /* void subscribeWorker() {
     _worker = ever(rxSearch, (String value) {
       if (value.isEmpty) {
         pageSearch = 1;
@@ -260,7 +299,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
       // se nao vazia vide stream no initState da classe
       //_SearchAppBarPageFutureBuilderState
     });
-  }
+  }*/
 
   /*void refreshSeachFullList(String value) {
     final list = listFull
@@ -270,7 +309,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
     //onSearchList(list);
   }*/
 
-  void refreshSeachList(String value) {
+  /* void refreshSeachList(String value) {
     final list = listFullSearchQuery
         .where((element) => _filters(stringFilter(element), value))
         .toList();
@@ -280,7 +319,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
     sortCompareList(list);
     //onSearchList(list);
   }
-
+*/
   void sortCompareList(List<T> list) {
     if (compareSort != null) {
       list.sort(compareSort);
@@ -289,7 +328,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
 
   FutureOr onClose() {
     _snapshotScroolPage.close();
-    _worker?.dispose();
+    // _worker?.dispose();
     _isModSearch.close();
     rxSearch.close();
     // listSearch.close();

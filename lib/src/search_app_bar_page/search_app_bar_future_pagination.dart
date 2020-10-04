@@ -54,6 +54,7 @@ class SearchAppBarPagination<T> extends StatefulWidget {
   ///  passa a mostrar o [widgetWaiting] até apresentar o primeiro dado
   final Widget widgetWaiting;
   final Widget widgetOffConnectyWaiting;
+  final Widget widgetEndScrollPage;
 
   /// [widgetError] You can do what you have when there is an error
   /// in the stream.
@@ -160,7 +161,7 @@ class SearchAppBarPagination<T> extends StatefulWidget {
     this.stringFilter,
     this.compareSort,
     this.numPageItems,
-    this.futureFetchPageItems,
+    this.futureFetchPageItems, this.widgetEndScrollPage,
   }) : super(key: key);
 
   @override
@@ -186,8 +187,8 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
         stringFilter: widget.stringFilter,
         compareSort: widget.compareSort,
         filtersType: widget.filtersType)
-      ..onInit()
-      ..subscribeWorker();
+      ..onInit();
+      //..subscribeWorker();
     //_subscribeListStream();
     //_future = widget.futureFetchPageItems(_controller.page, '');
   }
@@ -226,6 +227,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
           widgetError: widget.widgetError,
           widgetNothingFound: widget.widgetNothingFound,
           widgetWaiting: widget.widgetWaiting,
+          widgetEndScrollPage: widget.widgetEndScrollPage,
         ),
         floatingActionButton: widget.searchePageFloaActionButton,
         floatingActionButtonLocation:
