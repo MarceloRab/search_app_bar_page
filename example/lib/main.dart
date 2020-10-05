@@ -335,9 +335,9 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
         if (list.isEmpty) {
           return Center(
               child: Text(
-                'NOTHING FOUND',
-                style: TextStyle(fontSize: 14),
-              ));
+            'NOTHING FOUND',
+            style: TextStyle(fontSize: 14),
+          ));
         }
         return Column(
           children: [
@@ -475,7 +475,6 @@ final dataListPerson3 = <Person>[
   Person(name: 'Miriam Leitao', age: 33),
   Person(name: 'Gabriel Mentiroso', age: 19),
   Person(name: 'Caio Petro', age: 27),
-  Person(name: 'Mae Queida', age: 5),
   Person(name: 'Tanto Nome', age: 66),
   Person(name: 'Nao Diga', age: 33),
   Person(name: 'Fique Queto', age: 11),

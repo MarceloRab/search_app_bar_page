@@ -17,17 +17,22 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
   @override
   set isModSearch(bool value) => _isModSearch.value = value;
 
-  /*final Rx<AsyncSnapshot<List<T>>> _snapshot =
+  AsyncSnapshot<List<T>> snapshot;
+
+  bool finishPage = false;
+
+  /* final Rx<AsyncSnapshot<List<T>>> _snapshot =
       AsyncSnapshot<List<T>>.withData(ConnectionState.done, null).obs;
 
-  AsyncSnapshot<List<T>> get snapshot => _snapshot.value;
+  AsyncSnapshot<List<T>> get snapshotScroolPage => _snapshot.value;
 
-  set snapshot(AsyncSnapshot<List<T>> value) => _snapshot.value = value;*/
+  set snapshotScroolPage(AsyncSnapshot<List<T>> value) =>
+      _snapshot.value = value;*/
 
   final Rx<AsyncSnapshotScrollPage<T>> _snapshotScroolPage =
       AsyncSnapshotScrollPage<T>(
-              snapshot:
-                  AsyncSnapshot<List<T>>.withData(ConnectionState.none, null))
+          snapshot:
+          AsyncSnapshot<List<T>>.withData(ConnectionState.none, null))
           .obs;
 
   AsyncSnapshotScrollPage<T> get snapshotScroolPage =>
@@ -134,11 +139,11 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
       if (mapsSearch.containsKey(
           query.replaceRange(query.length - 1, query.length, ''))) {
         final listAnterior =
-            mapsSearch[query.replaceRange(query.length - 1, query.length, '')];
+        mapsSearch[query.replaceRange(query.length - 1, query.length, '')];
 
         listSearchBuild = listAnterior.listSearch
             .where((element) => _filters(stringFilter(element), query))
-            //query.replaceRange(query.length - 1, query.length, '')))
+        //query.replaceRange(query.length - 1, query.length, '')))
             .toList();
 
         if (mapsSearch.containsKey(query)) {
@@ -158,13 +163,26 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
       } else {
         listSearchBuild = listFull
             .where((element) => _filters(stringFilter(element), query))
-            //query.replaceRange(query.length - 1, query.length, '')))
+        //query.replaceRange(query.length - 1, query.length, '')))
             .toList();
+
+        pageSearch = (listSearchBuild.length / numPageItems).ceil();
+        if (pageSearch == 0) {
+          pageSearch = 1;
+        }
+
+        if (mapsSearch[query].isListSearchFull) {
+          return mapsSearch[query];
+        }
+
 
         mapsSearch[query] = ListSearchBuild<T>(
             listSearch: listSearchBuild,
             // se a anterior esta full a atual tb.
-            isListSearchFull: snapshotScroolPage.finishPage);
+            isListSearchFull: finishPage);
+        print('listSearch.query => '
+            '${mapsSearch[
+        query].listSearch.length.toString()}');
       }
 
       pageSearch = (listSearchBuild.length / numPageItems).ceil();
@@ -185,24 +203,37 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
         if (mapsSearch[query].isListSearchFull) {
           return mapsSearch[query];
         }
+      } else {
+        listSearchBuild = listFull
+            .where((element) => _filters(stringFilter(element), query))
+            .toList();
+
+
+        pageSearch = (listSearchBuild.length / numPageItems).ceil();
+        if (pageSearch == 0) {
+          pageSearch = 1;
+        }
+        mapsSearch[query] = ListSearchBuild<T>(listSearch: listSearchBuild);
+
+        print('listSearch.query => '
+            '${mapsSearch[
+        query].listSearch.length.toString()}');
+
+        print('searche.page => ${pageSearch.toString()}');
       }
 
-      listSearchBuild = listFull
-          .where((element) => _filters(stringFilter(element), query))
-          .toList();
-
-      if (snapshotScroolPage.finishPage) {
+      if (finishPage) {
         //mapsSearch.clear();
         pageSearch = (listSearchBuild.length / numPageItems).ceil();
         if (pageSearch == 0) {
           pageSearch = 1;
         }
-        snapshotScroolPage.finishSearchPage = true;
+        mapsSearch[query].isListSearchFull = true;
         debugPrint(' SearcherPagePaginationFutureController '
             'PAGE SEARCH DEPOIS== $pageSearch');
         debugPrint('SearcherPagePaginationFutureController - finalizou '
             'pagian search chamadas api'
-            ' ${snapshotScroolPage.finishSearchPage}');
+            ' ${mapsSearch[query].isListSearchFull}');
 
         //finaliza a listSearch da query inicial
         mapsSearch[query] = ListSearchBuild<T>(
@@ -211,16 +242,6 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
       } else {
         // Primeira adicao da key com query incial
 
-        snapshotScroolPage.finishSearchPage = false;
-        if (!mapsSearch.containsKey(query)) {
-          mapsSearch[query] = ListSearchBuild<T>(listSearch: listSearchBuild);
-        } else {
-          pageSearch =
-              (mapsSearch[query].listSearch.length / numPageItems).ceil();
-          if (pageSearch == 0) {
-            pageSearch = 1;
-          }
-        }
       }
     }
 
@@ -342,34 +363,36 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
 //AsyncSnapshot
 class AsyncSnapshotScrollPage<T> {
   AsyncSnapshot<List<T>> snapshot;
-  bool endPage;
+
+  /*bool endPage;
   bool endSearchPage;
   bool finishPage;
-  bool finishSearchPage;
+  bool finishSearchPage;*/
   bool loadingScroll;
 
-  AsyncSnapshotScrollPage(
-      {this.snapshot,
-      this.endPage = false,
+  AsyncSnapshotScrollPage({
+    this.snapshot,
+    /*this.endPage = false,
       this.finishPage = false,
-      this.finishSearchPage = false,
-      this.loadingScroll = false,
-      this.endSearchPage = false});
+      this.finishSearchPage = false,*/
+    this.loadingScroll = false,
+    //this.endSearchPage = false
+  });
 
   AsyncSnapshotScrollPage<T> copyWith({
     AsyncSnapshot<List<T>> snapshot,
-    bool endPage,
+    /* bool endPage,
     bool endSearchPage,
     bool finishPage,
-    bool finishSearchPage,
+    bool finishSearchPage,*/
     bool loadingScroll,
   }) {
     return AsyncSnapshotScrollPage<T>(
       snapshot: snapshot ?? this.snapshot,
-      endPage: endPage ?? this.endPage,
+      /*endPage: endPage ?? this.endPage,
       endSearchPage: endSearchPage ?? this.endSearchPage,
       finishPage: finishPage ?? this.finishPage,
-      finishSearchPage: finishSearchPage ?? this.finishSearchPage,
+      finishSearchPage: finishSearchPage ?? this.finishSearchPage,*/
       loadingScroll: loadingScroll ?? this.loadingScroll,
     );
   }
