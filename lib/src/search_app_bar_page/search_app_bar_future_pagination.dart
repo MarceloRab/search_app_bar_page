@@ -43,10 +43,6 @@ class SearchAppBarPagination<T> extends StatefulWidget {
   /// It is always the closest to the center.
   final Widget iconConnectyOffAppBar;
 
-  ///  [iconConnectyOffAppBar] Aparece quando o status da conexao é off.
-  ///  já existe um icone default. Caso nao queira apresentar escolha
-  ///  [hideDefaultConnectyIconOffAppBar] = false;
-
   /// Parametros para o Scaffold
 
   ///  [widgetOffConnectyWaiting] Apenas mostra algo quando esta sem conexao
@@ -54,12 +50,16 @@ class SearchAppBarPagination<T> extends StatefulWidget {
   ///  passa a mostrar o [widgetWaiting] até apresentar o primeiro dado
   final Widget widgetWaiting;
   final Widget widgetOffConnectyWaiting;
+
+  /// [widgetEndScrollPage] shown when the end of the page arrives and
+  /// awaits the Future of the data on the next page
   final Widget widgetEndScrollPage;
 
   /// [widgetError] You can do what you have when there is an error
   /// in the stream.
   final Widget widgetError;
 
+  /// [widgetNothingFound] when searching for something you don't find data.
   final Widget widgetNothingFound;
 
   /// [searchePageFloaActionButton] , [searchePageFloaActionButton] ,
@@ -92,8 +92,14 @@ class SearchAppBarPagination<T> extends StatefulWidget {
   /// [widgetWaiting]
   final List<T> initialData;
 
+  ///[futureFetchPageItems] Return the list in parts or parts by query String
+  ///filtered. We make the necessary changes on the device side to update the
+  ///page to be requested. Eg: If numItemsPage = 6 and you receive 05 or 11
+  ///or send empty, = >>> it means that the data is over.
   final FutureFetchPageItems<T> futureFetchPageItems;
 
+  /// [numPageItems] Automatically calculated when receiving the first data.
+  /// If it has [initialData] it cannot be null.
   final int numPageItems;
 
   /// [filtersType] These are the filters that the Controller uses to
@@ -101,6 +107,10 @@ class SearchAppBarPagination<T> extends StatefulWidget {
   /// startsWith, equals, contains. Default = FiltersTypes.contains;
   final FiltersTypes filtersType;
 
+  /// [paginationItemBuilder]
+  /// typedef WidgetsPaginationItemBuilder<T> = Widget Function(
+  ///BuildContext context, int index, T objectIndex);
+  /// final WidgetsPaginationItemBuilder<T> paginationItemBuilder;
   final WidgetsPaginationItemBuilder<T> paginationItemBuilder;
 
   /// [stringFilter] Required if you type.
@@ -116,6 +126,7 @@ class SearchAppBarPagination<T> extends StatefulWidget {
 
   const SearchAppBarPagination({
     Key key,
+    @required this.futureFetchPageItems,
     @required this.paginationItemBuilder,
     this.searchAppBartitle,
     this.searchAppBarcenterTitle = false,
@@ -161,7 +172,7 @@ class SearchAppBarPagination<T> extends StatefulWidget {
     this.stringFilter,
     this.compareSort,
     this.numPageItems,
-    this.futureFetchPageItems, this.widgetEndScrollPage,
+    this.widgetEndScrollPage,
   }) : super(key: key);
 
   @override
@@ -188,7 +199,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
         compareSort: widget.compareSort,
         filtersType: widget.filtersType)
       ..onInit();
-      //..subscribeWorker();
+    //..subscribeWorker();
     //_subscribeListStream();
     //_future = widget.futureFetchPageItems(_controller.page, '');
   }

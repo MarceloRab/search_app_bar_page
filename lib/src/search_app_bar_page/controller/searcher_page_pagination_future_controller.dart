@@ -31,8 +31,8 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
 
   final Rx<AsyncSnapshotScrollPage<T>> _snapshotScroolPage =
       AsyncSnapshotScrollPage<T>(
-          snapshot:
-          AsyncSnapshot<List<T>>.withData(ConnectionState.none, null))
+              snapshot:
+                  AsyncSnapshot<List<T>>.withData(ConnectionState.none, null))
           .obs;
 
   AsyncSnapshotScrollPage<T> get snapshotScroolPage =>
@@ -137,7 +137,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
       ListSearchBuild<T> listAnterior;
 
       final queryStringAnterior =
-      query.replaceRange(query.length - 1, query.length, '');
+          query.replaceRange(query.length - 1, query.length, '');
       if (mapsSearch.containsKey(queryStringAnterior)) {
         listAnterior = mapsSearch[queryStringAnterior];
 
@@ -175,7 +175,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
           listSearch.clear();
           listSearch = listFull
               .where((element) => _filters(stringFilter(element), query))
-          //query.replaceRange(query.length - 1, query.length, '')))
+              //query.replaceRange(query.length - 1, query.length, '')))
               .toList();
 
           pageSearch = (listSearch.length / numPageItems).ceil();
@@ -196,18 +196,17 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
         listSearch.clear();
         listSearch = listFull
             .where((element) => _filters(stringFilter(element), query))
-        //query.replaceRange(query.length - 1, query.length, '')))
+            //query.replaceRange(query.length - 1, query.length, '')))
             .toList();
         if (listAnterior != null) {
-          if (listAnterior.listSearch.length > listSearch
-              .length) {
+          if (listAnterior.listSearch.length > listSearch.length) {
             pageSearch = (listAnterior.listSearch.length / numPageItems).ceil();
             if (pageSearch == 0) {
               pageSearch = 1;
             }
             mapsSearch[query] = ListSearchBuild<T>(
-                listSearch: listAnterior.listSearch.where((element) =>
-                    _filters(stringFilter(element), query))
+                listSearch: listAnterior.listSearch
+                    .where((element) => _filters(stringFilter(element), query))
                     .toList(),
                 // se a anterior esta full a atual tb.
                 isListSearchFull: listAnterior.isListSearchFull);

@@ -34,10 +34,10 @@ class SearchAppBarPageFutureBuilder<T> extends StatefulWidget {
   const SearchAppBarPageFutureBuilder({
     Key key,
     @required this.futureFetchPageItems,
+    @required this.paginationItemBuilder,
     //this.builder,
     this.initialData,
     this.searcher,
-    this.paginationItemBuilder,
     this.widgetConnecty,
     this.numPageItems,
     this.widgetError,
@@ -167,8 +167,7 @@ class _SearchAppBarPageFutureBuilderState<T>
         if (data.isEmpty) {
           widget.searcher.finishPage = true;
           widget.searcher.snapshotScroolPage =
-              widget.searcher.snapshotScroolPage
-                  .copyWith();
+              widget.searcher.snapshotScroolPage.copyWith();
           return;
         }
 

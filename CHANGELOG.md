@@ -1,3 +1,6 @@
+## [0.3.0]
+- In this new update (SearchAppBarPagination - 🙌🏽 ) was added and some fixes were added.
+
 ## [0.2.2]
 - Fixed when using null initialList (SearchAppBarPageStream) and making a setState in the initialList 
 not null.
