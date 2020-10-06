@@ -36,7 +36,7 @@ class SearchAppBarPage<T> extends StatefulWidget {
 
 SearchAppBarPage(
                        //...
-       /// Parametros para o SearcherGetController
+       /// Parameters para o SearcherGetController
        /// final List<T> listFull;
        @required this.listFull, 
         /// [listBuilder] Function applied when it is filtering in search.
@@ -279,7 +279,7 @@ class Person {
 ```
 
 
-🔎 <span> </span> ```SearchAppBarPagination``` is built for fragmented requests for your API. If you have hundreds of data and would like to send them in parts, in addition to being able to filter them efficiently, this Widget is the chosen one. There is a cache of requests to avoid getting (REST) unnecessarily. The cache is reset when a screen is disposed. What differs from StreamPage is that a function that forwards the page and the search string query will always be called when necessary. Example: reaches the bottom of the page. Remembering that this function must return a Future (get for your API). You will see an example with the server side below in Dart.
+🔎 <span> </span> ```SearchAppBarPagination``` is built for fragmented requests for your API. If you have hundreds of data and would like to send them in parts, in addition to being able to filter them efficiently, this Widget is the chosen one. There is a cache of requests to avoid getting (REST) unnecessarily. The cache Kis reset when a screen is disposed. What differs from StreamPage is that a function that forwards the page and the search string query will always be called when necessary. Example: reaches the bottom of the page. Remembering that this function must return a Future (get for your API). You will see an example with the server side below in Dart.
 
 
 ```dart
@@ -288,13 +288,17 @@ class SearchAppBarPagination<T> extends StatefulWidget {
 
 SearchAppBarPagination(
         //...
-    /// typedef WidgetsPaginationItemBuilder<T> = Widget Function(
-    ///BuildContext context, int index, T objectIndex);
-    /// final WidgetsPaginationItemBuilder<T> paginationItemBuilder;
+    ///Returns Widget from the object (<T>). This comes from the List <T> index.
+    ///typedef WidgetsPaginationItemBuilder<T> = Widget Function(
+    ///    BuildContext context, int index, T objectIndex);
+    ///final WidgetsPaginationItemBuilder<T> paginationItemBuilder;
     @required this.paginationItemBuilder,
-
-
-
+    ///Return the list in parts or parts by query String
+    ///filtered. We make the necessary changes on the device side to update the
+    ///page to be requested. Eg: If numItemsPage = 6 and you receive 05 or 11
+    ///or send empty, = >>> it means that the data is over.
+    ///typedef FutureFetchPageItems<T> = Future<List<T>> Function(int page, String query);       
+    /// final FutureFetchPageItems<T> futureFetchPageItems;
     @required  this.futureFetchPageItems,
 
     /// [stringFilter] Required if you type. 
@@ -383,9 +387,8 @@ class _SearchAppBarPaginationTestState
 
 ![WhatsApp-Video-2020-10-05-at-21 58](https://user-images.githubusercontent.com/41010018/95147164-56d03680-0756-11eb-9aa4-21071920248f.gif)
 
-###### Vide [Example](https://pub.dev/packages/search_app_bar_page/example) for more details.
+#### Example of server side function.
 
-```Example of server side function.```
 Here in Dart. Return the list in parts or parts by query String filtered. We make the necessary changes on the device side to update the page to be requested. Eg: If numItemsPage = 6 and you receive 05 or 11 or send empty, = >>> it means that the data is over.
 
 ##### I had to spend a few hours testing it so there were no mistakes. Do tests and if you find an error, I would be happy to resolve them as soon as possible.
@@ -453,6 +456,8 @@ Future<List<Person>> _futureListPerson(int page, String query) async {
   }
 
 ```
+
+#### Vide [Example full](https://pub.dev/packages/search_app_bar_page/example) for more details.
 
 ## Filters
 

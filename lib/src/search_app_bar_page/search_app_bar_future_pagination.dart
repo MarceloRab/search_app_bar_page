@@ -107,7 +107,8 @@ class SearchAppBarPagination<T> extends StatefulWidget {
   /// startsWith, equals, contains. Default = FiltersTypes.contains;
   final FiltersTypes filtersType;
 
-  /// [paginationItemBuilder]
+  /// [paginationItemBuilder] Returns Widget from the object (<T>).
+  /// This comes from the List <T> index.
   /// typedef WidgetsPaginationItemBuilder<T> = Widget Function(
   ///BuildContext context, int index, T objectIndex);
   /// final WidgetsPaginationItemBuilder<T> paginationItemBuilder;
