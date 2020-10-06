@@ -386,7 +386,7 @@ class _SearchAppBarPaginationTestState
 }
 ```
 
-![WhatsApp-Video-2020-10-05-at-21 58](https://user-images.githubusercontent.com/41010018/95147164-56d03680-0756-11eb-9aa4-21071920248f.gif)
+![WhatsApp-Video-2020-10-05-at-23 33](https://user-images.githubusercontent.com/41010018/95152485-8cc7e780-0763-11eb-9c77-55b3fe84fd61.gif)
 
 #### Example of server side function.
 
