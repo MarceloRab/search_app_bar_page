@@ -128,73 +128,131 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
 
   //var listFullSearchQuery = <T>[];
 
-  ListSearchBuild<T> haveSearchQueryPage(String query) {
+  ListSearchBuild<T> haveSearchQueryPage(String query, {bool restart = false}) {
     queryProgride(query);
     pageSearch = 1;
-    var listSearchBuild = <T>[];
+    var listSearch = <T>[];
 
     if (query.length > 1) {
-      // Pega da anterior que já esta completa
+      ListSearchBuild<T> listAnterior;
 
-      if (mapsSearch.containsKey(
-          query.replaceRange(query.length - 1, query.length, ''))) {
-        final listAnterior =
-        mapsSearch[query.replaceRange(query.length - 1, query.length, '')];
+      final queryStringAnterior =
+      query.replaceRange(query.length - 1, query.length, '');
+      if (mapsSearch.containsKey(queryStringAnterior)) {
+        listAnterior = mapsSearch[queryStringAnterior];
 
-        listSearchBuild = listAnterior.listSearch
+        listSearch = listAnterior.listSearch
             .where((element) => _filters(stringFilter(element), query))
-        //query.replaceRange(query.length - 1, query.length, '')))
             .toList();
+      }
 
-        if (mapsSearch.containsKey(query)) {
-          pageSearch = (listSearchBuild.length / numPageItems).ceil();
+      if (mapsSearch.containsKey(query)) {
+        if (mapsSearch[query].isListSearchFull) {
+          pageSearch =
+              (mapsSearch[query].listSearch.length / numPageItems).ceil();
           if (pageSearch == 0) {
             pageSearch = 1;
           }
-          if (mapsSearch[query].isListSearchFull) {
-            return mapsSearch[query];
-          }
-        }
-
-        mapsSearch[query] = ListSearchBuild<T>(
-            listSearch: listSearchBuild,
-            // se a anterior esta full a atual tb.
-            isListSearchFull: listAnterior.isListSearchFull);
-      } else {
-        listSearchBuild = listFull
-            .where((element) => _filters(stringFilter(element), query))
-        //query.replaceRange(query.length - 1, query.length, '')))
-            .toList();
-
-        pageSearch = (listSearchBuild.length / numPageItems).ceil();
-        if (pageSearch == 0) {
-          pageSearch = 1;
-        }
-
-        if (mapsSearch[query].isListSearchFull) {
           return mapsSearch[query];
         }
 
+        if (listAnterior != null) {
+          if (listSearch.length > mapsSearch[query].listSearch.length) {
+            pageSearch = (listSearch.length / numPageItems).ceil();
+            if (pageSearch == 0) {
+              pageSearch = 1;
+            }
+            mapsSearch[query] = ListSearchBuild<T>(
+                listSearch: listSearch,
+                // se a anterior esta full a atual tb.
+                isListSearchFull: listAnterior.isListSearchFull);
+          }
 
-        mapsSearch[query] = ListSearchBuild<T>(
-            listSearch: listSearchBuild,
-            // se a anterior esta full a atual tb.
-            isListSearchFull: finishPage);
-        print('listSearch.query => '
-            '${mapsSearch[
-        query].listSearch.length.toString()}');
-      }
+          if (listAnterior.isListSearchFull) {
+            return mapsSearch[query];
+          }
+        } else {
+          listSearch.clear();
+          listSearch = listFull
+              .where((element) => _filters(stringFilter(element), query))
+          //query.replaceRange(query.length - 1, query.length, '')))
+              .toList();
 
-      pageSearch = (listSearchBuild.length / numPageItems).ceil();
-      if (pageSearch == 0) {
-        pageSearch = 1;
-      }
+          pageSearch = (listSearch.length / numPageItems).ceil();
+          if (pageSearch == 0) {
+            pageSearch = 1;
+          }
 
-      if (mapsSearch[query].isListSearchFull) {
-        return mapsSearch[query];
+          mapsSearch[query] = ListSearchBuild<T>(
+              listSearch: listSearch,
+              // se a anterior esta full a atual tb.
+              isListSearchFull: finishPage);
+
+          if (finishPage) {
+            return mapsSearch[query];
+          }
+        }
+      } else {
+        listSearch.clear();
+        listSearch = listFull
+            .where((element) => _filters(stringFilter(element), query))
+        //query.replaceRange(query.length - 1, query.length, '')))
+            .toList();
+        if (listAnterior != null) {
+          if (listAnterior.listSearch.length > listSearch
+              .length) {
+            pageSearch = (listAnterior.listSearch.length / numPageItems).ceil();
+            if (pageSearch == 0) {
+              pageSearch = 1;
+            }
+            mapsSearch[query] = ListSearchBuild<T>(
+                listSearch: listAnterior.listSearch.where((element) =>
+                    _filters(stringFilter(element), query))
+                    .toList(),
+                // se a anterior esta full a atual tb.
+                isListSearchFull: listAnterior.isListSearchFull);
+          } else {
+            pageSearch = (listSearch.length / numPageItems).ceil();
+            if (pageSearch == 0) {
+              pageSearch = 1;
+            }
+
+            mapsSearch[query] = ListSearchBuild<T>(
+                listSearch: listSearch,
+                // se a anterior esta full a atual tb.
+                isListSearchFull: finishPage);
+
+            if (finishPage) {
+              return mapsSearch[query];
+            }
+          }
+        } else {
+          pageSearch = (listSearch.length / numPageItems).ceil();
+          if (pageSearch == 0) {
+            pageSearch = 1;
+          }
+
+          mapsSearch[query] = ListSearchBuild<T>(
+              listSearch: listSearch,
+              // se a anterior esta full a atual tb.
+              isListSearchFull: finishPage);
+
+          if (finishPage) {
+            return mapsSearch[query];
+          }
+        }
       }
     } else {
       if (mapsSearch.containsKey(query)) {
+        if (restart) {
+          listSearch = listFull
+              .where((element) => _filters(stringFilter(element), query))
+              .toList();
+
+          mapsSearch[query] = ListSearchBuild<T>(
+              listSearch: listSearch, isListSearchFull: finishPage);
+        }
+
         pageSearch =
             (mapsSearch[query].listSearch.length / numPageItems).ceil();
         if (pageSearch == 0) {
@@ -204,44 +262,22 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
           return mapsSearch[query];
         }
       } else {
-        listSearchBuild = listFull
+        listSearch = listFull
             .where((element) => _filters(stringFilter(element), query))
             .toList();
 
-
-        pageSearch = (listSearchBuild.length / numPageItems).ceil();
+        pageSearch = (listSearch.length / numPageItems).ceil();
         if (pageSearch == 0) {
           pageSearch = 1;
         }
-        mapsSearch[query] = ListSearchBuild<T>(listSearch: listSearchBuild);
+        mapsSearch[query] = ListSearchBuild<T>(
+            listSearch: listSearch, isListSearchFull: finishPage);
 
-        print('listSearch.query => '
+        /*print('listSearch.query => '
             '${mapsSearch[
         query].listSearch.length.toString()}');
 
-        print('searche.page => ${pageSearch.toString()}');
-      }
-
-      if (finishPage) {
-        //mapsSearch.clear();
-        pageSearch = (listSearchBuild.length / numPageItems).ceil();
-        if (pageSearch == 0) {
-          pageSearch = 1;
-        }
-        mapsSearch[query].isListSearchFull = true;
-        debugPrint(' SearcherPagePaginationFutureController '
-            'PAGE SEARCH DEPOIS== $pageSearch');
-        debugPrint('SearcherPagePaginationFutureController - finalizou '
-            'pagian search chamadas api'
-            ' ${mapsSearch[query].isListSearchFull}');
-
-        //finaliza a listSearch da query inicial
-        mapsSearch[query] = ListSearchBuild<T>(
-            listSearch: listSearchBuild, isListSearchFull: true);
-        return mapsSearch[query];
-      } else {
-        // Primeira adicao da key com query incial
-
+        print('searche.page => ${pageSearch.toString()}');*/
       }
     }
 
