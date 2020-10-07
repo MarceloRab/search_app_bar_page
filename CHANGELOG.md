@@ -1,3 +1,10 @@
+## [0.3.1]
+- Improvements to [SearchAppBarPagination]. I now require two pages of the API when the current 
+page is incomplete and is filtering through Search.
+
+## [0.3.0+1]
+- Just improving the doc and readme.
+
 ## [0.3.0]
 - In this new update (SearchAppBarPagination - 🙌🏽 ) was added and some fixes were added.
 

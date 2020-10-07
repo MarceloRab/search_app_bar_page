@@ -476,7 +476,7 @@ in the base package, you can understand each component.
 
 <blockquote> NEW Components </blockquote>
 
-### Reactivity to the connection.
+## Reactivity to the connection.
 
 `[iconConnectyOffAppBar]` Appears when the connection status is off. There is already a default icon. 
 If you don't want to present a choice `[hideDefaultConnectyIconOffAppBar]` = true; If you want to have a custom icon,
@@ -485,6 +485,8 @@ do `[hideDefaultConnectyIconOffAppBar]` = true; and set the `[iconConnectyOffApp
 `[widgetOffConnectyWaiting]` Only shows something when it is disconnected and does not yet have the 
 first value of the stream. If the connection goes back to show the `[widgetWaiting]` until you 
 receive the first data. Everyone already comes with They all come with default widgets.
+
+![20201007-203744-360x780](https://user-images.githubusercontent.com/41010018/95398660-c708c480-08dc-11eb-8b07-e0ffa816cbbc.gif)
 
 ## Disclaimer
 

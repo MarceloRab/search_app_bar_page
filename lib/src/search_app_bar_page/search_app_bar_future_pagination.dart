@@ -200,9 +200,6 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
         compareSort: widget.compareSort,
         filtersType: widget.filtersType)
       ..onInit();
-    //..subscribeWorker();
-    //_subscribeListStream();
-    //_future = widget.futureFetchPageItems(_controller.page, '');
   }
 
   @override
