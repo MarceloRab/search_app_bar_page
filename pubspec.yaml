@@ -1,6 +1,6 @@
 name: search_app_bar_page
 description: A search page built for minimal work and good performance. Enjoy.
-version: 0.3.2
+version: 0.3.3
 homepage: https://github.com/MarceloRab/search_app_bar_page
 
 environment:

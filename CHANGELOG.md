@@ -1,5 +1,9 @@
+## [0.3.3]
+- Corrections in [SearchAppBarPagination]. After doing setState and redoing the list filtered by 
+youthe search.
+
 ## [0.3.2]
--Ensure that you require 02 pages only when they are at the end of the page and scroll.
+- Ensure that you require 02 pages only when they are at the end of the page and scroll.
 
 ## [0.3.1]
 - Improvements to [SearchAppBarPagination]. I now require two pages of the API when the current 
