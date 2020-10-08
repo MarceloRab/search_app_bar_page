@@ -450,6 +450,7 @@ class _SearchAppBarPageFutureBuilderState<T>
   void _subscribreSearhQuery() {
     _worker = debounce(widget.searcher.rxSearch, (String query) {
       if (query.isNotEmpty) {
+        _oneMorePage = false;
         final listBuilder = widget.searcher.haveSearchQueryPage(query);
 
         if (listBuilder.listSearch.isNotEmpty) {
@@ -544,6 +545,7 @@ class _SearchAppBarPageFutureBuilderState<T>
                   snapshot: AsyncSnapshot<List<T>>.withData(
                       ConnectionState.none, widget.searcher.listFull));
             } else {
+              _oneMorePage = false;
               final listBuilder = widget.searcher.haveSearchQueryPage(
                   widget.searcher.rxSearch.value,
                   restart: true);
