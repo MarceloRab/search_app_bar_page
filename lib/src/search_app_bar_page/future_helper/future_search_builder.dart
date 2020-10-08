@@ -237,7 +237,6 @@ class _SearchAppBarPageFutureBuilderState<T>
 
     widget.futureFetchPageItems(widget.searcher.pageSearch, query).then((data) {
       if (_activeListSearchCallbackIdentity == callbackIdentity) {
-
         // Recebeu lista vazia - encerrou
         if (data.isEmpty) {
           _oneMorePage = false;
