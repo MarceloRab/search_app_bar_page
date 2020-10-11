@@ -2,12 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get_state_manager/get_state_manager.dart';
-
-import 'controller/searcher_page_controller.dart';
-
-import 'filters/filters_type.dart';
-import 'filters/functions_filters.dart';
-import 'search_app_bar/search_app_bar.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
+import '../controller/searcher_page_controller.dart';
+import 'core/search_app_bar/search_app_bar.dart';
 
 class SearchAppBarPage<T> extends StatefulWidget {
   /// Paramentros do SearchAppBar

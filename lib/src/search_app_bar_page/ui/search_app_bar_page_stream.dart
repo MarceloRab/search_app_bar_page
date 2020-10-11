@@ -2,13 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
-import 'controller/searcher_page_stream_controller.dart';
-import 'filters/filters_type.dart';
-import 'filters/functions_filters.dart';
-//import 'filters/filters_type.dart';
-import 'search_app_bar/search_app_bar.dart';
-import 'stream_helper/stream_search_builder.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
+import '../controller/searcher_page_stream_controller.dart';
+import 'core/search_app_bar/search_app_bar.dart';
+import 'infra/page_stream/stream_search_builder.dart';
 
 class SearchAppBarPageStream<T> extends StatefulWidget {
   /// Paramentros do SearchAppBar

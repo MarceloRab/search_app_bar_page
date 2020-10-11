@@ -3,10 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get_state_manager/get_state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
-import 'package:search_app_bar_page/src/search_app_bar_page/filters/filters_type.dart';
-//import 'package:search_app_bar_page/src/search_app_bar_page/filters/filters_type.dart';
-
-import '../filters/functions_filters.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 
 class SearcherPagePaginationFutureController<T> extends SeacherBase {
   final RxBool _isModSearch = false.obs;
@@ -30,11 +28,14 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
 
   bool finishPage = false;
 
-  final Rx<AsyncSnapshotScrollPage<T>> _snapshotScroolPage =
+  /*final Rx<AsyncSnapshotScrollPage<T>> _snapshotScroolPage =
       AsyncSnapshotScrollPage<T>(
               snapshot:
                   AsyncSnapshot<List<T>>.withData(ConnectionState.none, null))
-          .obs;
+          .obs;*/
+
+  final Rx<AsyncSnapshotScrollPage<T>> _snapshotScroolPage =
+      AsyncSnapshotScrollPage<T>.nothing().obs;
 
   AsyncSnapshotScrollPage<T> get snapshotScroolPage =>
       _snapshotScroolPage.value;
@@ -296,19 +297,69 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
   }
 }
 
+//@immutable
 class AsyncSnapshotScrollPage<T> {
-  AsyncSnapshot<List<T>> snapshot;
+  final AsyncSnapshot<List<T>> snapshot;
+
+  final bool loadinglistFullScroll;
+  final bool loadingSearchScroll;
+
+  /*AsyncSnapshot<List<T>> snapshot;
 
   bool loadingSearchScroll;
-  bool loadinglistFullScroll;
+  bool loadinglistFullScroll;*/
 
-  AsyncSnapshotScrollPage({
+  /*const AsyncSnapshotScrollPage._(
+      {this.snapshot, this.loadingSearchScroll = false,
+        this.loadinglistFullScroll = false,});*/
+
+  /*const AsyncSnapshotScrollPage.loadingSearchScroll() : this._(snapshot: );*/
+
+  /*const AsyncSnapshotScrollPage({
     this.snapshot,
     this.loadingSearchScroll = false,
     this.loadinglistFullScroll = false,
-  });
+  });*/
 
-  AsyncSnapshotScrollPage<T> copyWith({
+  const AsyncSnapshotScrollPage._(this.snapshot,
+      {this.loadinglistFullScroll = false, this.loadingSearchScroll = false})
+      // para demais ter corpo também
+      : assert(snapshot != null);
+
+  // AsyncSnapshotScrollPage<T> waiting() =>
+  //  AsyncSnapshotScrollPage<T>._(const AsyncSnapshot.waiting());
+
+  const AsyncSnapshotScrollPage.waiting()
+      : this._(const AsyncSnapshot.waiting());
+
+  const AsyncSnapshotScrollPage.nothing()
+      : this._(const AsyncSnapshot.nothing());
+
+  AsyncSnapshotScrollPage<T> inState(ConnectionState state) =>
+      AsyncSnapshotScrollPage<T>._(snapshot.inState(state));
+
+  AsyncSnapshotScrollPage<T> withData(List<T> data) =>
+      AsyncSnapshotScrollPage<T>._(
+          AsyncSnapshot.withData(ConnectionState.done, data));
+
+  AsyncSnapshotScrollPage<T> withError(Object error) =>
+      AsyncSnapshotScrollPage<T>._(
+          AsyncSnapshot.withError(ConnectionState.done, error));
+
+  AsyncSnapshotScrollPage<T> togleLoadingSearchScroll(ConnectionState state) =>
+      AsyncSnapshotScrollPage<T>._(snapshot.inState(state),
+          loadingSearchScroll: !loadingSearchScroll);
+
+  AsyncSnapshotScrollPage<T> togleLoadinglistFullScroll(
+          ConnectionState state) =>
+      AsyncSnapshotScrollPage<T>._(snapshot.inState(state),
+          loadinglistFullScroll: !loadinglistFullScroll);
+
+/*const AsyncSnapshotScrollPage.withData(List<T> data)
+      : this._(const AsyncSnapshot.withData(ConnectionState.none, data), false,
+            false);*/
+
+/*AsyncSnapshotScrollPage<T> copyWith({
     AsyncSnapshot<List<T>> snapshot,
     bool loadingSearchScroll,
     bool loadinglistFullScroll,
@@ -317,9 +368,10 @@ class AsyncSnapshotScrollPage<T> {
       snapshot: snapshot ?? this.snapshot,
       loadingSearchScroll: loadingSearchScroll ?? this.loadingSearchScroll,
       loadinglistFullScroll:
-          loadinglistFullScroll ?? this.loadinglistFullScroll,
+      loadinglistFullScroll ?? this.loadinglistFullScroll,
     );
-  }
+  }*/
+
 }
 
 class ListSearchBuild<T> {

@@ -1,3 +1,6 @@
+## [0.3.4]
+- Changes to clear code and fixes in [SearchAppBarPagination] in search mode.
+
 ## [0.3.3]
 - Corrections in [SearchAppBarPagination]. After doing setState and redoing the list filtered by 
 youthe search.

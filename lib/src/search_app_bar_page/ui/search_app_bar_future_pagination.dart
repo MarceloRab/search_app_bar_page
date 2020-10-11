@@ -1,11 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:search_app_bar_page/src/search_app_bar_page/filters/filters_type.dart';
-import 'package:search_app_bar_page/src/search_app_bar_page/filters/functions_filters.dart';
-import 'package:search_app_bar_page/src/search_app_bar_page/search_app_bar/search_app_bar.dart';
-
-import 'controller/searcher_page_pagination_future_controller.dart';
-import 'future_helper/future_search_builder.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
+import '../controller/searcher_page_pagination_future_controller.dart';
+import 'core/search_app_bar/search_app_bar.dart';
+import 'infra/pagination/future_search_builder.dart';
 
 class SearchAppBarPagination<T> extends StatefulWidget {
   /// Paramentros do SearchAppBar

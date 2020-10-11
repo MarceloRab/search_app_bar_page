@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/connecty_controller.dart';
 
-import '../controller/searcher_page_stream_controller.dart';
+import '../../../controller/searcher_page_stream_controller.dart';
 
 typedef WidgetConnecty = Widget Function();
 

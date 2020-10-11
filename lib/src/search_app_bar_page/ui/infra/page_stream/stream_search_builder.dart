@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get_state_manager/get_state_manager.dart';
-
-import '../controller/searcher_page_stream_controller.dart';
-import '../filters/functions_filters.dart';
-import 'stream_seacher_builde_base.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_page_stream_controller.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/ui/infra/page_stream/stream_seacher_builde_base.dart';
 
 class StreamSearchBuilder<
         T> //extends StreamBuilderBase<List<T>, AsyncSnapshot<List<T>>> {
