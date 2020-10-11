@@ -297,7 +297,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
   }
 }
 
-//@immutable
+@immutable
 class AsyncSnapshotScrollPage<T> {
   final AsyncSnapshot<List<T>> snapshot;
 
