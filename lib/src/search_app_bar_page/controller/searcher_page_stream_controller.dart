@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:get_state_manager/get_state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
@@ -31,9 +32,12 @@ class SearcherPageStreamController<T> extends SeacherBase {
 
   Worker _worker;
 
-  //final Stream<List<T>> listStream;
+  final Rx<AsyncSnapshot<List<T>>> _snapshot =
+      AsyncSnapshot<List<T>>.withData(ConnectionState.none, null).obs;
 
-  //StreamSubscription _streamSubscription;
+  AsyncSnapshot<List<T>> get snapshot => _snapshot.value;
+
+  set snapshot(AsyncSnapshot<List<T>> value) => _snapshot.value = value;
 
   StringFilter<T> get _defaultFilter => (T value) => value as String;
 

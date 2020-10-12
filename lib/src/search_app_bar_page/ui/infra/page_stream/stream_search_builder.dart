@@ -74,5 +74,9 @@ class StreamSearchBuilder<
     }
 
     return builder(context, currentSummary);
+
+
+
+
   }
 }

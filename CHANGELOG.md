@@ -1,7 +1,7 @@
 ## [0.3.5]
 - Reformulation in error handling of [futureFetchPageItems] and [listStream] in 
 [SearchAppBarPagination] and [SearchAppBarPageStream] respectively. Now you can handle it if the 
-error is SocketException, HttpException, DioError and others like Firebase Expections.
+error is SocketException, HttpException, DioError and others like Firebase Exceptions.
 
 ## [0.3.4]
 - Changes to clear code and fixes in [SearchAppBarPagination] in search mode. Added @immutable to 
