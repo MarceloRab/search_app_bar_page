@@ -11,6 +11,9 @@ typedef Compare<T> = int Function(T a, T b);
 typedef WidgetsListBuilder<T> = Widget Function(
     BuildContext context, RxList<T> list, bool isModSearch);
 
+typedef WidgetsListBuilder2<T> = Widget Function(
+    BuildContext context, List<T> list, bool isModSearch);
+
 typedef WidgetsErrorBuilder<T> = Widget Function(Object error);
 
 typedef WidgetsPaginationItemBuilder<T> = Widget Function(

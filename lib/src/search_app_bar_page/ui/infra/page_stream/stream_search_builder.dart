@@ -63,6 +63,8 @@ class StreamSearchBuilder<
 
   @override
   Widget build(BuildContext context, AsyncSnapshot<List<T>> currentSummary) {
+    // TODO: aqui monto o Obx _rxSnapshot
+
     if (currentSummary.hasData) {
       searcher.haveInitialData = true;
 
@@ -74,9 +76,5 @@ class StreamSearchBuilder<
     }
 
     return builder(context, currentSummary);
-
-
-
-
   }
 }

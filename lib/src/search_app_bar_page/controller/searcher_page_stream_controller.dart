@@ -23,21 +23,23 @@ class SearcherPageStreamController<T> extends SeacherBase {
 
   Function(Iterable<T>) get onSearchList => listSearch.assignAll;
 
-  final FiltersTypes filtersType;
+  FiltersTypes filtersType;
   Filter<String> _filters;
   StringFilter<T> stringFilter;
 
-  final Compare<T> compareSort;
+  Compare<T> compareSort;
   bool haveInitialData = false;
 
   Worker _worker;
 
-  final Rx<AsyncSnapshot<List<T>>> _snapshot =
-      AsyncSnapshot<List<T>>.withData(ConnectionState.none, null).obs;
+  final Rx<AsyncSnapshot<List<T>>> _rxSnapshot =
+      AsyncSnapshot<List<T>>.waiting().obs;
 
-  AsyncSnapshot<List<T>> get snapshot => _snapshot.value;
+  //AsyncSnapshot<List<T>>.withData(ConnectionState.none, null).obs;
 
-  set snapshot(AsyncSnapshot<List<T>> value) => _snapshot.value = value;
+  AsyncSnapshot<List<T>> get snapshot => _rxSnapshot.value;
+
+  set snapshot(AsyncSnapshot<List<T>> value) => _rxSnapshot.value = value;
 
   StringFilter<T> get _defaultFilter => (T value) => value as String;
 
@@ -87,20 +89,6 @@ class SearcherPageStreamController<T> extends SeacherBase {
     } else {
       _filters = Filters.contains;
     }
-
-    /*_streamSubscription = listStream.listen((listData) {
-      if (bancoInit) {
-        listFull = listData;
-        if (rxSearch.value.isNotEmpty) {
-          refreshSeachList(rxSearch.value);
-        } else {
-          sortCompareList(listData);
-          onSearchFilter(listData);
-        }
-      } else {
-        initialChangeList = listData;
-      }
-    });*/
   }
 
   void wrabListSearch(List<T> listData) {
@@ -132,6 +120,15 @@ class SearcherPageStreamController<T> extends SeacherBase {
 
     //sortCompareList(list);
     onSearchList(list);
+  }
+
+  List<T> refreshSeachList2(String value) {
+    final list = listFull
+        .where((element) => _filters(stringFilter(element), value))
+        .toList();
+    sortCompareList(list);
+
+    return list;
   }
 
   void sortCompareList(List<T> list) {

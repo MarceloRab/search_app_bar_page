@@ -8,6 +8,175 @@ import '../controller/searcher_page_stream_controller.dart';
 import 'core/search_app_bar/search_app_bar.dart';
 import 'infra/page_stream/stream_search_builder.dart';
 
+class SearchAppBarPageStream2<T> extends StatelessWidget {
+  /// Paramentros do SearchAppBar
+
+  final Widget searchAppBartitle;
+  final bool searchAppBarcenterTitle;
+  final IconThemeData searchAppBariconTheme;
+  final Color searchAppBarbackgroundColor;
+  final Color searchAppBarModeSearchBackgroundColor;
+  final Color searchAppBarElementsColor;
+
+  /// [searchAppBarIconConnectyOffAppBarColor] You can change the color of
+  /// [iconConnectyOffAppBar]. By default = Colors.redAccent.
+  final Color searchAppBarIconConnectyOffAppBarColor;
+  final String searchAppBarhintText;
+  final bool searchAppBarflattenOnSearch;
+  final TextCapitalization searchAppBarcapitalization;
+  final List<Widget> searchAppBaractions;
+  final double searchAppBarelevation;
+  final TextInputType searchAppBarKeyboardType;
+
+  /// [magnifyinGlassColor] Changes the color of the magnifying glass.
+  /// Keeps IconTheme color by default.
+  final Color magnifyinGlassColor;
+
+  ///[iconConnectyOffAppBar] Appears when the connection status is off.
+  ///There is already a default icon. If you don't want to present a choice
+  ///[hideDefaultConnectyIconOffAppBar] = true; If you want to have a
+  ///custom icon, do [hideDefaultConnectyIconOffAppBar] = true; and set the
+  ///[iconConnectyOffAppBar]`.
+  final bool hideDefaultConnectyIconOffAppBar;
+
+  /// [iconConnectyOffAppBar] Displayed on the AppBar when the internet
+  /// connection is switched off.
+  /// It is always the closest to the center.
+  final Widget iconConnectyOffAppBar;
+
+  ///  [iconConnectyOffAppBar] Aparece quando o status da conexao é off.
+  ///  já existe um icone default. Caso nao queira apresentar escolha
+  ///  [hideDefaultConnectyIconOffAppBar] = false;
+
+  /// Parametros para o Scaffold
+
+  ///  [widgetOffConnectyWaiting] Apenas mostra algo quando esta sem conexao
+  ///  e ainda nao tem o primeiro valor da stream. Se a conexao voltar
+  ///  passa a mostrar o [widgetWaiting] até apresentar o primeiro dado
+  final Widget widgetWaiting;
+  final Widget widgetOffConnectyWaiting;
+
+  /// [widgetErrorBuilder] Widget built by the Object error returned by the
+  /// [listStream] error.
+  final WidgetsErrorBuilder widgetErrorBuilder;
+
+  /// [searchePageFloaActionButton] , [searchePageFloaActionButton] ,
+  /// [searchePageFloatingActionButtonLocation] ,
+  /// [searchePageFloatingActionButtonAnimator]  ...
+  /// ...
+  /// are passed on to the Scaffold.
+  final Widget searchePageFloaActionButton;
+  final FloatingActionButtonLocation searchePageFloatingActionButtonLocation;
+  final FloatingActionButtonAnimator searchePageFloatingActionButtonAnimator;
+  final List<Widget> searchePagePersistentFooterButtons;
+  final Widget searchePageDrawer;
+  final Widget searchePageEndDrawer;
+  final Widget searchePageBottomNavigationBar;
+  final Widget searchePageBottomSheet;
+  final Color searchPageBackgroundColor;
+  final bool resizeToAvoidBottomPadding;
+  final bool resizeToAvoidBottomInset;
+  final bool primary;
+  final DragStartBehavior drawerDragStartBehavior;
+  final bool extendBody;
+  final bool extendBodyBehindAppBar;
+  final Color drawerScrimColor;
+  final double drawerEdgeDragWidth;
+  final bool drawerEnableOpenDragGesture;
+  final bool endDrawerEnableOpenDragGesture;
+
+  /// Parametros para o SearcherGetController
+
+  /// [initialData] List to be filtered by Search.
+  /// These widgets will not be displayed. [widgetOffConnectyWaiting] and
+  /// [widgetWaiting]
+  final List<T> initialData;
+
+  /// [listStream] Just pass the Stream and we are already in charge
+  /// of working with the data. There is a StremBuilder in background.
+  final Stream<List<T>> listStream;
+
+  /// [filtersType] These are the filters that the Controller uses to
+  /// filter the list. Divide the filters into three types:
+  /// startsWith, equals, contains. Default = FiltersTypes.contains;
+  final FiltersTypes filtersType;
+
+  /// [listBuilder] Function applied when receiving data
+  /// through Stream or filtering in search.
+  final WidgetsListBuilder<T> listBuilder;
+
+  /// [stringFilter] Required if you type.
+  ///If not, it is understood that the type will be String.
+  /// ex.: stringFilter: (Person person) => person.name,
+  /// The list will be filtered by the person.name contains (default) a query.
+  final StringFilter<T> stringFilter;
+
+  ///[compareSort] If you want your list to be sorted, pass the function on.
+  /// Example: (Person a, Person b) => a.name.compareTo(b.name),
+  /// This list will be ordered by the object name parameter.
+  final Compare<T> compareSort;
+
+  const SearchAppBarPageStream2({
+    Key key,
+
+    /// Parametros para o SearcherGetController
+    @required this.listStream,
+    @required this.listBuilder,
+    this.stringFilter,
+    this.compareSort,
+    this.filtersType,
+    this.widgetOffConnectyWaiting,
+
+    /// Paramentros do SearchAppBar
+    this.searchAppBartitle,
+    this.searchAppBarcenterTitle = false,
+    this.searchAppBariconTheme,
+    this.searchAppBarbackgroundColor,
+    this.searchAppBarModeSearchBackgroundColor,
+    this.searchAppBarElementsColor,
+    this.searchAppBarIconConnectyOffAppBarColor = Colors.redAccent,
+    this.searchAppBarhintText,
+    this.searchAppBarflattenOnSearch = false,
+    this.searchAppBarcapitalization = TextCapitalization.none,
+    this.searchAppBaractions = const <Widget>[],
+    this.searchAppBarelevation = 4.0,
+    this.hideDefaultConnectyIconOffAppBar = false,
+    this.iconConnectyOffAppBar,
+    this.searchAppBarKeyboardType,
+    this.magnifyinGlassColor,
+
+    /// Parametros para o Scaffold
+
+    this.initialData,
+    this.widgetWaiting,
+    this.widgetErrorBuilder,
+    this.searchePageFloaActionButton,
+    this.searchePageFloatingActionButtonLocation,
+    this.searchePageFloatingActionButtonAnimator,
+    this.searchePagePersistentFooterButtons,
+    this.searchePageDrawer,
+    this.searchePageEndDrawer,
+    this.searchePageBottomNavigationBar,
+    this.searchePageBottomSheet,
+    this.searchPageBackgroundColor,
+    this.resizeToAvoidBottomPadding,
+    this.resizeToAvoidBottomInset,
+    this.primary = true,
+    this.drawerDragStartBehavior = DragStartBehavior.start,
+    this.extendBody = false,
+    this.extendBodyBehindAppBar = false,
+    this.drawerScrimColor,
+    this.drawerEdgeDragWidth,
+    this.drawerEnableOpenDragGesture = true,
+    this.endDrawerEnableOpenDragGesture = true,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
 class SearchAppBarPageStream<T> extends StatefulWidget {
   /// Paramentros do SearchAppBar
 
