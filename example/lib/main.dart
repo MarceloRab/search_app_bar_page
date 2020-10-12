@@ -259,7 +259,6 @@ class _SearchAppBarPaginationTestState
     } else {
       final listQuery =
           dataListPerson3.where((element) => contains(element, query)).toList();
-      ;
 
       int totalQueryPages = (listQuery.length / size).ceil();
       totalQueryPages = totalQueryPages == 0 ? 1 : totalQueryPages;
@@ -279,6 +278,7 @@ class _SearchAppBarPaginationTestState
       }*/
     }
 
+    //throw Exception('Voluntary Error');
     return list;
   }
 
@@ -396,11 +396,11 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
   }
 
   Stream<List<Person>> _streamListPerson = (() async* {
-    await Future<void>.delayed(Duration(seconds: 15));
+    await Future<void>.delayed(Duration(seconds: 3));
     yield dataListPerson;
-    await Future<void>.delayed(Duration(seconds: 8));
+    await Future<void>.delayed(Duration(seconds: 4));
     yield dataListPerson2;
-    await Future<void>.delayed(Duration(seconds: 6));
+    await Future<void>.delayed(Duration(seconds: 5));
     yield dataListPerson3;
   })();
 }

@@ -54,9 +54,9 @@ class SearchAppBarPagination<T> extends StatefulWidget {
   /// awaits the Future of the data on the next page
   final Widget widgetEndScrollPage;
 
-  /// [widgetError] You can do what you have when there is an error
-  /// in the stream.
-  final Widget widgetError;
+  /// [widgetErrorBuilder] Widget built by the Object error returned by the
+  /// [futureFetchPageItems] error.
+  final WidgetsErrorBuilder widgetErrorBuilder;
 
   /// [widgetNothingFound] when searching for something you don't find data.
   final Widget widgetNothingFound;
@@ -146,7 +146,7 @@ class SearchAppBarPagination<T> extends StatefulWidget {
     this.magnifyinGlassColor,
     this.widgetWaiting,
     this.widgetOffConnectyWaiting,
-    this.widgetError,
+    this.widgetErrorBuilder,
     this.widgetNothingFound,
     this.searchePageFloaActionButton,
     this.searchePageFloatingActionButtonLocation,
@@ -232,7 +232,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
           searcher: _controller,
           paginationItemBuilder: widget.paginationItemBuilder,
           widgetConnecty: widget.widgetOffConnectyWaiting,
-          widgetError: widget.widgetError,
+          widgetErrorBuilder: widget.widgetErrorBuilder,
           widgetNothingFound: widget.widgetNothingFound,
           widgetWaiting: widget.widgetWaiting,
           widgetEndScrollPage: widget.widgetEndScrollPage,

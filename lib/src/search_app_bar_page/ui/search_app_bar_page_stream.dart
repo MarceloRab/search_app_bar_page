@@ -56,9 +56,9 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
   final Widget widgetWaiting;
   final Widget widgetOffConnectyWaiting;
 
-  /// [widgetError] You can do what you have when there is an error
-  /// in the stream.
-  final Widget widgetError;
+  /// [widgetErrorBuilder] Widget built by the Object error returned by the
+  /// [listStream] error.
+  final WidgetsErrorBuilder widgetErrorBuilder;
 
   /// [searchePageFloaActionButton] , [searchePageFloaActionButton] ,
   /// [searchePageFloatingActionButtonLocation] ,
@@ -149,7 +149,7 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
 
     this.initialData,
     this.widgetWaiting,
-    this.widgetError,
+    this.widgetErrorBuilder,
     this.searchePageFloaActionButton,
     this.searchePageFloatingActionButtonLocation,
     this.searchePageFloatingActionButtonAnimator,
@@ -225,7 +225,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
             listBuilder: widget.listBuilder,
             builder: (context, snapshot) {
               if (snapshot.hasError) {
-                if (widget.widgetError == null)
+                if (widget.widgetErrorBuilder == null)
                   return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -237,12 +237,16 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
                         Center(
                           child: Padding(
                             padding: const EdgeInsets.only(top: 16),
-                            child: Text('Temos um erro: ${snapshot.error}'),
+                            child: Text(
+                              'We found an error.\n'
+                              'Error: ${snapshot.error}',
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         )
                       ]);
                 else
-                  return widget.widgetError;
+                  return widget.widgetErrorBuilder(snapshot.error);
               } else {
                 if (widget.widgetWaiting == null)
                   return Center(

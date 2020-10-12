@@ -7,14 +7,8 @@ import 'package:search_app_bar_page/src/search_app_bar_page/controller/connecty_
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_page_pagination_future_controller.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 
-//import 'package:rxdart/rxdart.dart';
-
 class SearchAppBarPageFutureBuilder<T> extends StatefulWidget {
   final FutureFetchPageItems<T> futureFetchPageItems;
-
-  //final Future<List<T>> futureInitialList;
-
-  //final AsyncWidgetBuilder<List<T>> builder;
 
   final List<T> initialData;
 
@@ -26,7 +20,7 @@ class SearchAppBarPageFutureBuilder<T> extends StatefulWidget {
 
   final int numPageItems;
 
-  final Widget widgetError;
+  final WidgetsErrorBuilder widgetErrorBuilder;
   final Widget widgetWaiting;
   final Widget widgetNothingFound;
   final Widget widgetEndScrollPage;
@@ -35,16 +29,14 @@ class SearchAppBarPageFutureBuilder<T> extends StatefulWidget {
     Key key,
     @required this.futureFetchPageItems,
     @required this.paginationItemBuilder,
-    //this.builder,
     this.initialData,
     this.searcher,
     this.widgetConnecty,
     this.numPageItems,
-    this.widgetError,
+    this.widgetErrorBuilder,
     this.widgetWaiting,
     this.widgetNothingFound,
     this.widgetEndScrollPage,
-    //@required this.futureInitialList
   }) : super(key: key);
 
   @override
@@ -75,7 +67,8 @@ class _SearchAppBarPageFutureBuilderState<T>
   Worker _worker;
 
   Widget _widgetWaiting;
-  Widget _widgetError;
+
+  //Widget _widgetError;
   Widget _widgetNothingFound;
   Widget _widgetEndScrollPage;
 
@@ -104,10 +97,6 @@ class _SearchAppBarPageFutureBuilderState<T>
 
       widget.searcher.listFull.addAll(widget.initialData);
       widget.searcher.sortCompareList(widget.searcher.listFull);
-
-      /*widget.searcher.snapshotScroolPage = AsyncSnapshotScrollPage<T>(
-          snapshot: AsyncSnapshot<List<T>>.withData(
-              ConnectionState.none, widget.initialData));*/
 
       widget.searcher.snapshotScroolPage =
           widget.searcher.snapshotScroolPage.withData(widget.initialData);
@@ -169,9 +158,6 @@ class _SearchAppBarPageFutureBuilderState<T>
         // Encerroou dados da API
         if (data.isEmpty) {
           widget.searcher.finishPage = true;
-          /*widget.searcher.snapshotScroolPage = widget
-              .searcher.snapshotScroolPage
-              .copyWith(loadinglistFullScroll: false);*/
 
           if (!isSearchMode) {
             widget.searcher.snapshotScroolPage = widget
@@ -187,11 +173,6 @@ class _SearchAppBarPageFutureBuilderState<T>
           widget.searcher.wrabListSearch(data);
 
           widget.searcher.finishPage = true;
-          /* widget.searcher.snapshotScroolPage =
-              widget.searcher.snapshotScroolPage.copyWith(
-                  snapshot: AsyncSnapshot<List<T>>.withData(
-                      ConnectionState.done, widget.searcher.listFull),
-                  loadinglistFullScroll: false);*/
 
           if (!isSearchMode) {
             widget.searcher.snapshotScroolPage = widget
@@ -204,13 +185,6 @@ class _SearchAppBarPageFutureBuilderState<T>
 
         widget.searcher.wrabListSearch(data);
 
-        /*widget.searcher.snapshotScroolPage =
-        widget.searcher.snapshotScroolPage
-            .copyWith(
-                snapshot: AsyncSnapshot<List<T>>.withData(
-                    ConnectionState.done, widget.searcher.listFull),
-                loadinglistFullScroll: false);*/
-
         if (!isSearchMode) {
           widget.searcher.snapshotScroolPage = widget
               .searcher.snapshotScroolPage
@@ -221,12 +195,9 @@ class _SearchAppBarPageFutureBuilderState<T>
       if (_activeListFullCallbackIdentity == callbackIdentity) {
         refazFutureListFull();
 
-        /*widget.searcher.snapshotScroolPage =
-        widget.searcher.snapshotScroolPage
-            .copyWith(
-                snapshot: AsyncSnapshot<List<T>>.withError(
-                    ConnectionState.done, error),
-                loadinglistFullScroll: false);*/
+        //final tipo = error as Exception;
+        //print(' TEST Exception --  ${tipo.toString()}');
+        //print(' TEST Exception --  ${(error is Exception).toString()}');
 
         widget.searcher.snapshotScroolPage =
             widget.searcher.snapshotScroolPage.withError(error);
@@ -234,12 +205,6 @@ class _SearchAppBarPageFutureBuilderState<T>
     });
 
     if (!scroollEndPage) {
-      /*widget.searcher.snapshotScroolPage = widget.searcher.snapshotScroolPage
-          .copyWith(
-              snapshot: widget.searcher.snapshotScroolPage.snapshot
-                  .inState(ConnectionState.waiting),
-              loadinglistFullScroll: false);*/
-
       widget.searcher.snapshotScroolPage = AsyncSnapshotScrollPage<T>.waiting();
     }
   }
@@ -247,24 +212,11 @@ class _SearchAppBarPageFutureBuilderState<T>
   void _futureSearchPageQuery(String query, {bool scroollEndPage = false}) {
     if (_activeListSearchCallbackIdentity != null) {
       _unsubscribeSearhCallBack();
-
-      /*widget.searcher.snapshotScroolPage = widget.searcher.snapshotScroolPage
-          .copyWith(
-              snapshot: widget.searcher.snapshotScroolPage.snapshot
-                  .inState(ConnectionState.none));*/
-
-      /*widget.searcher.snapshotScroolPage =
-          widget.searcher.snapshotScroolPage.inState(ConnectionState.none);*/
     }
     final SearchCallBack callbackIdentity =
         SearchCallBack(widget.searcher.rxSearch.value);
     _activeListSearchCallbackIdentity = callbackIdentity;
     if (!scroollEndPage) {
-      /*widget.searcher.snapshotScroolPage = widget.searcher.snapshotScroolPage
-          .copyWith(
-              snapshot: widget.searcher.snapshotScroolPage.snapshot
-                  .inState(ConnectionState.waiting));*/
-
       widget.searcher.snapshotScroolPage = AsyncSnapshotScrollPage<T>.waiting();
     }
 
@@ -279,35 +231,17 @@ class _SearchAppBarPageFutureBuilderState<T>
           widget.searcher.mapsSearch[callbackIdentity.query].isListSearchFull =
               true;
 
-          /*widget.searcher.snapshotScroolPage =
-              widget.searcher.snapshotScroolPage.copyWith(
-                  snapshot: AsyncSnapshot<List<T>>.withData(
-                      ConnectionState.done,
-                      widget.searcher.mapsSearch[widget.searcher.rxSearch.value]
-                          .listSearch),
-                  loadingSearchScroll: false);*/
-
           if (isSearchMode) {
             widget.searcher.snapshotScroolPage =
                 widget.searcher.snapshotScroolPage.withData(widget
                     .searcher.mapsSearch[callbackIdentity.query].listSearch);
           }
 
-          /*widget.searcher.snapshotScroolPage = widget
-              .searcher.snapshotScroolPage
-              .togleLoadingSearchScroll(state: ConnectionState.done);*/
-
           return;
         }
 
         if (data.length - widget.searcher.numPageItems < 0) {
           _oneMorePage = false;
-
-          /* print('searche.page => ${widget.searcher.pageSearch.toString()}');
-          print('listSearch.query => '
-              // ignore: lines_longer_than_80_chars
-              '${widget.searcher.mapsSearch[callbackIdentity.query]
-              .listSearch.length.toString()}');*/
 
           final num =
               (widget.searcher.pageSearch - 1) * widget.searcher.numPageItems;
@@ -321,16 +255,6 @@ class _SearchAppBarPageFutureBuilderState<T>
 
           widget.searcher.mapsSearch[callbackIdentity.query].isListSearchFull =
               true;
-
-          /*widget.searcher.snapshotScroolPage =
-              widget.searcher.snapshotScroolPage.copyWith(
-                  snapshot: AsyncSnapshot<List<T>>.withData(
-                      ConnectionState.done,
-                      widget.searcher.mapsSearch[widget.searcher.rxSearch.value]
-                          .listSearch),
-                  //endSearchPage: false,
-                  //finishSearchPage: true,
-                  loadingSearchScroll: false);*/
 
           if (isSearchMode) {
             widget.searcher.snapshotScroolPage =
@@ -362,14 +286,6 @@ class _SearchAppBarPageFutureBuilderState<T>
           _futureSearchPageQuery(widget.searcher.rxSearch.value,
               scroollEndPage: true);
         } else {
-          /*widget.searcher.snapshotScroolPage =
-              widget.searcher.snapshotScroolPage.copyWith(
-                  snapshot: AsyncSnapshot<List<T>>.withData(
-                      ConnectionState.done,
-                      widget.searcher.mapsSearch[widget.searcher.rxSearch.value]
-                          .listSearch),
-                  loadingSearchScroll: false);*/
-
           if (isSearchMode) {
             widget.searcher.snapshotScroolPage =
                 widget.searcher.snapshotScroolPage.withData(widget.searcher
@@ -382,13 +298,6 @@ class _SearchAppBarPageFutureBuilderState<T>
     }, onError: (Object error) {
       if (_activeListSearchCallbackIdentity == callbackIdentity) {
         refazFutureSearchQuery();
-
-        /*widget.searcher.snapshotScroolPage =
-        widget.searcher.snapshotScroolPage
-            .copyWith(
-                snapshot: AsyncSnapshot<List<T>>.withError(
-                    ConnectionState.done, error),
-                loadingSearchScroll: false);*/
 
         widget.searcher.snapshotScroolPage =
             widget.searcher.snapshotScroolPage.withError(error);
@@ -410,12 +319,6 @@ class _SearchAppBarPageFutureBuilderState<T>
                   .haveSearchQueryPage(widget.searcher.rxSearch.value);
 
               if (listBuilder.isListSearchFull) {
-                /*widget.searcher.snapshotScroolPage =
-                    widget.searcher.snapshotScroolPage.copyWith(
-                        snapshot: AsyncSnapshot<List<T>>.withData(
-                            ConnectionState.done, listBuilder.listSearch),
-                        loadingSearchScroll: false);*/
-
                 widget.searcher.snapshotScroolPage = widget
                     .searcher.snapshotScroolPage
                     .withData(listBuilder.listSearch);
@@ -423,10 +326,6 @@ class _SearchAppBarPageFutureBuilderState<T>
                 debugPrint('listFullSearchQuery '
                     // ignore: lines_longer_than_80_chars
                     '${listBuilder.listSearch.toString()}');
-
-                /*widget.searcher.snapshotScroolPage = widget
-                    .searcher.snapshotScroolPage
-                    .copyWith(loadingSearchScroll: true);*/
 
                 if (listBuilder.listSearch.length -
                         (widget.searcher.pageSearch *
@@ -449,18 +348,8 @@ class _SearchAppBarPageFutureBuilderState<T>
         } else {
           if (!widget.searcher.finishPage) {
             if (!widget.searcher.snapshotScroolPage.loadinglistFullScroll) {
-              /*widget.searcher.snapshotScroolPage = widget
-                  .searcher.snapshotScroolPage
-                  .copyWith(loadinglistFullScroll: true);*/
-
               if (_activeListFullCallbackIdentity != null) {
                 _unsubscribeListFullCallBack();
-
-                /*widget.searcher.snapshotScroolPage =
-                    widget.searcher.snapshotScroolPage.copyWith(
-                        snapshot: widget.searcher.snapshotScroolPage.snapshot
-                            .inState(ConnectionState.none));*/
-
               }
 
               widget.searcher.snapshotScroolPage = widget
@@ -496,7 +385,8 @@ class _SearchAppBarPageFutureBuilderState<T>
       }
 
       if (widget.searcher.snapshotScroolPage.snapshot.hasError) {
-        return _widgetError;
+        return buildwidgetError(
+            widget.searcher.snapshotScroolPage.snapshot.error);
       }
 
       if (widget.searcher.snapshotScroolPage.snapshot.data.isEmpty) {
@@ -530,22 +420,10 @@ class _SearchAppBarPageFutureBuilderState<T>
         _oneMorePage = false;
         initBuildSearchList(query);
       } else {
-        //widget.searcher.restartQuery();
-        /*widget.searcher.snapshotScroolPage =
-        widget.searcher.snapshotScroolPage
-            .copyWith(
-                snapshot: AsyncSnapshot<List<T>>.withData(
-                    ConnectionState.done, widget.searcher.listFull));*/
-
         widget.searcher.snapshotScroolPage = widget.searcher.snapshotScroolPage
             .withData(widget.searcher.listFull);
       }
     }, time: const Duration(milliseconds: 350));
-
-    /*_subscriptionSearch = widget.searcher.rxSearch.stream
-        .distinct()
-        .debounceTime(const Duration(milliseconds: 350))
-        .listen((query) {});*/
   }
 
   void initBuildSearchList(String query, {bool restart = false}) {
@@ -554,38 +432,18 @@ class _SearchAppBarPageFutureBuilderState<T>
 
     if (listBuilder.listSearch.isNotEmpty) {
       if (listBuilder.isListSearchFull) {
-        /*widget.searcher.snapshotScroolPage =
-        widget.searcher.snapshotScroolPage
-            .copyWith(
-                snapshot: AsyncSnapshot<List<T>>.withData(
-                    ConnectionState.done, listBuilder.listSearch),
-                loadingSearchScroll: false);*/
-
         widget.searcher.snapshotScroolPage =
             widget.searcher.snapshotScroolPage.withData(listBuilder.listSearch);
       } else {
         if (listBuilder.listSearch.length < widget.searcher.numPageItems) {
           _futureSearchPageQuery(query);
         } else {
-          /*widget.searcher.snapshotScroolPage =
-              widget.searcher.snapshotScroolPage.copyWith(
-                  snapshot: AsyncSnapshot<List<T>>.withData(
-                      ConnectionState.done, listBuilder.listSearch),
-                  loadingSearchScroll: false);*/
-
           widget.searcher.snapshotScroolPage = widget
               .searcher.snapshotScroolPage
               .withData(listBuilder.listSearch);
         }
       }
     } else if (listBuilder.listSearch.isEmpty && listBuilder.isListSearchFull) {
-      //widget.searcher.listFullSearchQuery.clear();
-      /* widget.searcher.snapshotScroolPage = widget.searcher.snapshotScroolPage
-          .copyWith(
-              snapshot: AsyncSnapshot<List<T>>.withData(
-                  ConnectionState.done, listBuilder.listSearch),
-              loadingSearchScroll: false);*/
-
       widget.searcher.snapshotScroolPage =
           widget.searcher.snapshotScroolPage.withData(listBuilder.listSearch);
     } else {
@@ -619,17 +477,11 @@ class _SearchAppBarPageFutureBuilderState<T>
             widget.searcher.sortCompareList(widget.searcher.listFull);
 
             if (widget.searcher.rxSearch.value.isEmpty) {
-              /*widget.searcher.snapshotScroolPage = AsyncSnapshotScrollPage<T>(
-                  snapshot: AsyncSnapshot<List<T>>.withData(
-                      ConnectionState.none, widget.searcher.listFull));*/
-
               widget.searcher.snapshotScroolPage = widget
                   .searcher.snapshotScroolPage
                   .withData(widget.searcher.listFull);
             } else {
               _oneMorePage = false;
-              //widget.searcher.snapshotScroolPage
-              // .loadinglistFullScroll = false;
 
               initBuildSearchList(widget.searcher.rxSearch.value,
                   //refaz a listSearch pois temos uma nova listFull
@@ -643,12 +495,6 @@ class _SearchAppBarPageFutureBuilderState<T>
       if (oldWidget.futureFetchPageItems != widget.futureFetchPageItems) {
         if (_activeListFullCallbackIdentity != null) {
           _unsubscribeListFullCallBack();
-
-          /*widget.searcher.snapshotScroolPage =
-              widget.searcher.snapshotScroolPage.copyWith(
-                  snapshot: widget.searcher.snapshotScroolPage.snapshot
-                      .inState(ConnectionState.none),
-                  loadinglistFullScroll: false);*/
 
           widget.searcher.snapshotScroolPage =
               widget.searcher.snapshotScroolPage.inState(ConnectionState.none);
@@ -700,12 +546,6 @@ class _SearchAppBarPageFutureBuilderState<T>
           downConnectyWithoutData = true;
         });
       } else if (isConnected && (!_haveInitialData)) {
-        /*widget.searcher.snapshotScroolPage =
-        widget.searcher.snapshotScroolPage
-            .copyWith(
-                snapshot: widget.searcher.snapshotScroolPage.snapshot
-                    .inState(ConnectionState.waiting));*/
-
         widget.searcher.snapshotScroolPage =
             AsyncSnapshotScrollPage<T>.waiting();
       }
@@ -747,29 +587,6 @@ class _SearchAppBarPageFutureBuilderState<T>
       _widgetWaiting = widget.widgetWaiting;
     }
 
-    if (widget.widgetError == null) {
-      _widgetError = Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Icon(
-              Icons.error_outline,
-              color: Colors.red,
-              size: 60,
-            ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Text(
-                  'Temos um erro: '
-                  '${widget.searcher.snapshotScroolPage.snapshot.error}',
-                ),
-              ),
-            )
-          ]);
-    } else {
-      _widgetError = widget.widgetError;
-    }
-
     if (widget.widgetNothingFound == null) {
       _widgetNothingFound = const Center(
           child: Text(
@@ -794,12 +611,33 @@ class _SearchAppBarPageFutureBuilderState<T>
     }
   }
 
-/* void _unsubscribeSearhQuery() {
-    if (_subscriptionSearch != null) {
-      _subscriptionSearch.cancel();
-      _subscriptionSearch = null;
+  Widget buildwidgetError(Object error) {
+    if (widget.widgetErrorBuilder == null) {
+      return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Icon(
+              Icons.error_outline,
+              color: Colors.red,
+              size: 60,
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text(
+                  'We found an error.\n'
+                  'Error: $error',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            )
+          ]);
+    } else {
+      return widget.widgetErrorBuilder(error);
     }
-  }*/
+
+    //return _widgetError;
+  }
 }
 
 class SearchCallBack {
