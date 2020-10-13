@@ -279,7 +279,7 @@ class Person {
 ```
 
 
-🔎 <span> </span> ```SearchAppBarPagination``` is built for fragmented requests for your API. If you have hundreds of data and would like to send them in parts, in addition to being able to filter them efficiently, this Widget is the chosen one. There is a cache of requests to avoid getting (REST) unnecessarily. The cache Kis reset when a screen is disposed. What differs from StreamPage is that a function that forwards the page and the search string query will always be called when necessary. Example: reaches the bottom of the page. 
+🔎 <span> </span> ```SearchAppBarPagination``` is built for fragmented requests for your API. If you have hundreds of data and would like to send them in parts, in addition to being able to filter them efficiently, this Widget is the chosen one. There is a cache of requests to avoid getting (REST) unnecessarily. The cache reset when a screen is disposed. What differs from StreamPage is that a function that forwards the page and the search string query will always be called when necessary. Example: reaches the bottom of the page. 
 Remembering that this function must return a Future (get for your API). You will see an example with the server side below [in Dart](https://github.com/MarceloRab/search_app_bar_page#example-of-server-side-function).
 
 
