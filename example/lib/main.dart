@@ -450,6 +450,7 @@ final dataListPerson3 = <Person>[
   Person(name: 'Exausto Nome', age: 81),
 ];
 
+//class Person extends CacheJson {
 class Person {
   final String name;
 
@@ -461,4 +462,20 @@ class Person {
   String toString() {
     return 'Person{name: $name, age: $age}';
   }
+
+/* @override
+   CacheJson fromMap(Map<String, dynamic> map) {
+    return Person(
+      name: map['name'] as String,
+      age: map['age'] as int,
+    );
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'name': this.name,
+      'age': this.age,
+    };
+  }*/
 }

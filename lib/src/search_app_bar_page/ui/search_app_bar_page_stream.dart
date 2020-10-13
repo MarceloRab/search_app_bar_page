@@ -189,16 +189,20 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
 
   SearcherPageStreamController<T> _controller;
 
-  void initial(List<T> data) => _controller.snapshot =
+  void initial(List<T> data) =>
+      _controller.snapshot =
       AsyncSnapshot<List<T>>.withData(ConnectionState.none, data);
 
-  void afterConnected() => _controller.snapshot =
-      _controller.snapshot.inState(ConnectionState.waiting);
+  void afterConnected() =>
+      _controller.snapshot =
+          _controller.snapshot.inState(ConnectionState.waiting);
 
-  void afterData(List<T> data) => _controller.snapshot = _controller.snapshot =
+  void afterData(List<T> data) =>
+      _controller.snapshot = _controller.snapshot =
       AsyncSnapshot<List<T>>.withData(ConnectionState.active, data);
 
-  void afterError(Object error) => _controller.snapshot =
+  void afterError(Object error) =>
+      _controller.snapshot =
       AsyncSnapshot<List<T>>.withError(ConnectionState.active, error);
 
   void afterDone() =>
@@ -211,7 +215,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
   void initState() {
     super.initState();
     _controller = SearcherPageStreamController<T>(
-        //listStream: widget._stream,
+      //listStream: widget._stream,
         stringFilter: widget.stringFilter,
         compareSort: widget.compareSort,
         filtersType: widget.filtersType)
@@ -303,23 +307,23 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
             backgroundColor: widget.searchAppBarbackgroundColor,
             searchBackgroundColor: widget.searchAppBarModeSearchBackgroundColor,
             iconConnectyOffAppBarColor:
-                widget.searchAppBarIconConnectyOffAppBarColor,
+            widget.searchAppBarIconConnectyOffAppBarColor,
             searchElementsColor: widget.searchAppBarElementsColor,
             hintText: widget.searchAppBarhintText,
             flattenOnSearch: widget.searchAppBarflattenOnSearch,
             capitalization: widget.searchAppBarcapitalization,
             actions: widget.searchAppBaractions,
             hideDefaultConnectyIconOffAppBar:
-                widget.hideDefaultConnectyIconOffAppBar,
+            widget.hideDefaultConnectyIconOffAppBar,
             iconConnectyOffAppBar: widget.iconConnectyOffAppBar,
             keyboardType: widget.searchAppBarKeyboardType,
             magnifyinGlassColor: widget.magnifyinGlassColor),
         body: buildBody(),
         floatingActionButton: widget.searchePageFloaActionButton,
         floatingActionButtonLocation:
-            widget.searchePageFloatingActionButtonLocation,
+        widget.searchePageFloatingActionButtonLocation,
         floatingActionButtonAnimator:
-            widget.searchePageFloatingActionButtonAnimator,
+        widget.searchePageFloatingActionButtonAnimator,
         persistentFooterButtons: widget.searchePagePersistentFooterButtons,
         drawer: widget.searchePageDrawer,
         endDrawer: widget.searchePageEndDrawer,
@@ -418,18 +422,18 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
     _connectyController = ConnectyController();
     _subscriptionConnecty =
         _connectyController.connectyStream.listen((bool isConnected) {
-      if (!isConnected && (!_haveInitialData)) {
-        //lançar _widgetConnecty
-        setState(() {
-          downConnectyWithoutData = true;
+          if (!isConnected && (!_haveInitialData)) {
+            //lançar _widgetConnecty
+            setState(() {
+              downConnectyWithoutData = true;
+            });
+          } else if (isConnected && (!_haveInitialData)) {
+            setState(() {
+              downConnectyWithoutData = false;
+              afterConnected();
+            });
+          }
         });
-      } else if (isConnected && (!_haveInitialData)) {
-        setState(() {
-          downConnectyWithoutData = false;
-          afterConnected();
-        });
-      }
-    });
   }
 
   void _unsubscribeConnecty() {
@@ -462,7 +466,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
                 padding: const EdgeInsets.only(top: 16),
                 child: Text(
                   'We found an error.\n'
-                  'Error: $error',
+                      'Error: $error',
                   textAlign: TextAlign.center,
                 ),
               ),

@@ -12,6 +12,8 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
   @override
   bool get isModSearch => _isModSearch.value;
 
+  bool get isSearchModePage => rxSearch.value.isNotEmpty;
+
   @override
   set isModSearch(bool value) => _isModSearch.value = value;
 
@@ -27,12 +29,6 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
   bool get bancoInit => _bancoInit.value;
 
   bool finishPage = false;
-
-  /*final Rx<AsyncSnapshotScrollPage<T>> _snapshotScroolPage =
-      AsyncSnapshotScrollPage<T>(
-              snapshot:
-                  AsyncSnapshot<List<T>>.withData(ConnectionState.none, null))
-          .obs;*/
 
   final Rx<AsyncSnapshotScrollPage<T>> _snapshotScroolPage =
       AsyncSnapshotScrollPage<T>.nothing().obs;
@@ -61,24 +57,11 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
 
   Map<String, ListSearchBuild<T>> mapsSearch = {};
 
-  /*String _query = '';
-
-  bool progide = false;*/
-
-  /*void queryProgride(String newQuery) {
-    progide = newQuery.length - _query.length > 0;
-    _query = newQuery;
-  }
-
-  void restartQuery() {
-    _query = '';
-    progide = false;
-  }*/
-
   SearcherPagePaginationFutureController({
     this.stringFilter,
     this.compareSort,
     this.filtersType = FiltersTypes.contains,
+    this.cache = false,
   }) {
     if (stringFilter == null) {
       if (T == String) {
@@ -91,6 +74,8 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
   }
 
   var listFull = <T>[];
+
+  final bool cache;
 
   ListSearchBuild<T> haveSearchQueryPage(String query, {bool restart = false}) {
     //queryProgride(query);
@@ -295,12 +280,23 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
 
   void wrabListSearch(List<T> listData) {
     // para aparecer a lupa
-    if (bancoInit) {
+
+    if (!bancoInit) {
+      bancoInit = true;
+      _bancoInit.close();
+    }
+
+    listFull.addAll(listData);
+    sortCompareList(listFull);
+
+    //TODO: montar cache
+
+    /*if (bancoInit) {
       listFull.addAll(listData);
       sortCompareList(listFull);
     } else {
       initialChangeList = listData;
-    }
+    }*/
   }
 
   void sortCompareList(List<T> list) {
@@ -332,30 +328,10 @@ class AsyncSnapshotScrollPage<T> {
   final bool loadinglistFullScroll;
   final bool loadingSearchScroll;
 
-  /*AsyncSnapshot<List<T>> snapshot;
-
-  bool loadingSearchScroll;
-  bool loadinglistFullScroll;*/
-
-  /*const AsyncSnapshotScrollPage._(
-      {this.snapshot, this.loadingSearchScroll = false,
-        this.loadinglistFullScroll = false,});*/
-
-  /*const AsyncSnapshotScrollPage.loadingSearchScroll() : this._(snapshot: );*/
-
-  /*const AsyncSnapshotScrollPage({
-    this.snapshot,
-    this.loadingSearchScroll = false,
-    this.loadinglistFullScroll = false,
-  });*/
-
   const AsyncSnapshotScrollPage._(this.snapshot,
       {this.loadinglistFullScroll = false, this.loadingSearchScroll = false})
       // para demais ter corpo também
       : assert(snapshot != null);
-
-  // AsyncSnapshotScrollPage<T> waiting() =>
-  //  AsyncSnapshotScrollPage<T>._(const AsyncSnapshot.waiting());
 
   const AsyncSnapshotScrollPage.waiting()
       : this._(const AsyncSnapshot.waiting());
@@ -382,24 +358,6 @@ class AsyncSnapshotScrollPage<T> {
           ConnectionState state) =>
       AsyncSnapshotScrollPage<T>._(snapshot.inState(state),
           loadinglistFullScroll: !loadinglistFullScroll);
-
-/*const AsyncSnapshotScrollPage.withData(List<T> data)
-      : this._(const AsyncSnapshot.withData(ConnectionState.none, data), false,
-            false);*/
-
-/*AsyncSnapshotScrollPage<T> copyWith({
-    AsyncSnapshot<List<T>> snapshot,
-    bool loadingSearchScroll,
-    bool loadinglistFullScroll,
-  }) {
-    return AsyncSnapshotScrollPage<T>(
-      snapshot: snapshot ?? this.snapshot,
-      loadingSearchScroll: loadingSearchScroll ?? this.loadingSearchScroll,
-      loadinglistFullScroll:
-      loadinglistFullScroll ?? this.loadinglistFullScroll,
-    );
-  }*/
-
 }
 
 class ListSearchBuild<T> {

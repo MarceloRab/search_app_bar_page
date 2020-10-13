@@ -1,3 +1,6 @@
+## [0.3.7]
+- Some more fixes in [SearchAppBarPagination].
+
 ## [0.3.6]
 - Improving the code to decrease the need for setState with get_state_manager. Necessary corrections
  were made. You can now change the type of filtering and give it a setState. Added code if the 
