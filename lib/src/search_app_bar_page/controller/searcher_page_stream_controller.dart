@@ -19,9 +19,9 @@ class SearcherPageStreamController<T> extends SeacherBase {
   // ignore: overridden_fields
   final rxSearch = ''.obs;
 
-  final RxList<T> listSearch = <T>[].obs;
+  //final RxList<T> listSearch = <T>[].obs;
 
-  Function(Iterable<T>) get onSearchList => listSearch.assignAll;
+  //Function(Iterable<T>) get onSearchList => listSearch.assignAll;
 
   FiltersTypes filtersType;
   Filter<String> _filters;
@@ -69,7 +69,7 @@ class SearcherPageStreamController<T> extends SeacherBase {
 
     listFull = list;
     sortCompareList(listFull);
-    onSearchList(list);
+    //onSearchList(list);
     rxSearch('');
   }
 
@@ -81,7 +81,7 @@ class SearcherPageStreamController<T> extends SeacherBase {
   @override
   bool get bancoInit => _bancoInit.value;
 
-  void onInit() {
+  void onInitFilter() {
     if (filtersType.toString() == FiltersTypes.startsWith.toString()) {
       _filters = Filters.startsWith;
     } else if (filtersType.toString() == FiltersTypes.equals.toString()) {
@@ -91,7 +91,11 @@ class SearcherPageStreamController<T> extends SeacherBase {
     }
   }
 
-  void wrabListSearch(List<T> listData) {
+  void bancoInitClose() {
+    _bancoInit.close();
+  }
+
+  /*void wrabListSearch(List<T> listData) {
     if (bancoInit) {
       // Fica negativo dentro do StreamBuilder
       // Após apresentar o primeiro Obx(())
@@ -105,9 +109,9 @@ class SearcherPageStreamController<T> extends SeacherBase {
     } else {
       initialChangeList = listData;
     }
-  }
+  }*/
 
-  void subscribeWorker() {
+  /*void subscribeWorker() {
     _worker = ever(rxSearch, (String value) {
       refreshSeachList(value);
     });
@@ -120,7 +124,7 @@ class SearcherPageStreamController<T> extends SeacherBase {
 
     //sortCompareList(list);
     onSearchList(list);
-  }
+  }*/
 
   List<T> refreshSeachList2(String value) {
     final list = listFull
@@ -141,6 +145,6 @@ class SearcherPageStreamController<T> extends SeacherBase {
     _worker?.dispose();
     _isModSearch.close();
     rxSearch.close();
-    listSearch.close();
+    //listSearch.close();
   }
 }

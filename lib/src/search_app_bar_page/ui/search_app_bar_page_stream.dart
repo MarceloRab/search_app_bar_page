@@ -2,13 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get_state_manager/get_state_manager.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/connecty_controller.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 import '../controller/searcher_page_stream_controller.dart';
 import 'core/search_app_bar/search_app_bar.dart';
-import 'infra/page_stream/stream_search_builder.dart';
 
-class SearchAppBarPageStream2<T> extends StatelessWidget {
+class SearchAppBarPageStream<T> extends StatefulWidget {
   /// Paramentros do SearchAppBar
 
   final Widget searchAppBartitle;
@@ -116,40 +117,33 @@ class SearchAppBarPageStream2<T> extends StatelessWidget {
   /// This list will be ordered by the object name parameter.
   final Compare<T> compareSort;
 
-  const SearchAppBarPageStream2({
+  const SearchAppBarPageStream({
     Key key,
-
-    /// Parametros para o SearcherGetController
     @required this.listStream,
     @required this.listBuilder,
+    this.initialData,
+    this.widgetWaiting,
+    this.widgetErrorBuilder,
     this.stringFilter,
     this.compareSort,
     this.filtersType,
-    this.widgetOffConnectyWaiting,
-
-    /// Paramentros do SearchAppBar
     this.searchAppBartitle,
     this.searchAppBarcenterTitle = false,
     this.searchAppBariconTheme,
     this.searchAppBarbackgroundColor,
     this.searchAppBarModeSearchBackgroundColor,
     this.searchAppBarElementsColor,
-    this.searchAppBarIconConnectyOffAppBarColor = Colors.redAccent,
+    this.searchAppBarIconConnectyOffAppBarColor,
     this.searchAppBarhintText,
     this.searchAppBarflattenOnSearch = false,
     this.searchAppBarcapitalization = TextCapitalization.none,
     this.searchAppBaractions = const <Widget>[],
     this.searchAppBarelevation = 4.0,
-    this.hideDefaultConnectyIconOffAppBar = false,
-    this.iconConnectyOffAppBar,
     this.searchAppBarKeyboardType,
     this.magnifyinGlassColor,
-
-    /// Parametros para o Scaffold
-
-    this.initialData,
-    this.widgetWaiting,
-    this.widgetErrorBuilder,
+    this.hideDefaultConnectyIconOffAppBar = false,
+    this.iconConnectyOffAppBar,
+    this.widgetOffConnectyWaiting,
     this.searchePageFloaActionButton,
     this.searchePageFloatingActionButtonLocation,
     this.searchePageFloatingActionButtonAnimator,
@@ -172,11 +166,362 @@ class SearchAppBarPageStream2<T> extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<SearchAppBarPageStream<T>> createState() =>
+      _SearchAppBarPageStreamState<T>();
+}
+
+/// State for [StreamBuilderBase].
+class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
+  StreamSubscription<List<T>> _subscription;
+  StreamSubscription _subscriptionConnecty;
+
+  // T as List
+
+  bool _haveInitialData;
+
+  ConnectyController _connectyController;
+  bool downConnectyWithoutData = false;
+
+  Widget _widgetConnecty;
+  Widget _widgetWaiting;
+
+  Worker _worker;
+
+  SearcherPageStreamController<T> _controller;
+
+  void initial(List<T> data) => _controller.snapshot =
+      AsyncSnapshot<List<T>>.withData(ConnectionState.none, data);
+
+  void afterConnected() => _controller.snapshot =
+      _controller.snapshot.inState(ConnectionState.waiting);
+
+  void afterData(List<T> data) => _controller.snapshot = _controller.snapshot =
+      AsyncSnapshot<List<T>>.withData(ConnectionState.active, data);
+
+  void afterError(Object error) => _controller.snapshot =
+      AsyncSnapshot<List<T>>.withError(ConnectionState.active, error);
+
+  void afterDone() =>
+      _controller.snapshot = _controller.snapshot.inState(ConnectionState.done);
+
+  void afterDisconnected() =>
+      _controller.snapshot = _controller.snapshot.inState(ConnectionState.none);
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = SearcherPageStreamController<T>(
+        //listStream: widget._stream,
+        stringFilter: widget.stringFilter,
+        compareSort: widget.compareSort,
+        filtersType: widget.filtersType)
+      ..onInitFilter();
+    //..subscribeWorker();
+
+    _haveInitialData = widget.initialData != null;
+
+    _subscribeStream();
+    _subscribreSearhQuery();
+    if (!_haveInitialData) {
+      _subscribeConnecty();
+    } else {
+      _controller.listFull.addAll(widget.initialData);
+      _controller.sortCompareList(_controller.listFull);
+      initial(_controller.listFull);
+    }
+
+    buildwidgetsDefault();
+  }
+
+  @override
+  void didUpdateWidget(SearchAppBarPageStream<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    /*if (oldWidget.stringFilter != widget.stringFilter) {
+    }
+
+    if (oldWidget.compareSort != widget.compareSort) {
+    }
+
+    if (oldWidget.filtersType != widget.filtersType) {
+    }*/
+
+    _controller.stringFilter = widget.stringFilter;
+    _controller.compareSort = widget.compareSort;
+    _controller.filtersType = widget.filtersType;
+    _controller.onInitFilter();
+
+    if (oldWidget.initialData != widget.initialData) {
+      //_initialData = widget.getInitialData;
+      _haveInitialData = widget.initialData != null;
+
+      if (_haveInitialData) {
+        //_controller.wrabListSearch(widget.initialData);
+        downConnectyWithoutData = false;
+        _unsubscribeConnecty();
+
+        if (widget.initialData.length > _controller.listFull.length) {
+          _controller.listFull.clear();
+          _controller.listFull.addAll(widget.initialData);
+          _controller.sortCompareList(_controller.listFull);
+          initial(_controller.listFull);
+        }
+      } else if (_controller.listFull.isEmpty &&
+          _subscriptionConnecty != null) {
+        _subscribeConnecty();
+      }
+    }
+
+    if (_controller.listFull.isNotEmpty) {
+      if (_controller.rxSearch.value.isNotEmpty) {
+        afterData(_controller.refreshSeachList2(_controller.rxSearch.value));
+      } else {
+        _controller.sortCompareList(_controller.listFull);
+        afterData(_controller.listFull);
+      }
+    }
+
+    if (oldWidget.listStream != widget.listStream) {
+      if (_subscription != null) {
+        _unsubscribeStream();
+
+        afterDisconnected();
+      }
+
+      _subscribeStream();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+        appBar: SearchAppBar(
+            controller: _controller,
+            title: widget.searchAppBartitle,
+            centerTitle: widget.searchAppBarcenterTitle,
+            elevation: widget.searchAppBarelevation,
+            iconTheme: widget.searchAppBariconTheme,
+            backgroundColor: widget.searchAppBarbackgroundColor,
+            searchBackgroundColor: widget.searchAppBarModeSearchBackgroundColor,
+            iconConnectyOffAppBarColor:
+                widget.searchAppBarIconConnectyOffAppBarColor,
+            searchElementsColor: widget.searchAppBarElementsColor,
+            hintText: widget.searchAppBarhintText,
+            flattenOnSearch: widget.searchAppBarflattenOnSearch,
+            capitalization: widget.searchAppBarcapitalization,
+            actions: widget.searchAppBaractions,
+            hideDefaultConnectyIconOffAppBar:
+                widget.hideDefaultConnectyIconOffAppBar,
+            iconConnectyOffAppBar: widget.iconConnectyOffAppBar,
+            keyboardType: widget.searchAppBarKeyboardType,
+            magnifyinGlassColor: widget.magnifyinGlassColor),
+        body: buildBody(),
+        floatingActionButton: widget.searchePageFloaActionButton,
+        floatingActionButtonLocation:
+            widget.searchePageFloatingActionButtonLocation,
+        floatingActionButtonAnimator:
+            widget.searchePageFloatingActionButtonAnimator,
+        persistentFooterButtons: widget.searchePagePersistentFooterButtons,
+        drawer: widget.searchePageDrawer,
+        endDrawer: widget.searchePageEndDrawer,
+        bottomNavigationBar: widget.searchePageBottomNavigationBar,
+        bottomSheet: widget.searchePageBottomSheet,
+        backgroundColor: widget.searchPageBackgroundColor,
+        resizeToAvoidBottomPadding: widget.resizeToAvoidBottomPadding,
+        resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
+        primary: widget.primary,
+        drawerDragStartBehavior: widget.drawerDragStartBehavior,
+        extendBody: widget.extendBody,
+        extendBodyBehindAppBar: widget.extendBodyBehindAppBar,
+        drawerScrimColor: widget.drawerScrimColor,
+        drawerEdgeDragWidth: widget.drawerEdgeDragWidth,
+        drawerEnableOpenDragGesture: widget.drawerEnableOpenDragGesture,
+        endDrawerEnableOpenDragGesture: widget.endDrawerEnableOpenDragGesture);
+  }
+
+  Widget buildBody() {
+    if (downConnectyWithoutData) {
+      // Apenas anuncia quando nao tem a primeira data e esta sem conexao
+      return _widgetConnecty;
+    }
+
+    return Obx(() {
+      //print(widget.searcher.snapshotScroolPage.snapshot.connectionState
+      //.toString());
+      if (_controller.snapshot.connectionState == ConnectionState.waiting) {
+        return _widgetWaiting;
+      }
+
+      if (_controller.snapshot.hasError) {
+        return buildWidgetError(_controller.snapshot.error);
+      }
+
+      //final isListFull = widget.searcher.rxSearch.value.isEmpty;
+      return widget.listBuilder(
+          context, _controller.snapshot.data, _controller.isModSearch);
+    });
+  }
+
+  @override
+  void dispose() {
+    _unsubscribeStream();
+    _unsubscribeConnecty();
+    _controller.onClose();
+    _worker?.dispose();
+    super.dispose();
+  }
+
+  void _subscribeStream() {
+    _subscription = widget.listStream.listen((data) {
+      if (data == null) {
+        if (_controller.listFull.isNotEmpty) {
+          afterData(_controller.listFull);
+        } else
+          afterError(Exception('It cannot return null. 😢'));
+        return;
+      } else {
+        if (!_controller.bancoInit) {
+          // Mostrar lupa do Search
+          _controller.bancoInit = true;
+          _controller.bancoInitClose();
+        }
+      }
+      downConnectyWithoutData = false;
+      _unsubscribeConnecty();
+
+      _controller.listFull = data;
+      _controller.sortCompareList(_controller.listFull);
+
+      if (_controller.rxSearch.value.isNotEmpty) {
+        afterData(_controller.refreshSeachList2(_controller.rxSearch.value));
+      } else {
+        afterData(_controller.listFull);
+      }
+    }, onError: (Object error) {
+      afterError(error);
+    }, onDone: () {
+      afterDone();
+    });
+    afterConnected();
+  }
+
+  void _subscribreSearhQuery() {
+    _worker = debounce(_controller.rxSearch, (String query) {
+      if (query.isNotEmpty) {
+        afterData(_controller.refreshSeachList2(query));
+      } else {
+        afterData(_controller.listFull);
+      }
+    }, time: const Duration(milliseconds: 350));
+  }
+
+  void _subscribeConnecty() {
+    _connectyController = ConnectyController();
+    _subscriptionConnecty =
+        _connectyController.connectyStream.listen((bool isConnected) {
+      if (!isConnected && (!_haveInitialData)) {
+        //lançar _widgetConnecty
+        setState(() {
+          downConnectyWithoutData = true;
+        });
+      } else if (isConnected && (!_haveInitialData)) {
+        setState(() {
+          downConnectyWithoutData = false;
+          afterConnected();
+        });
+      }
+    });
+  }
+
+  void _unsubscribeConnecty() {
+    if (_subscriptionConnecty != null) {
+      _subscriptionConnecty.cancel();
+      _subscriptionConnecty = null;
+      _connectyController.onClose();
+    }
+  }
+
+  void _unsubscribeStream() {
+    if (_subscription != null) {
+      _subscription.cancel();
+      _subscription = null;
+    }
+  }
+
+  Widget buildWidgetError(Object error) {
+    if (widget.widgetErrorBuilder == null) {
+      return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Icon(
+              Icons.error_outline,
+              color: Colors.red,
+              size: 60,
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text(
+                  'We found an error.\n'
+                  'Error: $error',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            )
+          ]);
+    } else {
+      return widget.widgetErrorBuilder(error);
+    }
+
+    //return _widgetError;
+  }
+
+  void buildwidgetsDefault() {
+    if (widget.widgetOffConnectyWaiting == null) {
+      _widgetConnecty = Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            SizedBox(
+              width: 60,
+              height: 60,
+              child: CircularProgressIndicator(),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              'Check connection...',
+              style: TextStyle(fontSize: 18),
+            )
+          ],
+        ),
+      );
+    } else {
+      _widgetConnecty = widget.widgetOffConnectyWaiting;
+    }
+
+    if (widget.widgetWaiting == null) {
+      _widgetWaiting = Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            SizedBox(
+              width: 60,
+              height: 60,
+              child: CircularProgressIndicator(),
+            ),
+          ],
+        ),
+      );
+    } else {
+      _widgetWaiting = widget.widgetWaiting;
+    }
   }
 }
 
+/*
 class SearchAppBarPageStream<T> extends StatefulWidget {
   /// Paramentros do SearchAppBar
 
@@ -440,268 +785,6 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
             widget.searchePageFloatingActionButtonLocation,
         floatingActionButtonAnimator:
             widget.searchePageFloatingActionButtonAnimator,
-        persistentFooterButtons: widget.searchePagePersistentFooterButtons,
-        drawer: widget.searchePageDrawer,
-        endDrawer: widget.searchePageEndDrawer,
-        bottomNavigationBar: widget.searchePageBottomNavigationBar,
-        bottomSheet: widget.searchePageBottomSheet,
-        backgroundColor: widget.searchPageBackgroundColor,
-        resizeToAvoidBottomPadding: widget.resizeToAvoidBottomPadding,
-        resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
-        primary: widget.primary,
-        drawerDragStartBehavior: widget.drawerDragStartBehavior,
-        extendBody: widget.extendBody,
-        extendBodyBehindAppBar: widget.extendBodyBehindAppBar,
-        drawerScrimColor: widget.drawerScrimColor,
-        drawerEdgeDragWidth: widget.drawerEdgeDragWidth,
-        drawerEnableOpenDragGesture: widget.drawerEnableOpenDragGesture,
-        endDrawerEnableOpenDragGesture: widget.endDrawerEnableOpenDragGesture);
-  }
-}
-
-/* void _subscribeListStream() {
-    _streamSubscription = widget._stream.listen((listData) {
-      if (_controller.bancoInit) {
-        // Fica negativo dentro do StreamBuilder
-        // Após apresentar o primeiro Obx(())
-        _controller.listFull = listData;
-        if (_controller.rxSearch.value.isNotEmpty) {
-          _controller.refreshSeachList(_controller.rxSearch.value);
-        } else {
-          _controller.sortCompareList(listData);
-          _controller.onSearchFilter(listData);
-        }
-      } else {
-        _controller.initialChangeList = listData;
-      }
-    });
-  }
-
-
-void _unsubscribeListStream() {
-    if (_streamSubscription != null) {
-      _streamSubscription.cancel();
-      _streamSubscription = null;
-    }
-  }
-
-
- @override
-  void didUpdateWidget(SearchAppBarPageStream<T> oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget._stream != widget._stream) {
-      if (_streamSubscription != null) {
-        _unsubscribeListStream();
-        //Necessário para resolver após o setState
-        widget._stream = oldWidget._stream.asBroadcastStream();
-      }
-
-      _subscribeListStream();
-    }
-  }
-
-
- @override
-  void dispose() {
-    //_controller.onClose();
-    _unsubscribeListStream();
-    super.dispose();
-  }
-*/
-
-/*
-class SearchAppBarPageStream<T> extends StatelessWidget {
-  /// Paramentros do SearchAppBar
-
-  final Widget searchAppBartitle;
-  final bool searchAppBarcenterTitle;
-  final IconThemeData searchAppBariconTheme;
-  final Color searchAppBarbackgroundColor;
-  final Color searchAppBarModeSearchBackgroundColor;
-  final Color searchAppBarElementsColor;
-  final String searchAppBarhintText;
-  final bool searchAppBarflattenOnSearch;
-  final TextCapitalization searchAppBarcapitalization;
-  final List<Widget> searchAppBaractions;
-  final double searchAppBarelevation;
-  final bool showIconConnectyOffAppBar;
-  final Widget iconConnectyOffAppBar;
-
-  ///  [iconConnectyOffAppBar] Aparece quando o status da conexao é off.
-  ///  já existe um icone default. Caso nao queira apresentar escolha
-  ///  [showIconConnectyOffAppBar] = false;
-
-
-  /// Parametros para o Scaffold
-
-  ///  [widgetConnecty] Apenas mostra algo quando esta sem conexao e ainda nao
-  ///  tem o primeiro valor da stream. Se a conexao voltar passa a mostrar
-  /// o [widgetWaiting] até apresentar o primeiro dado
-  final Widget widgetWaiting;
-  final Widget widgetConnecty;
-  final Widget widgetError;
-  final Widget searchePageFloaActionButton;
-  final FloatingActionButtonLocation searchePageFloatingActionButtonLocation;
-  final FloatingActionButtonAnimator searchePageFloatingActionButtonAnimator;
-  final List<Widget> searchePagePersistentFooterButtons;
-  final Widget searchePageDrawer;
-  final Widget searchePageEndDrawer;
-  final Widget searchePageBottomNavigationBar;
-  final Widget searchePageBottomSheet;
-  final Color searchPageBackgroundColor;
-  final bool resizeToAvoidBottomPadding;
-  final bool resizeToAvoidBottomInset;
-  final bool primary;
-  final DragStartBehavior drawerDragStartBehavior;
-  final bool extendBody;
-  final bool extendBodyBehindAppBar;
-  final Color drawerScrimColor;
-  final double drawerEdgeDragWidth;
-  final bool drawerEnableOpenDragGesture;
-  final bool endDrawerEnableOpenDragGesture;
-
-  /// Parametros para o SearcherGetController
-  final List<T> initialData;
-  final Stream<List<T>> listStream;
-  final FiltersTypes filtersType;
-  final FunctionList<T> listBuilder;
-  final StringFilter<T> stringFilter;
-  final Compare<T> compareSort;
-
-  /// Para montar em asBroadcastStream
-  // nao de pode colocar final. Após um setState precisa refaze-la
-  // vide o metodo didUpdateWidget
-  Stream<List<T>> _stream;
-
-  SearchAppBarPageStream({
-    Key key,
-
-    /// Parametros para o SearcherGetController
-    @required this.listStream,
-    @required this.listBuilder,
-    this.compareSort,
-    this.filtersType,
-    this.stringFilter,
-    this.widgetConnecty,
-
-    /// Paramentros do SearchAppBar
-    this.searchAppBartitle,
-    this.searchAppBarcenterTitle = false,
-    this.searchAppBariconTheme,
-    this.searchAppBarbackgroundColor,
-    this.searchAppBarModeSearchBackgroundColor,
-    this.searchAppBarElementsColor,
-    this.searchAppBarhintText,
-    this.searchAppBarflattenOnSearch = false,
-    this.searchAppBarcapitalization = TextCapitalization.none,
-    this.searchAppBaractions = const <Widget>[],
-    this.searchAppBarelevation = 4.0,
-    this.showIconConnectyOffAppBar = true,
-    this.iconConnectyOffAppBar,
-
-    /// Parametros para o Scaffold
-
-    this.initialData,
-    this.widgetWaiting,
-    this.widgetError,
-    this.searchePageFloaActionButton,
-    this.searchePageFloatingActionButtonLocation,
-    this.searchePageFloatingActionButtonAnimator,
-    this.searchePagePersistentFooterButtons,
-    this.searchePageDrawer,
-    this.searchePageEndDrawer,
-    this.searchePageBottomNavigationBar,
-    this.searchePageBottomSheet,
-    this.searchPageBackgroundColor,
-    this.resizeToAvoidBottomPadding,
-    this.resizeToAvoidBottomInset,
-    this.primary = true,
-    this.drawerDragStartBehavior = DragStartBehavior.start,
-    this.extendBody = false,
-    this.extendBodyBehindAppBar = false,
-    this.drawerScrimColor,
-    this.drawerEdgeDragWidth,
-    this.drawerEnableOpenDragGesture = true,
-    this.endDrawerEnableOpenDragGesture = true,
-  })
-      : _stream = listStream.asBroadcastStream(),
-        super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: SearchAppBar(
-          controller: SearcherPageStreamController<T>(
-            //listStream: widget._stream,
-              stringFilter: stringFilter,
-              compareSort: compareSort,
-              filtersType: filtersType)
-            ..onInit()
-            ..subscribeWorker(),
-          title: searchAppBartitle,
-          centerTitle:searchAppBarcenterTitle,
-          elevation: searchAppBarelevation,
-          iconTheme: searchAppBariconTheme,
-          backgroundColor: searchAppBarbackgroundColor,
-          searchBackgroundColor: searchAppBarModeSearchBackgroundColor,
-          searchElementsColor: searchAppBarElementsColor,
-          hintText: searchAppBarhintText,
-          flattenOnSearch: searchAppBarflattenOnSearch,
-          capitalization: searchAppBarcapitalization,
-          actions: searchAppBaractions,
-          showIconConnectyOffAppBar: showIconConnectyOffAppBar,
-          iconConnectyOffAppBar: iconConnectyOffAppBar,
-        ),
-        body: StreamSearchBuilder<T>(
-            initialData: .initialData,
-            widgetConnecty: .widgetConnecty,
-            stream: ._stream,
-            searcher: _controller,
-            listBuilder: widget.listBuilder,
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                if (widget.widgetError == null)
-                  return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        const Icon(
-                          Icons.error_outline,
-                          color: Colors.red,
-                          size: 60,
-                        ),
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 16),
-                            child: Text('Temos um erro: ${snapshot.error}'),
-                          ),
-                        )
-                      ]);
-                else
-                  return widget.widgetError;
-              } else {
-                if (widget.widgetWaiting == null)
-                  return Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: CircularProgressIndicator(),
-                        ),
-                      ],
-                    ),
-                  );
-                else
-                  return widget.widgetWaiting;
-              }
-            }),
-        floatingActionButton: widget.searchePageFloaActionButton,
-        floatingActionButtonLocation:
-        widget.searchePageFloatingActionButtonLocation,
-        floatingActionButtonAnimator:
-        widget.searchePageFloatingActionButtonAnimator,
         persistentFooterButtons: widget.searchePagePersistentFooterButtons,
         drawer: widget.searchePageDrawer,
         endDrawer: widget.searchePageEndDrawer,

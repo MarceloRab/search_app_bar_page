@@ -43,11 +43,11 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
   set snapshotScroolPage(AsyncSnapshotScrollPage<T> value) =>
       _snapshotScroolPage.value = value;
 
-  final FiltersTypes filtersType;
+  FiltersTypes filtersType;
   Filter<String> _filters;
   StringFilter<T> stringFilter;
 
-  final Compare<T> compareSort;
+  Compare<T> compareSort;
 
   int page = 1;
   int pageSearch = 1;
@@ -119,6 +119,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
           if (pageSearch == 0) {
             pageSearch = 1;
           }
+
           return mapsSearch[query];
         }
 
@@ -132,6 +133,8 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
                 listSearch: listSearch,
                 // se a anterior esta full a atual tb.
                 isListSearchFull: listAnterior.isListSearchFull);
+            mapsSearch[query].listSearch =
+                sortCompareListSearch(mapsSearch[query].listSearch);
           }
 
           if (listAnterior.isListSearchFull) {
@@ -152,6 +155,8 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
               listSearch: listSearch,
               // se a anterior esta full a atual tb.
               isListSearchFull: finishPage);
+          mapsSearch[query].listSearch =
+              sortCompareListSearch(mapsSearch[query].listSearch);
 
           if (finishPage) {
             return mapsSearch[query];
@@ -175,6 +180,9 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
                     .toList(),
                 // se a anterior esta full a atual tb.
                 isListSearchFull: listAnterior.isListSearchFull);
+
+            mapsSearch[query].listSearch =
+                sortCompareListSearch(mapsSearch[query].listSearch);
           } else {
             pageSearch = (listSearch.length / numPageItems).ceil();
             if (pageSearch == 0) {
@@ -185,6 +193,9 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
                 listSearch: listSearch,
                 // se a anterior esta full a atual tb.
                 isListSearchFull: finishPage);
+
+            mapsSearch[query].listSearch =
+                sortCompareListSearch(mapsSearch[query].listSearch);
 
             if (finishPage) {
               return mapsSearch[query];
@@ -201,6 +212,9 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
               // se a anterior esta full a atual tb.
               isListSearchFull: finishPage);
 
+          mapsSearch[query].listSearch =
+              sortCompareListSearch(mapsSearch[query].listSearch);
+
           if (finishPage) {
             return mapsSearch[query];
           }
@@ -216,6 +230,9 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
 
           mapsSearch[query] = ListSearchBuild<T>(
               listSearch: listSearch, isListSearchFull: finishPage);
+
+          mapsSearch[query].listSearch =
+              sortCompareListSearch(mapsSearch[query].listSearch);
         }
 
         pageSearch =
@@ -237,6 +254,9 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
         }
         mapsSearch[query] = ListSearchBuild<T>(
             listSearch: listSearch, isListSearchFull: finishPage);
+
+        mapsSearch[query].listSearch =
+            sortCompareListSearch(mapsSearch[query].listSearch);
 
         /*print('listSearch.query => '
             '${mapsSearch[
@@ -263,7 +283,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
     rxSearch('');
   }
 
-  void onInit() {
+  void onInitFilter() {
     if (filtersType.toString() == FiltersTypes.startsWith.toString()) {
       _filters = Filters.startsWith;
     } else if (filtersType.toString() == FiltersTypes.equals.toString()) {
@@ -287,6 +307,14 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
     if (compareSort != null) {
       list.sort(compareSort);
     }
+  }
+
+  List<T> sortCompareListSearch(List<T> list) {
+    if (compareSort != null) {
+      list.sort(compareSort);
+    }
+
+    return list;
   }
 
   FutureOr onClose() {

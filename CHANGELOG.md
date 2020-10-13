@@ -1,3 +1,8 @@
+## [0.3.6]
+- Improving the code to decrease the need for setState with get_state_manager. Necessary corrections
+ were made. You can now change the type of filtering and give it a setState. Added code if the 
+ request values return null.
+
 ## [0.3.5]
 - Reformulation in error handling of [futureFetchPageItems] and [listStream] in 
 [SearchAppBarPagination] and [SearchAppBarPageStream] respectively. Now you can handle it if the 

@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:get_state_manager/get_state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_page_stream_controller.dart';
@@ -63,7 +64,6 @@ class StreamSearchBuilder<
 
   @override
   Widget build(BuildContext context, AsyncSnapshot<List<T>> currentSummary) {
-    // TODO: aqui monto o Obx _rxSnapshot
 
     if (currentSummary.hasData) {
       searcher.haveInitialData = true;
@@ -78,3 +78,4 @@ class StreamSearchBuilder<
     return builder(context, currentSummary);
   }
 }
+*/
