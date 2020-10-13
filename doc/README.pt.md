@@ -1,79 +1,54 @@
 
 # search_app_bar_page 
 
-Um pacote em Flutter para lhe dar uma search page.
+# search_app_bar_page 
+
+Um pacote Flutter para fornecer a você uma página de pesquisa simples.
 
 ## Introdução
 
-Este pacote foi construido para gerar uma tela de search completa e reativa com a melhor facilidade possível. 
-Ele tem como base outro pacote. Gostaria de 👀 como fica a animação? Abra aqui [search_app_bar](https://pub.dev/packages/search_app_bar) 
-(by - rodolfoggp@gmail.com). Lá você tem os pormenores das funções do search_app_bar. Com as mudanças aqui, 
-voce não vai precisar extender a classe controller mas apenas passar a lista base para ser filtrada ou insira 
-a stream que devolve a sua lista para ser filtrada. Nesta caso, já existe um StreamBuilder para fazer o 
-tratamento em pano de fundo. 
+Este pacote foi construído para gerar uma tela de busca completa e reativa com a melhor facilidade possível.
+É baseado em outro pacote. Abra aqui => [search_app_bar] (https://pub.dev/packages/search_app_bar) (por - rodolfoggp@gmail.com). Lá você tem os detalhes das funções search_app_bar. Com as mudanças aqui,
+você não precisa estender a classe do controlador, mas apenas passar a lista base a ser filtrada ou inserir
+o fluxo que retorna sua lista para ser filtrada. Neste caso, já existe um StreamBuilder para fazer o
+tratamento de fundo. Infelizmente, não consegui atualizar o pacote básico, pois Rodolfo não controlou o pacote
+há mais de 01 ano e não respondeu ao meu pedido de alterações por e-mail.
 
-Obs.: Minha real intenção era atualizar o projeto do Rodolfo, mas já mandei algumas mensagens, a primeira há 06 meses, e não obtenho resposta.
-O projeto dele esta parado há mais de 01 ano.
+![example_video](https://user-images.githubusercontent.com/41010018/94386509-426cb800-011e-11eb-975d-05bd57707b16.gif)
 
-##### As página se divide entre: 
--  SEARCH_APP_BAR 
--  CONTROLLER
+##### ✷ A página está dividida entre
+- SEARCH_APP_BAR
+- CONTROLADOR
 - BODY de um Scaffold.
 
-## Parâmetros necessários
+## Required parameters
 
-Temos duas páginas: <blockquote> SearchAppBarPage e SearchAppBarPageStream.</blockquote>
+Temos três páginas: <blockquote> SearchAppBarPage, SearchAppBarPageStream and  SearchAppBarPagination</blockquote>
 
-🔎 <p> SearchAppBarPage precisa de uma lista que é a lista completa a ser filtrada e uma função que é repassada 
-       para montar o Widget a depender da lista filtrada. Se você tipar a página, se faz necessário [stringFilter].
-       Esta é uma função que recebe o parâmetro T (tipo da lista) e você escolhe como o String de retorno a partir 
-       do objeto. Como no exemplo abaixo. Foi tipada como Person e retornou o person.name. Este será usado para filtrar pelo query do search.
+🔎 <span> </span> ```SearchAppBarPage``` precisa de uma lista que é a lista completa a ser filtrada e uma função que é passada para construir
+o widget dependendo da lista filtrada. Se você digitar a página, precisará de [stringFilter]. Esta é uma função que recebe
+o parâmetro T (tipo de lista) e você o escolhe como a String de retorno do objeto. Como no exemplo abaixo. Foi digitado
+como Person e retornou person.name. Isso será usado para filtrar pela consulta de pesquisa.
 
 ```dart
 class SearchAppBarPage<T> extends StatefulWidget {
           //...
 
 SearchAppBarPage(
-       //..
-       /// Parametros para o SearcherGetController
+                       //...
+       /// Parameters para o SearcherGetController
        /// final List<T> listFull;
        @required this.listFull, 
-        /// [listBuilder] Funcao aplicada quando a lista é filtrada pelo search.
+        /// [listBuilder] Function applied when it is filtering in search.
        @required this.listBuilder,
-        /// [stringFilter] Precisa se tipada. 
-       ///Deve, pelo menos tipar com String.
-       this.stringFilter, )
-          //..
+        /// [stringFilter] Required if you type. 
+       ///You should at least type with String.
+       this.stringFilter
+                  //...
+    )
 }
 ```
 
-🔎 <p> SearchAppBarPageStream precisa de um stream que já é trabalhado, ou seja, já existe um Widget por 
-       padrão de erro e espera. Você pode modificá-los a vontade Também precisa de uma função que é repassada 
-       para montar o Widget que será apresentado no Body, a depender da lista filtrada. Esta é renovada pelo 
-       fluxo natural do stream e também pelo filtragem do Search. 
-
-```dart
-class SearchAppBarPageStream<T> extends StatefulWidget {
-      //...
-
-SearchAppBarPageStream(
-   //...
-    /// final Stream<List<T>> listStream;
-    @required this.listStream, 
-    ///final FunctionList<T> listBuilder; 
-    /// Funcao aplicado quando recebe algo sa stream ou quando é 
-    /// filtrada pelo search.
-    @required this.listBuilder
-        // ...
-    )
-
-   }  
-      //...
-```
-
-
-## Exemplo 
-###### See [Example](https://pub.dev/packages/search_app_bar_page/example) para mais detalhes.
 #### 🔎 SearchAppBarPage
 
 ```dart
@@ -95,8 +70,7 @@ class SearchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     //return SearchAppBarPage<String>(
     return SearchAppBarPage<Person>(
-      searchAppBariconTheme:
-          Theme.of(context).iconTheme.copyWith(color: Colors.white),
+      magnifyinGlassColor: Colors.white,
       searchAppBarcenterTitle: true,
       searchAppBarhintText: 'Pesquise um Nome',
       searchAppBartitle: Text(
@@ -174,6 +148,33 @@ class Person {
 }
 
 ```
+
+🔎 ```SearchAppBarPageStream``` precisa de um stream que já esteja trabalhado, ou seja, já existe um Widget por padrão
+por erro e espera. Você pode modificá-los à vontade. Você também precisa de uma função que é passada para montar o widget
+que será apresentado no Corpo, dependendo da lista filtrada. Isso é renovado pelo fluxo natural do stream
+e também pela filtragem de pesquisa.
+
+```dart
+class SearchAppBarPageStream<T> extends StatefulWidget {
+      //...
+
+SearchAppBarPageStream(
+        //...
+    /// final Stream<List<T>> listStream;
+    @required this.listStream, 
+    ///final FunctionList<T> listBuilder; 
+    /// Function applied when receiving data through Stream or filtering in search.
+    @required this.listBuilder,
+    /// [stringFilter] Required if you type. 
+       ///You should at least type with String.
+    this.stringFilter
+        // ...
+   ) 
+      //...
+}
+```
+
+
 #### 🔎 SearchAppBarPageStream
 ```dart
 import 'package:flutter/material.dart';
@@ -184,8 +185,7 @@ class SearchAppBarStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SearchAppBarPageStream<Person>(
-      searchAppBariconTheme:
-          Theme.of(context).iconTheme.copyWith(color: Colors.white),
+      magnifyinGlassColor: Colors.white,
       searchAppBarcenterTitle: true,
       searchAppBarhintText: 'Pesquise um Nome',
       searchAppBartitle: Text(
@@ -278,31 +278,219 @@ class Person {
 
 ```
 
-## Filtros
 
-Divide os filtros em três tipos:
+🔎 <span> </span> ```SearchAppBarPagination``` foi criado para solicitações fragmentadas de sua API. Se você tem centenas de dados e gostaria de enviá-los em partes, além de poder filtrá-los com eficiência, este Widget é o escolhido. Há um cache de solicitações para evitar (REST) ​​desnecessariamente. O cache é redefinido quando uma tela é descartada. O que difere do StreamPage é que uma função que encaminha a página e a consulta da string de pesquisa sempre será chamada quando necessário. Exemplo: atinge o final da página.
+Lembrando que esta função deve retornar um Future (get para sua API). Você verá um exemplo com o lado do servidor abaixo [in Dart](https://github.com/MarceloRab/search_app_bar_page#example-of-server-side-function).
+
+
+```dart
+class SearchAppBarPagination<T> extends StatefulWidget {
+      //...
+
+SearchAppBarPagination(
+        //...
+    ///Returns Widget from the object (<T>). This comes from the List <T> index.
+    ///typedef WidgetsPaginationItemBuilder<T> = Widget Function(
+    ///    BuildContext context, int index, T objectIndex);
+    ///final WidgetsPaginationItemBuilder<T> paginationItemBuilder;
+    @required this.paginationItemBuilder,
+    ///Return the list in parts or parts by query String
+    ///filtered. We make the necessary changes on the device side to update the
+    ///page to be requested. Eg: If numItemsPage = 6 and you receive 05 or 11
+    ///or send empty, = >>> it means that the data is over.
+    ///typedef FutureFetchPageItems<T> = Future<List<T>> Function(int page, String query);       
+    /// final FutureFetchPageItems<T> futureFetchPageItems;
+    @required  this.futureFetchPageItems,
+
+    /// [stringFilter] Required if you type. 
+    ///You should at least type with String.
+    this.stringFilter
+        // ...
+   ) 
+      //...
+}
+```
+
+##### 😱 Você pode fazer um setState em sua página de stream e sua paginação ou um Rot Reload sem problemas. Mesmo mudando o valor de initialData.
+
+
+#### 🔎 SearchAppBarPagination
+
+```dart
+class SearchAppBarPaginationTest extends StatefulWidget {
+  const SearchAppBarPaginationTest({Key key}) : super(key: key);
+
+  @override
+  _SearchAppBarPaginationTestState createState() =>
+      _SearchAppBarPaginationTestState();
+}
+
+class _SearchAppBarPaginationTestState
+    extends State<SearchAppBarPaginationTest> {
+  //var _initialData;
+
+  /*@override
+  void initState() {
+    Future.delayed(Duration(seconds: 6), () {
+      setState(() {
+        _initialData = dataListPerson0;
+      });
+    });
+    super.initState();
+  }*/
+
+  @override
+  Widget build(BuildContext context) {
+    return SearchAppBarPagination<Person>(
+        //initialData: _initialData,
+        magnifyinGlassColor: Colors.white,
+        searchAppBarcenterTitle: true,
+        searchAppBarhintText: 'Pesquise um Nome',
+        searchAppBartitle: Text(
+          'Search Pagination',
+          style: TextStyle(fontSize: 20),
+        ),
+        futureFetchPageItems: _futureListPerson,
+        stringFilter: (Person person) => person.name,
+        compareSort: (Person a, Person b) => a.name.compareTo(b.name),
+        filtersType: FiltersTypes.contains,
+        paginationItemBuilder:
+            (BuildContext context, int index, Person objectIndex) {
+          return Card(
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4)),
+              // color: Theme.of(context).primaryColorDark,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 130.0, vertical: 20),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Name: ${objectIndex.name}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Age: ${objectIndex.age.toStringAsFixed(2)}',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    )
+                  ],
+                ),
+              ));
+        });
+  }
+}
+```
+
+![WhatsApp-Video-2020-10-05-at-23 33](https://user-images.githubusercontent.com/41010018/95152485-8cc7e780-0763-11eb-9c77-55b3fe84fd61.gif)
+
+#### Exemplo da função do lado do servidor.
+
+Aqui em Dart. Retorna a lista em partes ou partes por string de consulta filtrada. Fazemos as alterações necessárias no lado do dispositivo para atualizar a página a ser solicitada. Ex: Se numItemsPage = 6 e você recebe 05 ou 11 ou envia vazio, = >>> significa que os dados acabaram.
+
+##### Tive que passar algumas horas testando-o para que não houvesse erros. Faça testes e se encontrar algum erro, ficarei feliz em resolvê-los o mais rápido possível.
+
+```dart
+Future<List<Person>> _futureListPerson(int page, String query) async {
+    final size = 8;
+    List<Person> list = [];
+
+    final fistElement = (page - 1) * size;
+    final lastElement = page * size;
+
+    /*print('fistElement = ' + fistElement.toString());
+    print('lastElement = ' + lastElement.toString());
+    print('--------');
+    print('page pedida = ' + page.toString());
+    print('--------');*/
+
+    dataListPerson3.sort((a, b) => a.name.compareTo(b.name));
+
+    await Future<void>.delayed(Duration(seconds: 3));
+
+    if (query.isEmpty) {
+      int totalPages = (dataListPerson3.length / size).ceil();
+      totalPages = totalPages == 0 ? 1 : totalPages;
+
+      //print('TotalPages = ' + totalPages.toString());
+      if (page > totalPages) {
+        //print('--TEM--nada');
+        return list;
+      }
+
+      list = dataListPerson3.sublist(
+          fistElement,
+          lastElement > dataListPerson3.length
+              ? dataListPerson3.length
+              : lastElement);
+      /*if (list.length < size) {
+        print('-###-  Last  ---Page --- Full');
+      }*/
+    } else {
+      final listQuery =
+          dataListPerson3.where((element) => contains(element, query)).toList();
+      ;
+
+      int totalQueryPages = (listQuery.length / size).ceil();
+      totalQueryPages = totalQueryPages == 0 ? 1 : totalQueryPages;
+
+      //print('TotalQueryPages = ' + totalQueryPages.toString());
+
+      if (page > totalQueryPages) {
+        //print('--TEM---nada');
+        return list;
+      }
+
+      list = listQuery.sublist(fistElement,
+          lastElement > listQuery.length ? listQuery.length : lastElement);
+
+      /*if (list.length < size) {
+        print('-###-  LAst -- Page --- Search');
+      }*/
+    }
+
+    return list;
+  }
+
+```
+
+#### Vide [Example full](https://pub.dev/packages/search_app_bar_page/example) for more details.
+
+## Filters
+
+Estes são os filtros que o controlador usa para filtrar
+ a lista. Divida os filtros em três tipos: 
 
 ```enum FiltersTypes { startsWith, equals, contains }```
 
 Default = FiltersTypes.contains;
 
-## Parametros do search_app_bar
+## Search_app_bar parameters
 
-Aqui [search_app_bar paremetros](https://pub.dev/packages/search_app_bar#parameters), 
-no pacote base, você pode entender cado compenente.
-<blockquote> Componentes NOVOS </blockquote>
+Aqui [parâmetros search_app_bar] (https://pub.dev/packages/search_app_bar#parameters),
+no pacote básico, você pode entender cada componente.
 
-`[iconConnectyOffAppBar]`  Aparece quando o status da conexão está desligado. Já existe um ícone padrão.
-Se você não quiser apresentar uma escolha  `[hideDefaultConnectyIconOffAppBar]` = true; Se você quiser 
-ter um ícone personalizado, faça `[hideDefaultConnectyIconOffAppBar]` = true; e configure um `[iconConnectyOffAppBar]`.
+<blockquote> NOVOS Componentes </blockquote>
 
-`[widgetOffConnectyWaiting]` Apenas mostra algo quando esta sem conexao e ainda nao tem o primeiro 
-valor da stream. Se a conexao voltar passa a mostrar o [widgetWaiting]`  até apresentar o primeiro 
-dado. Todos já vem com widgets default.
+## Reatividade à conexão.
+
+`[iconConnectyOffAppBar]` Aparece quando o status da conexão está desligado. Já existe um ícone padrão.
+Se você não quiser apresentar uma escolha `[hideDefaultConnectyIconOffAppBar]` = true; Se você quiser ter um ícone personalizado,
+faça `[hideDefaultConnectyIconOffAppBar]` = true; e defina o `[iconConnectyOffAppBar]`.
+
+`[widgetOffConnectyWaiting]` Mostra algo apenas quando está desconectado e ainda não tem o
+primeiro valor do fluxo. Se a conexão voltar a mostrar o `[widgetWaiting]` até você
+receber os primeiros dados. Todos já vêm com Todos vêm com widgets padrão.
+
+![20201007-203744-360x780](https://user-images.githubusercontent.com/41010018/95398660-c708c480-08dc-11eb-8b07-e0ffa816cbbc.gif)
 
 ## Disclaimer
 
-O projeto inicial deste pacote tem uma animação fornecida em um tutorial by Nishant Desai
-at: https://blog.usejournal.com/change-app-bar-in-flutter-with-animation-cfffb3413e8a
+O design inicial deste pacote tem uma animação fornecida em um tutorial por Nishant Desai
+em: https://blog.usejournal.com/change-app-bar-in-flutter-with-animation-cfffb3413e8a
 
 Todos os méritos para Rodolfo (rodolfoggp@gmail.com) e Nishant Desai.
