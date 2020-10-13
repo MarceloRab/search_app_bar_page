@@ -373,8 +373,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
     if (_activeListSearchCallbackIdentity != null) {
       _unsubscribeSearhCallBack();
     }
-    final SearchCallBack callbackIdentity =
-        SearchCallBack(_controller.rxSearch.value);
+    final SearchCallBack callbackIdentity = SearchCallBack(query);
     _activeListSearchCallbackIdentity = callbackIdentity;
     if (!scroollEndPage) {
       _controller.snapshotScroolPage = AsyncSnapshotScrollPage<T>.waiting();
@@ -382,7 +381,19 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
 
     widget.futureFetchPageItems(_controller.pageSearch, query).then((data) {
       if (_activeListSearchCallbackIdentity == callbackIdentity) {
-        final isSearchMode = _controller.rxSearch.value.isNotEmpty;
+        //final isSearchMode = _controller.rxSearch.value.isNotEmpty;
+
+        if (data == null) {
+          refazFutureSearchQuery();
+
+          if (_controller.isModSearch) {
+            _controller.snapshotScroolPage = _controller.snapshotScroolPage
+                .withData(
+                    _controller.mapsSearch[callbackIdentity.query].listSearch);
+          }
+
+          return;
+        }
 
         // Recebeu lista vazia - encerrou
         if (data.isEmpty) {
@@ -391,7 +402,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
           _controller.mapsSearch[callbackIdentity.query].isListSearchFull =
               true;
 
-          if (isSearchMode) {
+          if (_controller.isModSearch) {
             _controller.snapshotScroolPage = _controller.snapshotScroolPage
                 .withData(
                     _controller.mapsSearch[callbackIdentity.query].listSearch);
@@ -413,7 +424,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
           _controller.mapsSearch[callbackIdentity.query].isListSearchFull =
               true;
 
-          if (isSearchMode) {
+          if (_controller.isModSearch) {
             _controller.snapshotScroolPage = _controller.snapshotScroolPage
                 .withData(
                     _controller.mapsSearch[callbackIdentity.query].listSearch);
@@ -438,7 +449,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
           _controller.pageSearch++;
           _futureSearchPageQuery(callbackIdentity.query, scroollEndPage: true);
         } else {
-          if (isSearchMode) {
+          if (_controller.isModSearch) {
             _controller.snapshotScroolPage = _controller.snapshotScroolPage
                 .withData(
                     _controller.mapsSearch[callbackIdentity.query].listSearch);
