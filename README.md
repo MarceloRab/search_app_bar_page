@@ -23,7 +23,7 @@ for more than 01 year and has not responded to my request for changes by email.
 
 ## Required parameters
 
-Temos duas páginas: <blockquote> SearchAppBarPage, SearchAppBarPageStream and  SearchAppBarPagination</blockquote>
+We have three pages: <blockquote> SearchAppBarPage, SearchAppBarPageStream and  SearchAppBarPagination</blockquote>
 
 🔎 <span> </span> ```SearchAppBarPage``` needs a list that is the complete list to be filtered and a function that is passed on to build
 the Widget depending on the filtered list. If you type the page, you need [stringFilter]. This is a function that receives 
