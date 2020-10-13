@@ -1,8 +1,6 @@
 
 # search_app_bar_page 
 
-# search_app_bar_page 
-
 Um pacote Flutter para fornecer a você uma página de pesquisa simples.
 
 ## Introdução
