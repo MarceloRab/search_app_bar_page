@@ -392,7 +392,7 @@ Ex: Se numItemsPage = 20 (total de itens em uma página) e você envia uma lista
 
 #### Tipos de retorno para FetchPageItems futuros.
 
-- Lista igual a numItemsPage [(list.length == numItemsPage)] = continua a solicitar páginas de notícias.
+- Lista igual a numItemsPage [(list.length == numItemsPage)] = continua a solicitar novas notícias.
 - Lista vazia ou lista menor que numItemsPage [(list.length <numItemsPage)] = termina a solicitação de páginas. Seja uma lista completa, seja a lista filtrada pela pesquisa. A solicitação da API para uma lista filtrada pela pesquisa só é atendida se a lista completa não for finalizada ou a solicitação da lista filtrada pela pesquisa não tiver sido finalizada pelos mesmos princípios acima.
 - Retorno nulo. Se você enviar null: se ainda não houver dados, retorne uma Exceção; se um dado já existe, ele retorna os mesmos dados no cache.
 
