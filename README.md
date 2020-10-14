@@ -396,7 +396,7 @@ Ex: If numItemsPage = 20 (total items on a page) and you send a list with a leng
 
 - List equal to numItemsPage ```(list.length == numItemsPage)``` = continues to request new pages.
 - Empty list or list smaller than numItemsPage ```(list.length < numItemsPage)``` = ends the request for pages. Be it a complete list, be it the list filtered by the search. The API request for a list filtered by the search is only fulfilled if the complete list is not finalized or the list request filtered by the search has not been finalized by the same principles above.
-- Null return. If you send null: if there is still no data, return an Exception; if a data already exists, it returns the same data in the cache.
+- Null return. If you send null: if there is still no data, return an Exception; if a data already exists, it returns the same data in the cache. For now the cahe is restarted when the screen receives dispose.
 
 
 ##### I had to spend a few hours testing it so there were no mistakes. Do tests and if you find an error, I would be happy to resolve them as soon as possible.
