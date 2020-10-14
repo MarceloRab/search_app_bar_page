@@ -394,7 +394,7 @@ Ex: Se numItemsPage = 20 (total de itens em uma página) e você envia uma lista
 
 - Lista igual a numItemsPage ```(list.length == numItemsPage)``` = continua a solicitar novas notícias.
 - Lista vazia ou lista menor que numItemsPage ```(list.length <numItemsPage)``` = termina a solicitação de páginas. Seja uma lista completa, seja a lista filtrada pela pesquisa. A solicitação da API para uma lista filtrada pela pesquisa só é atendida se a lista completa não for finalizada ou a solicitação da lista filtrada pela pesquisa não tiver sido finalizada pelos mesmos princípios acima.
-- Retorno nulo. Se você enviar null: se ainda não houver dados, retorne uma Exceção; se um dado já existe, ele retorna os mesmos dados no cache.
+- Retorno nulo. Se você enviar null: se ainda não houver dados, retorne uma Exceção; se um dado já existe, ele retorna os mesmos dados no cache. Por enquanto o cahe é reiniciado quando a tela recebe dispose;
 
 ##### Tive que passar algumas horas testando-o para que não houvesse erros. Faça testes e se encontrar algum erro, ficarei feliz em resolvê-los o mais rápido possível.
 
