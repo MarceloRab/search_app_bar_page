@@ -386,9 +386,15 @@ class _SearchAppBarPaginationTestState
 
 ![WhatsApp-Video-2020-10-05-at-23 33](https://user-images.githubusercontent.com/41010018/95152485-8cc7e780-0763-11eb-9c77-55b3fe84fd61.gif)
 
-#### Exemplo da função do lado do servidor.
+### Exemplo de função do lado do servidor.
 
-Aqui em Dart. Retorna a lista em partes ou partes por string de consulta filtrada. Fazemos as alterações necessárias no lado do dispositivo para atualizar a página a ser solicitada. Ex: Se numItemsPage = 6 e você recebe 05 ou 11 ou envia vazio, = >>> significa que os dados acabaram.
+Ex: Se numItemsPage = 20 (total de itens em uma página) e você envia uma lista com comprimento inferior a 20 ou envia uma lista vazia, = >>> significa que os dados acabaram. Se você enviar null: se ainda não houver dados, retorna uma Exceção; se um dado já existe, nada acontece.
+
+#### Tipos de retorno para FetchPageItems futuros.
+
+- Lista igual a numItemsPage [(list.length == numItemsPage)] = continua a solicitar páginas de notícias.
+- Lista vazia ou lista menor que numItemsPage [(list.length <numItemsPage)] = termina a solicitação de páginas. Seja uma lista completa, seja a lista filtrada pela pesquisa. A solicitação da API para uma lista filtrada pela pesquisa só é atendida se a lista completa não for finalizada ou a solicitação da lista filtrada pela pesquisa não tiver sido finalizada pelos mesmos princípios acima.
+- Retorno nulo. Se você enviar null: se ainda não houver dados, retorne uma Exceção; se um dado já existe, ele retorna os mesmos dados no cache.
 
 ##### Tive que passar algumas horas testando-o para que não houvesse erros. Faça testes e se encontrar algum erro, ficarei feliz em resolvê-los o mais rápido possível.
 
