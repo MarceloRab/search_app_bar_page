@@ -388,9 +388,16 @@ class _SearchAppBarPaginationTestState
 
 ![WhatsApp-Video-2020-10-05-at-23 33](https://user-images.githubusercontent.com/41010018/95152485-8cc7e780-0763-11eb-9c77-55b3fe84fd61.gif)
 
-#### Example of server side function.
+### Example of server side function.
 
-Here in Dart. Return the list in parts or parts by query String filtered. We make the necessary changes on the device side to update the page to be requested. Eg: If numItemsPage = 6 and you receive 05 or 11 or send empty, = >>> it means that the data is over.
+Ex: If numItemsPage = 20 (total items on a page) and you send a list with a length less than 20 or send an empty list, = >>> means that the data is over. If you send null: if there is no data yet, return an Exception; if a data already exists, nothing happens.
+
+#### Return types for future FetchPageItems.
+
+- List equal to numItemsPage [(list.length == numItemsPage)] = continues to request news pages.
+- Empty list or list smaller than numItemsPage [(list.length < numItemsPage)] = ends the request for pages. Be it a complete list, be it the list filtered by the search. The API request for a list filtered by the search is only fulfilled if the complete list is not finalized or the list request filtered by the search has not been finalized by the same principles above.
+- Null return. If you send null: if there is still no data, return an Exception; if a data already exists, it returns the same data in the cache.
+
 
 ##### I had to spend a few hours testing it so there were no mistakes. Do tests and if you find an error, I would be happy to resolve them as soon as possible.
 
