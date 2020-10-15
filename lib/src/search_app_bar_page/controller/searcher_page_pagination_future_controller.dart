@@ -54,7 +54,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
   int page = 1;
   int pageSearch = 1;
 
-  int numPageItems = 0;
+  int numItemsPage = 0;
 
   Future<List<T>> functionFuturePageItems(FutureFetchPageItems<T> func) =>
       func(page, rxSearch.value);
@@ -106,7 +106,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
       if (mapsSearch.containsKey(query)) {
         if (mapsSearch[query].isListSearchFull) {
           pageSearch =
-              (mapsSearch[query].listSearch.length / numPageItems).ceil();
+              (mapsSearch[query].listSearch.length / numItemsPage).ceil();
           if (pageSearch == 0) {
             pageSearch = 1;
           }
@@ -116,7 +116,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
 
         if (listAnterior != null) {
           if (listSearch.length > mapsSearch[query].listSearch.length) {
-            pageSearch = (listSearch.length / numPageItems).ceil();
+            pageSearch = (listSearch.length / numItemsPage).ceil();
             if (pageSearch == 0) {
               pageSearch = 1;
             }
@@ -137,7 +137,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
               .where((element) => _filters(stringFilter(element), query))
               .toList();
 
-          pageSearch = (listSearch.length / numPageItems).ceil();
+          pageSearch = (listSearch.length / numItemsPage).ceil();
           if (pageSearch == 0) {
             pageSearch = 1;
           }
@@ -161,7 +161,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
             .toList();
         if (listAnterior != null) {
           if (listAnterior.listSearch.length > listSearch.length) {
-            pageSearch = (listAnterior.listSearch.length / numPageItems).ceil();
+            pageSearch = (listAnterior.listSearch.length / numItemsPage).ceil();
             if (pageSearch == 0) {
               pageSearch = 1;
             }
@@ -175,7 +175,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
             mapsSearch[query].listSearch =
                 sortCompareListSearch(mapsSearch[query].listSearch);
           } else {
-            pageSearch = (listSearch.length / numPageItems).ceil();
+            pageSearch = (listSearch.length / numItemsPage).ceil();
             if (pageSearch == 0) {
               pageSearch = 1;
             }
@@ -193,7 +193,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
             }
           }
         } else {
-          pageSearch = (listSearch.length / numPageItems).ceil();
+          pageSearch = (listSearch.length / numItemsPage).ceil();
           if (pageSearch == 0) {
             pageSearch = 1;
           }
@@ -227,7 +227,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
         }
 
         pageSearch =
-            (mapsSearch[query].listSearch.length / numPageItems).ceil();
+            (mapsSearch[query].listSearch.length / numItemsPage).ceil();
         if (pageSearch == 0) {
           pageSearch = 1;
         }
@@ -239,7 +239,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
             .where((element) => _filters(stringFilter(element), query))
             .toList();
 
-        pageSearch = (listSearch.length / numPageItems).ceil();
+        pageSearch = (listSearch.length / numItemsPage).ceil();
         if (pageSearch == 0) {
           pageSearch = 1;
         }
@@ -303,6 +303,16 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
     }
   }
 
+  void refazFutureSearchQuery(String searchQuery) {
+    //_oneMorePage = false;
+
+    if (pageSearch > 1 && snapshotScroolPage.loadingSearchScroll) {
+      if ((mapsSearch[searchQuery].listSearch.length ~/ numItemsPage) == 0) {
+        page--;
+      }
+    }
+  }
+
   void handleListEmpty() {
     if (listFull.isNotEmpty) {
       if (!isSearchModePage) {
@@ -313,6 +323,18 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
       withError(Exception('It cannot return null. 😢'));
     //snapshotScroolPage =
     //snapshotScroolPage.withError(Exception('It cannot return null. 😢'));
+  }
+
+  void handleListDataSearchList({@required List<T> listData}) {
+    if (listData == null) {
+      return;
+    }
+
+    if (listData.isEmpty) {
+      return;
+    }
+
+    if (listData.length - numItemsPage < 0) {}
   }
 
   void handleListDataFullList({@required List<T> listData}) {
@@ -326,7 +348,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
     }
 
     if (listData.isEmpty) {
-      if (numPageItems == 0) {
+      if (numItemsPage == 0) {
         withError(Exception('First return cannot have zero elements. 😢'));
         return;
       }
@@ -340,13 +362,13 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
       return;
     }
 
-    if (listData.length < 15 && numPageItems == 0) {
+    if (listData.length < 15 && numItemsPage == 0) {
       withError(Exception(
           'First return cannot be a list of less than 15 elements. 😢'));
       return;
     }
 
-    if (listData.length - numPageItems < 0) {
+    if (listData.length - numItemsPage < 0) {
       wrapListFull(listData);
 
       finishPage = true;
@@ -357,8 +379,8 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
       return;
     }
 
-    if (numPageItems == 0) {
-      numPageItems = listData.length;
+    if (numItemsPage == 0) {
+      numItemsPage = listData.length;
     }
 
     wrapListFull(listData);
@@ -398,7 +420,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
 
   @override
   void withData(List<T> data) =>
-      snapshotScroolPage = snapshotScroolPage.withData(listFull);
+      snapshotScroolPage = snapshotScroolPage.withData(data);
 
   @override
   void withError(Object error) =>

@@ -331,7 +331,7 @@ class _SearchAppBarPaginationTestState
   ///05 or 11 or send empty, = >>> it means that the data is over.
   //Please work your future to not return null.
   Future<List<Person>> _futureListPerson(int page, String query) async {
-    final size = 8;
+    final size = 15;
     List<Person> list = [];
 
     final fistElement = (page - 1) * size;

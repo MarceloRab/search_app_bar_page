@@ -236,7 +236,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
       _controller.initial(_controller.listFull);
     }
 
-    buildwidgetsDefault();
+    buildWidgetsDefault();
   }
 
   @override
@@ -483,7 +483,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
     //return _widgetError;
   }
 
-  void buildwidgetsDefault() {
+  void buildWidgetsDefault() {
     if (widget.widgetOffConnectyWaiting == null) {
       _widgetConnecty = Center(
         child: Column(

@@ -102,9 +102,9 @@ class SearchAppBarPagination<T> extends StatefulWidget {
   ///or send empty, = >>> it means that the data is over.
   final FutureFetchPageItems<T> futureFetchPageItems;
 
-  /// [numPageItems] Automatically calculated when receiving the first data.
+  /// [numItemsPage] Automatically calculated when receiving the first data.
   /// If it has [initialData] it cannot be null.
-  final int numPageItems;
+  final int numItemsPage;
 
   /// [filtersType] These are the filters that the Controller uses to
   /// filter the list. Divide the filters into three types:
@@ -179,11 +179,9 @@ class SearchAppBarPagination<T> extends StatefulWidget {
     this.filtersType,
     this.stringFilter,
     this.compareSort,
-    this.numPageItems,
+    this.numItemsPage,
     this.widgetEndScrollPage,
-  })  : assert(numPageItems > 15,
-            'LThe minimum value for the number of elements is 15.'),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   _SearchAppBarPaginationState<T> createState() =>
@@ -225,9 +223,14 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
   void initState() {
     super.initState();
     //_controller = widget.searcher;
-    if (widget.initialData != null && widget.numPageItems == null) {
-      throw Exception('Necessario passar o numero de itens por página para que '
-          'possa calcular a pagina inicial');
+    if (widget.numItemsPage != null && widget.numItemsPage < 15) {
+      throw Exception('The minimum value for the number of elements is 15.');
+    }
+
+    if (widget.initialData != null && widget.numItemsPage == null) {
+      throw Exception(
+          'It is necessary to pass the number of items per page so that '
+          'can calculate the home page');
     }
     _controller = SearcherPagePaginationFutureController<T>(
         //listStream: widget._stream,
@@ -239,17 +242,17 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
     _scrollController = ScrollController();
     _scrollController.addListener(pagesListener);
 
-    if (widget.numPageItems != null) {
-      _controller.numPageItems = widget.numPageItems;
+    if (widget.numItemsPage != null) {
+      _controller.numItemsPage = widget.numItemsPage;
     }
     _haveInitialData = widget.initialData != null;
     //_snapshot = AsyncSnapshot<List<T>>.withData(
     // ConnectionState.none, widget.initialData);
 
     if (_haveInitialData) {
-      if (_controller.numPageItems != 0) {
+      if (_controller.numItemsPage != 0) {
         _controller.page =
-            (widget.initialData.length / widget.numPageItems).ceil();
+            (widget.initialData.length / widget.numItemsPage).ceil();
       }
 
       _controller.listFull.addAll(widget.initialData);
@@ -329,6 +332,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
     }
   }
 
+  //TODO: desacoplar para o controller.
   void _futureSearchPageQuery(String query, {bool scroollEndPage = false}) {
     if (_activeListSearchCallbackIdentity != null) {
       _unsubscribeSearhCallBack();
@@ -345,7 +349,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
         //final isSearchMode = _controller.rxSearch.value.isNotEmpty;
 
         if (data == null) {
-          refazFutureSearchQuery();
+          refazFutureSearchQuery(callbackIdentity.query);
 
           if (_controller.isSearchModePage) {
             _controller.withData(
@@ -378,10 +382,10 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
           return;
         }
 
-        if (data.length - _controller.numPageItems < 0) {
+        if (data.length - _controller.numItemsPage < 0) {
           _oneMorePage = false;
 
-          final num = (_controller.pageSearch - 1) * _controller.numPageItems;
+          final num = (_controller.pageSearch - 1) * _controller.numItemsPage;
           _controller.mapsSearch[callbackIdentity.query].listSearch.removeRange(
               num,
               _controller.mapsSearch[callbackIdentity.query].listSearch.length);
@@ -407,7 +411,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
         print('listSearch.query => '
             '${widget.searcher.mapsSearch[widget.searcher.rxSearch.value]
             .listSearch.length.toString()}');*/
-        final num = (_controller.pageSearch - 1) * _controller.numPageItems;
+        final num = (_controller.pageSearch - 1) * _controller.numItemsPage;
 
         _controller.mapsSearch[callbackIdentity.query].listSearch.removeRange(
             num,
@@ -429,11 +433,11 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
           }
         }
       } else {
-        refazFutureSearchQuery();
+        refazFutureSearchQuery(callbackIdentity.query);
       }
     }, onError: (Object error) {
       if (_activeListSearchCallbackIdentity == callbackIdentity) {
-        refazFutureSearchQuery();
+        refazFutureSearchQuery(callbackIdentity.query);
 
         _controller.withError(error);
         //_controller.snapshotScroolPage =
@@ -466,7 +470,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
                     '${listBuilder.listSearch.toString()}');
 
                 if (listBuilder.listSearch.length -
-                        (_controller.pageSearch * _controller.numPageItems) ==
+                        (_controller.pageSearch * _controller.numItemsPage) ==
                     0) {
                   _controller.pageSearch++;
                 } else {
@@ -616,7 +620,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
         //_controller.snapshotScroolPage =
         // _controller.snapshotScroolPage.withData(listBuilder.listSearch);
       } else {
-        if (listBuilder.listSearch.length < _controller.numPageItems) {
+        if (listBuilder.listSearch.length < _controller.numItemsPage) {
           _futureSearchPageQuery(query);
         } else {
           _controller.withData(listBuilder.listSearch);
@@ -646,7 +650,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
     _controller.onInitFilter();
 
     if (oldWidget.initialData != widget.initialData) {
-      if (widget.initialData != null && widget.numPageItems == null) {
+      if (widget.initialData != null && widget.numItemsPage == null) {
         throw Exception(
             'Necessario passar o numero de itens por página para que '
             'possa calcular a pagina inicial');
@@ -660,7 +664,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
           }
           if (widget.initialData.length > _controller.listFull.length) {
             _controller.page =
-                (widget.initialData.length / widget.numPageItems).ceil();
+                (widget.initialData.length / widget.numItemsPage).ceil();
 
             _controller.listFull.clear();
             _controller.listFull.addAll(widget.initialData);
@@ -698,14 +702,13 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
     }
   }
 
-  void refazFutureSearchQuery() {
+  void refazFutureSearchQuery(String searchQuery) {
     _oneMorePage = false;
 
     if (_controller.pageSearch > 1 &&
         _controller.snapshotScroolPage.loadingSearchScroll) {
-      if ((_controller
-                  .mapsSearch[_controller.rxSearch.value].listSearch.length ~/
-              _controller.numPageItems) ==
+      if ((_controller.mapsSearch[searchQuery].listSearch.length ~/
+              _controller.numItemsPage) ==
           0) {
         _controller.page--;
       }
