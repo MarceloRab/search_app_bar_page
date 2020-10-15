@@ -5,8 +5,10 @@ import 'package:get_state_manager/get_state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/ui/infra/search_stream_page_base.dart';
 
-class SearcherPageStreamController<T> extends SeacherBase {
+class SearcherPageStreamController<T> extends SeacherBase
+    with StreamSearcherBase<T> {
   final RxBool _isModSearch = false.obs;
 
   @override
@@ -95,37 +97,6 @@ class SearcherPageStreamController<T> extends SeacherBase {
     _bancoInit.close();
   }
 
-  /*void wrabListSearch(List<T> listData) {
-    if (bancoInit) {
-      // Fica negativo dentro do StreamBuilder
-      // Após apresentar o primeiro Obx(())
-      listFull = listData;
-      sortCompareList(listFull);
-      if (rxSearch.value.isNotEmpty) {
-        refreshSeachList(rxSearch.value);
-      } else {
-        onSearchList(listData);
-      }
-    } else {
-      initialChangeList = listData;
-    }
-  }*/
-
-  /*void subscribeWorker() {
-    _worker = ever(rxSearch, (String value) {
-      refreshSeachList(value);
-    });
-  }
-
-  void refreshSeachList(String value) {
-    final list = listFull
-        .where((element) => _filters(stringFilter(element), value))
-        .toList();
-
-    //sortCompareList(list);
-    onSearchList(list);
-  }*/
-
   List<T> refreshSeachList2(String value) {
     final list = listFull
         .where((element) => _filters(stringFilter(element), value))
@@ -147,4 +118,25 @@ class SearcherPageStreamController<T> extends SeacherBase {
     rxSearch.close();
     //listSearch.close();
   }
+
+  @override
+  void initial(List<T> data) =>
+      snapshot = AsyncSnapshot<List<T>>.withData(ConnectionState.none, data);
+
+  @override
+  void afterData(List<T> data) => snapshot =
+      snapshot = AsyncSnapshot<List<T>>.withData(ConnectionState.active, data);
+
+  @override
+  void afterDisconnected() => snapshot = snapshot.inState(ConnectionState.none);
+
+  @override
+  void afterDone() => snapshot = snapshot.inState(ConnectionState.done);
+
+  @override
+  void afterError(Object error) => snapshot =
+      AsyncSnapshot<List<T>>.withError(ConnectionState.active, error);
+
+  @override
+  void afterConnected() => snapshot = snapshot.inState(ConnectionState.waiting);
 }

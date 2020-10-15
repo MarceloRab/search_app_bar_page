@@ -12,7 +12,7 @@ import '../controller/searcher_page_pagination_future_controller.dart';
 import 'core/search_app_bar/search_app_bar.dart';
 
 class SearchAppBarPagination<T> extends StatefulWidget {
-  /// Paramentros do SearchAppBar
+  /// Parameters do SearchAppBar
 
   final Widget searchAppBartitle;
   final bool searchAppBarcenterTitle;
@@ -181,7 +181,9 @@ class SearchAppBarPagination<T> extends StatefulWidget {
     this.compareSort,
     this.numPageItems,
     this.widgetEndScrollPage,
-  }) : super(key: key);
+  })  : assert(numPageItems > 15,
+            'LThe minimum value for the number of elements is 15.'),
+        super(key: key);
 
   @override
   _SearchAppBarPaginationState<T> createState() =>
@@ -195,7 +197,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
   SearchCallBack _activeListSearchCallbackIdentity;
 
   //AsyncSnapshot<List<T>> _snapshot;
-  ConnectyController _connectyController;
+  ConnectController _connectyController;
   StreamSubscription _subscriptionConnecty;
 
   //StreamSubscription _subscriptionSearch;
@@ -252,11 +254,11 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
 
       _controller.listFull.addAll(widget.initialData);
       _controller.sortCompareList(_controller.listFull);
-
-      _controller.snapshotScroolPage =
-          _controller.snapshotScroolPage.withData(widget.initialData);
+      _controller.withData(widget.initialData);
+      // _controller.snapshotScroolPage =
+      // _controller.snapshotScroolPage.withData(widget.initialData);
     } else {
-      _connectyController = ConnectyController();
+      _connectyController = ConnectController();
       _subscribeConnecty();
     }
 
@@ -297,79 +299,35 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
 
     widget.futureFetchPageItems(_controller.page, '').then<void>(
         (List<T> data) {
-      if (_controller.numPageItems == 0) {
+      /*if (_controller.numPageItems == 0) {
         _controller.numPageItems = data?.length;
-      }
+      }*/
 
       if (_activeListFullCallbackIdentity == callbackIdentity) {
         //final isSearchMode = _controller.rxSearch.value.isNotEmpty;
-        if (data == null) {
-          refazFutureListFull();
 
-          if (_controller.listFull.isNotEmpty) {
-            if (!_controller.isSearchModePage) {
-              _controller.snapshotScroolPage =
-                  _controller.snapshotScroolPage.withData(_controller.listFull);
-            }
-          } else
-            _controller.snapshotScroolPage = _controller.snapshotScroolPage
-                .withError(Exception('It cannot return null. 😢'));
-
-          return;
-        }
-        if (downConnectyWithoutData) {
-          downConnectyWithoutData = false;
-          _unsubscribeConnecty();
-        }
-
-        // Encerroou dados da API
-        if (data.isEmpty) {
-          _controller.finishPage = true;
-
-          if (!_controller.isSearchModePage) {
-            _controller.snapshotScroolPage = _controller.snapshotScroolPage
-                .togleLoadinglistFullScroll(ConnectionState.done);
+        if (data != null) {
+          if (downConnectyWithoutData) {
+            downConnectyWithoutData = false;
+            _unsubscribeConnecty();
           }
-
-          return;
         }
 
-        // Ultima pagina
-        if (data.length - _controller.numPageItems < 0) {
-          _controller.wrabListSearch(data);
-
-          _controller.finishPage = true;
-
-          if (!_controller.isSearchModePage) {
-            _controller.snapshotScroolPage =
-                _controller.snapshotScroolPage.withData(_controller.listFull);
-          }
-
-          return;
-        }
-
-        _controller.wrabListSearch(data);
-
-        if (!_controller.isSearchModePage) {
-          _controller.snapshotScroolPage =
-              _controller.snapshotScroolPage.withData(_controller.listFull);
-        }
+        _controller.handleListDataFullList(listData: data);
       }
     }, onError: (Object error) {
       if (_activeListFullCallbackIdentity == callbackIdentity) {
-        refazFutureListFull();
+        _controller.refazFutureListFull();
 
-        //final tipo = error as Exception;
-        //print(' TEST Exception --  ${tipo.toString()}');
-        //print(' TEST Exception --  ${(error is Exception).toString()}');
-
-        _controller.snapshotScroolPage =
-            _controller.snapshotScroolPage.withError(error);
+        _controller.withError(error);
+        //_controller.snapshotScroolPage =
+        //  _controller.snapshotScroolPage.withError(error);
       }
     });
 
     if (!scroollEndPage) {
-      _controller.snapshotScroolPage = AsyncSnapshotScrollPage<T>.waiting();
+      _controller.waiting();
+      //_controller.snapshotScroolPage = AsyncSnapshotScrollPage<T>.waiting();
     }
   }
 
@@ -380,7 +338,8 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
     final SearchCallBack callbackIdentity = SearchCallBack(query);
     _activeListSearchCallbackIdentity = callbackIdentity;
     if (!scroollEndPage) {
-      _controller.snapshotScroolPage = AsyncSnapshotScrollPage<T>.waiting();
+      _controller.waiting();
+      //_controller.snapshotScroolPage = AsyncSnapshotScrollPage<T>.waiting();
     }
 
     widget.futureFetchPageItems(_controller.pageSearch, query).then((data) {
@@ -391,9 +350,12 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
           refazFutureSearchQuery();
 
           if (_controller.isSearchModePage) {
-            _controller.snapshotScroolPage = _controller.snapshotScroolPage
+            _controller.withData(
+                _controller.mapsSearch[callbackIdentity.query].listSearch);
+            /* _controller.snapshotScroolPage = _controller.snapshotScroolPage
                 .withData(
-                    _controller.mapsSearch[callbackIdentity.query].listSearch);
+                    _controller
+                    .mapsSearch[callbackIdentity.query].listSearch);*/
           }
 
           return;
@@ -407,9 +369,12 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
               true;
 
           if (_controller.isSearchModePage) {
-            _controller.snapshotScroolPage = _controller.snapshotScroolPage
+            _controller.withData(
+                _controller.mapsSearch[callbackIdentity.query].listSearch);
+            /*_controller.snapshotScroolPage = _controller.snapshotScroolPage
                 .withData(
-                    _controller.mapsSearch[callbackIdentity.query].listSearch);
+                    _controller
+                        .mapsSearch[callbackIdentity.query].listSearch);*/
           }
 
           return;
@@ -429,9 +394,12 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
               true;
 
           if (_controller.isSearchModePage) {
-            _controller.snapshotScroolPage = _controller.snapshotScroolPage
+            _controller.withData(
+                _controller.mapsSearch[callbackIdentity.query].listSearch);
+            /*_controller.snapshotScroolPage = _controller.snapshotScroolPage
                 .withData(
-                    _controller.mapsSearch[callbackIdentity.query].listSearch);
+                    _controller
+                        .mapsSearch[callbackIdentity.query].listSearch);*/
           }
 
           return;
@@ -454,9 +422,12 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
           _futureSearchPageQuery(callbackIdentity.query, scroollEndPage: true);
         } else {
           if (_controller.isSearchModePage) {
-            _controller.snapshotScroolPage = _controller.snapshotScroolPage
+            _controller.withData(
+                _controller.mapsSearch[callbackIdentity.query].listSearch);
+            /*_controller.snapshotScroolPage = _controller.snapshotScroolPage
                 .withData(
-                    _controller.mapsSearch[callbackIdentity.query].listSearch);
+                    _controller
+                    .mapsSearch[callbackIdentity.query].listSearch);*/
           }
         }
       } else {
@@ -466,8 +437,9 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
       if (_activeListSearchCallbackIdentity == callbackIdentity) {
         refazFutureSearchQuery();
 
-        _controller.snapshotScroolPage =
-            _controller.snapshotScroolPage.withError(error);
+        _controller.withError(error);
+        //_controller.snapshotScroolPage =
+        //_controller.snapshotScroolPage.withError(error);
       }
     });
   }
@@ -486,8 +458,10 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
                   _controller.haveSearchQueryPage(_controller.rxSearch.value);
 
               if (listBuilder.isListSearchFull) {
-                _controller.snapshotScroolPage = _controller.snapshotScroolPage
-                    .withData(listBuilder.listSearch);
+                _controller.withData(listBuilder.listSearch);
+                //_controller.snapshotScroolPage =
+                // _controller.snapshotScroolPage
+                //  .withData(listBuilder.listSearch);
               } else {
                 debugPrint('listFullSearchQuery '
                     // ignore: lines_longer_than_80_chars
@@ -500,9 +474,10 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
                 } else {
                   _oneMorePage = true;
                 }
-
-                _controller.snapshotScroolPage = _controller.snapshotScroolPage
-                    .togleLoadingSearchScroll(ConnectionState.none);
+                _controller.togleLoadingSearchScroll();
+                //_controller.snapshotScroolPage =
+                // _controller.snapshotScroolPage
+                //.togleLoadingSearchScroll(ConnectionState.none);
 
                 _futureSearchPageQuery(_controller.rxSearch.value,
                     scroollEndPage: true);
@@ -515,9 +490,10 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
               if (_activeListFullCallbackIdentity != null) {
                 _unsubscribeListFullCallBack();
               }
+              _controller.togleLoadinglistFullScroll();
 
-              _controller.snapshotScroolPage = _controller.snapshotScroolPage
-                  .togleLoadinglistFullScroll(ConnectionState.none);
+              //_controller.snapshotScroolPage = _controller.snapshotScroolPage
+              //.togleLoadinglistFullScroll(ConnectionState.none);
 
               _controller.page++;
               /*print(
@@ -625,8 +601,9 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
         _oneMorePage = false;
         initBuildSearchList(query);
       } else {
-        _controller.snapshotScroolPage =
-            _controller.snapshotScroolPage.withData(_controller.listFull);
+        _controller.withData(_controller.listFull);
+        //_controller.snapshotScroolPage =
+        // _controller.snapshotScroolPage.withData(_controller.listFull);
       }
     }, time: const Duration(milliseconds: 350));
   }
@@ -637,19 +614,25 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
 
     if (listBuilder.listSearch.isNotEmpty) {
       if (listBuilder.isListSearchFull) {
-        _controller.snapshotScroolPage =
-            _controller.snapshotScroolPage.withData(listBuilder.listSearch);
+        _controller.withData(listBuilder.listSearch);
+        //_controller.snapshotScroolPage =
+        // _controller.snapshotScroolPage.withData(listBuilder.listSearch);
       } else {
         if (listBuilder.listSearch.length < _controller.numPageItems) {
           _futureSearchPageQuery(query);
         } else {
-          _controller.snapshotScroolPage =
-              _controller.snapshotScroolPage.withData(listBuilder.listSearch);
+          _controller.withData(listBuilder.listSearch);
+
+          /*_controller.snapshotScroolPage =
+              _controller.snapshotScroolPage
+                  .withData(listBuilder.listSearch);*/
         }
       }
     } else if (listBuilder.listSearch.isEmpty && listBuilder.isListSearchFull) {
-      _controller.snapshotScroolPage =
-          _controller.snapshotScroolPage.withData(listBuilder.listSearch);
+      _controller.withData(listBuilder.listSearch);
+
+      //_controller.snapshotScroolPage =
+      //_controller.snapshotScroolPage.withData(listBuilder.listSearch);
     } else {
       _futureSearchPageQuery(query);
     }
@@ -686,8 +669,9 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
             _controller.sortCompareList(_controller.listFull);
 
             if (_controller.rxSearch.value.isEmpty) {
-              _controller.snapshotScroolPage =
-                  _controller.snapshotScroolPage.withData(_controller.listFull);
+              _controller.withData(_controller.listFull);
+              //_controller.snapshotScroolPage =
+              //_controller.snapshotScroolPage.withData(_controller.listFull);
             } else {
               _oneMorePage = false;
 
@@ -705,8 +689,10 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
         if (_activeListFullCallbackIdentity != null) {
           _unsubscribeListFullCallBack();
 
-          _controller.snapshotScroolPage =
-              _controller.snapshotScroolPage.inState(ConnectionState.none);
+          _controller.inState();
+
+          //_controller.snapshotScroolPage =
+          // _controller.snapshotScroolPage.inState(ConnectionState.none);
         }
 
         _firstFuturePageSubscribe();
@@ -728,12 +714,6 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
     }
   }
 
-  void refazFutureListFull() {
-    if (_controller.snapshotScroolPage.loadinglistFullScroll) {
-      _controller.page--;
-    }
-  }
-
   @override
   void dispose() {
     _unsubscribeListFullCallBack();
@@ -748,14 +728,15 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
 
   void _subscribeConnecty() {
     _subscriptionConnecty =
-        _connectyController.connectyStream.listen((bool isConnected) {
+        _connectyController.connectStream.listen((bool isConnected) {
       if (!isConnected && (!_haveInitialData)) {
         //lançar _widgetConnecty
         setState(() {
           downConnectyWithoutData = true;
         });
       } else if (isConnected && (!_haveInitialData)) {
-        _controller.snapshotScroolPage = AsyncSnapshotScrollPage<T>.waiting();
+        _controller.waiting();
+        //_controller.snapshotScroolPage = AsyncSnapshotScrollPage<T>.waiting();
       }
     });
   }

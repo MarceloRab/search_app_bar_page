@@ -5,8 +5,14 @@ import 'package:get_state_manager/get_state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/ui/infra/search_pagination_base.dart';
 
-class SearcherPagePaginationFutureController<T> extends SeacherBase {
+typedef CallBack = void Function();
+
+typedef CallBackListData<T> = void Function(List<T> listData);
+
+class SearcherPagePaginationFutureController<T> extends SeacherBase
+    with SearcherPaginnationBase<T> {
   final RxBool _isModSearch = false.obs;
 
   @override
@@ -278,9 +284,8 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
     }
   }
 
-  void wrabListSearch(List<T> listData) {
-    // para aparecer a lupa
-
+  void wrapListFull(List<T> listData) {
+    // para aparecer a lupa no AppBar
     if (!bancoInit) {
       bancoInit = true;
       _bancoInit.close();
@@ -290,13 +295,77 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
     sortCompareList(listFull);
 
     //TODO: montar cache
+  }
 
-    /*if (bancoInit) {
-      listFull.addAll(listData);
-      sortCompareList(listFull);
-    } else {
-      initialChangeList = listData;
-    }*/
+  void refazFutureListFull() {
+    if (snapshotScroolPage.loadinglistFullScroll) {
+      page--;
+    }
+  }
+
+  void handleListEmpty() {
+    if (listFull.isNotEmpty) {
+      if (!isSearchModePage) {
+        withData(listFull);
+        // snapshotScroolPage = snapshotScroolPage.withData(listFull);
+      }
+    } else
+      withError(Exception('It cannot return null. 😢'));
+    //snapshotScroolPage =
+    //snapshotScroolPage.withError(Exception('It cannot return null. 😢'));
+  }
+
+  void handleListDataFullList({@required List<T> listData}) {
+    //print('length  ${listData.length.toString()} ');
+    if (listData == null) {
+      refazFutureListFull();
+
+      handleListEmpty();
+
+      return;
+    }
+
+    if (listData.isEmpty) {
+      if (numPageItems == 0) {
+        withError(Exception('First return cannot be zero. 😢'));
+        return;
+      }
+
+      finishPage = true;
+
+      if (!isSearchModePage) {
+        togleLoadinglistFullScroll();
+      }
+
+      return;
+    }
+
+    if (listData.length < 15 && numPageItems == 0) {
+      withError(Exception(
+          'First return cannot be a list of less than 15 elements. 😢'));
+      return;
+    }
+
+    if (listData.length - numPageItems < 0) {
+      wrapListFull(listData);
+
+      finishPage = true;
+
+      if (!isSearchModePage) {
+        withData(listFull);
+      }
+      return;
+    }
+
+    if (numPageItems == 0) {
+      numPageItems = listData.length;
+    }
+
+    wrapListFull(listData);
+
+    if (!isSearchModePage) {
+      withData(listFull);
+    }
   }
 
   void sortCompareList(List<T> list) {
@@ -319,6 +388,29 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase {
     _isModSearch.close();
     rxSearch.close();
   }
+
+  @override
+  void inState() =>
+      snapshotScroolPage = snapshotScroolPage.inState(ConnectionState.none);
+
+  @override
+  void waiting() => snapshotScroolPage = AsyncSnapshotScrollPage<T>.waiting();
+
+  @override
+  void withData(List<T> data) =>
+      snapshotScroolPage = snapshotScroolPage.withData(listFull);
+
+  @override
+  void withError(Object error) =>
+      snapshotScroolPage = snapshotScroolPage.withError(error);
+
+  @override
+  void togleLoadingSearchScroll() => snapshotScroolPage =
+      snapshotScroolPage.togleLoadingSearchScroll(ConnectionState.none);
+
+  @override
+  void togleLoadinglistFullScroll() => snapshotScroolPage =
+      snapshotScroolPage.togleLoadinglistFullScroll(ConnectionState.done);
 }
 
 @immutable

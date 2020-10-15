@@ -6,6 +6,7 @@ import 'package:get_state_manager/get_state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/connecty_controller.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
+
 import '../controller/searcher_page_stream_controller.dart';
 import 'core/search_app_bar/search_app_bar.dart';
 
@@ -179,7 +180,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
 
   bool _haveInitialData;
 
-  ConnectyController _connectyController;
+  ConnectController _connectyController;
   bool downConnectyWithoutData = false;
 
   Widget _widgetConnecty;
@@ -189,7 +190,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
 
   SearcherPageStreamController<T> _controller;
 
-  void initial(List<T> data) =>
+  /*void initial(List<T> data) =>
       _controller.snapshot =
       AsyncSnapshot<List<T>>.withData(ConnectionState.none, data);
 
@@ -209,13 +210,14 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
       _controller.snapshot = _controller.snapshot.inState(ConnectionState.done);
 
   void afterDisconnected() =>
-      _controller.snapshot = _controller.snapshot.inState(ConnectionState.none);
+      _controller.snapshot =
+      _controller.snapshot.inState(ConnectionState.none);*/
 
   @override
   void initState() {
     super.initState();
     _controller = SearcherPageStreamController<T>(
-      //listStream: widget._stream,
+        //listStream: widget._stream,
         stringFilter: widget.stringFilter,
         compareSort: widget.compareSort,
         filtersType: widget.filtersType)
@@ -231,7 +233,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
     } else {
       _controller.listFull.addAll(widget.initialData);
       _controller.sortCompareList(_controller.listFull);
-      initial(_controller.listFull);
+      _controller.initial(_controller.listFull);
     }
 
     buildwidgetsDefault();
@@ -267,7 +269,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
           _controller.listFull.clear();
           _controller.listFull.addAll(widget.initialData);
           _controller.sortCompareList(_controller.listFull);
-          initial(_controller.listFull);
+          _controller.initial(_controller.listFull);
         }
       } else if (_controller.listFull.isEmpty &&
           _subscriptionConnecty != null) {
@@ -277,10 +279,11 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
 
     if (_controller.listFull.isNotEmpty) {
       if (_controller.rxSearch.value.isNotEmpty) {
-        afterData(_controller.refreshSeachList2(_controller.rxSearch.value));
+        _controller.afterData(
+            _controller.refreshSeachList2(_controller.rxSearch.value));
       } else {
         _controller.sortCompareList(_controller.listFull);
-        afterData(_controller.listFull);
+        _controller.afterData(_controller.listFull);
       }
     }
 
@@ -288,7 +291,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
       if (_subscription != null) {
         _unsubscribeStream();
 
-        afterDisconnected();
+        _controller.afterDisconnected();
       }
 
       _subscribeStream();
@@ -307,23 +310,23 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
             backgroundColor: widget.searchAppBarbackgroundColor,
             searchBackgroundColor: widget.searchAppBarModeSearchBackgroundColor,
             iconConnectyOffAppBarColor:
-            widget.searchAppBarIconConnectyOffAppBarColor,
+                widget.searchAppBarIconConnectyOffAppBarColor,
             searchElementsColor: widget.searchAppBarElementsColor,
             hintText: widget.searchAppBarhintText,
             flattenOnSearch: widget.searchAppBarflattenOnSearch,
             capitalization: widget.searchAppBarcapitalization,
             actions: widget.searchAppBaractions,
             hideDefaultConnectyIconOffAppBar:
-            widget.hideDefaultConnectyIconOffAppBar,
+                widget.hideDefaultConnectyIconOffAppBar,
             iconConnectyOffAppBar: widget.iconConnectyOffAppBar,
             keyboardType: widget.searchAppBarKeyboardType,
             magnifyinGlassColor: widget.magnifyinGlassColor),
         body: buildBody(),
         floatingActionButton: widget.searchePageFloaActionButton,
         floatingActionButtonLocation:
-        widget.searchePageFloatingActionButtonLocation,
+            widget.searchePageFloatingActionButtonLocation,
         floatingActionButtonAnimator:
-        widget.searchePageFloatingActionButtonAnimator,
+            widget.searchePageFloatingActionButtonAnimator,
         persistentFooterButtons: widget.searchePagePersistentFooterButtons,
         drawer: widget.searchePageDrawer,
         endDrawer: widget.searchePageEndDrawer,
@@ -378,9 +381,9 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
     _subscription = widget.listStream.listen((data) {
       if (data == null) {
         if (_controller.listFull.isNotEmpty) {
-          afterData(_controller.listFull);
+          _controller.afterData(_controller.listFull);
         } else
-          afterError(Exception('It cannot return null. 😢'));
+          _controller.afterError(Exception('It cannot return null. 😢'));
         return;
       } else {
         if (!_controller.bancoInit) {
@@ -396,44 +399,45 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
       _controller.sortCompareList(_controller.listFull);
 
       if (_controller.rxSearch.value.isNotEmpty) {
-        afterData(_controller.refreshSeachList2(_controller.rxSearch.value));
+        _controller.afterData(
+            _controller.refreshSeachList2(_controller.rxSearch.value));
       } else {
-        afterData(_controller.listFull);
+        _controller.afterData(_controller.listFull);
       }
     }, onError: (Object error) {
-      afterError(error);
+      _controller.afterError(error);
     }, onDone: () {
-      afterDone();
+      _controller.afterDone();
     });
-    afterConnected();
+    _controller.afterConnected();
   }
 
   void _subscribreSearhQuery() {
     _worker = debounce(_controller.rxSearch, (String query) {
       if (query.isNotEmpty) {
-        afterData(_controller.refreshSeachList2(query));
+        _controller.afterData(_controller.refreshSeachList2(query));
       } else {
-        afterData(_controller.listFull);
+        _controller.afterData(_controller.listFull);
       }
     }, time: const Duration(milliseconds: 350));
   }
 
   void _subscribeConnecty() {
-    _connectyController = ConnectyController();
+    _connectyController = ConnectController();
     _subscriptionConnecty =
-        _connectyController.connectyStream.listen((bool isConnected) {
-          if (!isConnected && (!_haveInitialData)) {
-            //lançar _widgetConnecty
-            setState(() {
-              downConnectyWithoutData = true;
-            });
-          } else if (isConnected && (!_haveInitialData)) {
-            setState(() {
-              downConnectyWithoutData = false;
-              afterConnected();
-            });
-          }
+        _connectyController.connectStream.listen((bool isConnected) {
+      if (!isConnected && (!_haveInitialData)) {
+        //lançar _widgetConnecty
+        setState(() {
+          downConnectyWithoutData = true;
         });
+      } else if (isConnected && (!_haveInitialData)) {
+        setState(() {
+          downConnectyWithoutData = false;
+          _controller.afterConnected();
+        });
+      }
+    });
   }
 
   void _unsubscribeConnecty() {
@@ -466,7 +470,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
                 padding: const EdgeInsets.only(top: 16),
                 child: Text(
                   'We found an error.\n'
-                      'Error: $error',
+                  'Error: $error',
                   textAlign: TextAlign.center,
                 ),
               ),

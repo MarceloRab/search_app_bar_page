@@ -4,32 +4,26 @@ import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:get_state_manager/get_state_manager.dart';
 
-class ConnectyController {
-  //final StreamController<bool> _connecTyController =
-  //StreamController.broadcast();
-  //Sink get connectySink => _connecTyController.sink;
-
-  //Stream<bool> get connectyStream => _connecTyController.stream;
-
+class ConnectController {
   Connectivity connectivity;
 
-  final RxBool _connecTyController = true.obs;
+  final RxBool _connectController = true.obs;
 
-  bool get isConnected => _connecTyController.value;
+  bool get isConnected => _connectController.value;
 
-  set isConnected(bool value) => _connecTyController.value = value;
+  set isConnected(bool value) => _connectController.value = value;
 
-  Stream<bool> get connectyStream => _connecTyController.stream;
+  Stream<bool> get connectStream => _connectController.stream;
 
-  StreamSubscription _subscriptionConnecty;
+  StreamSubscription _subscriptionConnect;
 
-  ConnectyController() {
+  ConnectController() {
     connectivity = Connectivity();
     initialiseTestInterGeral();
   }
 
   Future<void> initialiseTestInterGeral() async {
-    _subscriptionConnecty = connectivity.onConnectivityChanged.listen((result) {
+    _subscriptionConnect = connectivity.onConnectivityChanged.listen((result) {
       //_checkStatus(result);
       _checkInternet();
     });
@@ -65,7 +59,7 @@ class ConnectyController {
   }*/
 
   FutureOr<void> onClose() async {
-    _connecTyController.close();
-    _subscriptionConnecty?.cancel();
+    _connectController.close();
+    _subscriptionConnect?.cancel();
   }
 }

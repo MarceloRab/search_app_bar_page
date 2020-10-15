@@ -15,11 +15,11 @@ class ConnectyWidget extends StatefulWidget {
 }
 
 class _ConnectyWidgetState extends State<ConnectyWidget> {
-  ConnectyController _connectyController;
+  ConnectController _connectyController;
 
   @override
   void initState() {
-    _connectyController = ConnectyController();
+    _connectyController = ConnectController();
     super.initState();
   }
 
