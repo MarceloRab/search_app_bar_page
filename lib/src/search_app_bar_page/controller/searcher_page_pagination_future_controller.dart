@@ -327,7 +327,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
 
     if (listData.isEmpty) {
       if (numPageItems == 0) {
-        withError(Exception('First return cannot be zero. 😢'));
+        withError(Exception('First return cannot have zero elements. 😢'));
         return;
       }
 

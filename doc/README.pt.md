@@ -388,6 +388,8 @@ class _SearchAppBarPaginationTestState
 
 ### Exemplo de função do lado do servidor.
 
+##### Atençao: O numero de itens por página deve ser mair que 14 ```(numItemsPage > 14)```.
+
 Ex: Se numItemsPage = 20 (total de itens em uma página) e você envia uma lista com comprimento inferior a 20 ou envia uma lista vazia, = >>> significa que os dados acabaram. Se você enviar null: se ainda não houver dados, retorna uma Exceção; se um dado já existe, nada acontece.
 
 #### Tipos de retorno para FetchPageItems futuros.

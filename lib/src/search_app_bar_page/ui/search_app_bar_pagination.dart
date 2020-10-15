@@ -304,8 +304,6 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
       }*/
 
       if (_activeListFullCallbackIdentity == callbackIdentity) {
-        //final isSearchMode = _controller.rxSearch.value.isNotEmpty;
-
         if (data != null) {
           if (downConnectyWithoutData) {
             downConnectyWithoutData = false;

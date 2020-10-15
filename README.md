@@ -390,6 +390,7 @@ class _SearchAppBarPaginationTestState
 
 ### Example of server side function.
 
+##### Attencion: The number of elements must be more than 14 ```(numItemsPage > 14)```.
 Ex: If numItemsPage = 20 (total items on a page) and you send a list with a length less than 20 or send an empty list, = >>> means that the data is over. If you send null: if there is no data yet, return an Exception; if a data already exists, nothing happens.
 
 #### Return types for future FetchPageItems.
