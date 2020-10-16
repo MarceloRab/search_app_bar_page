@@ -9,12 +9,12 @@ final controllerPagination = SearcherPagePaginationFutureController<Person>(
   stringFilter: (Person person) => person.name,
   compareSort: (Person a, Person b) => a.name.compareTo(b.name),
   //filtersType: FiltersTypes.contains
-);
+)..onInitFilter();
 
 void main() {
   const page = 2;
   test('Pragina ${page.toString()} com 10 elementos', () async {
-    const size = 10;
+    const size = 15;
 
     const fistElement = (page - 1) * size;
     const lastElement = page * size;

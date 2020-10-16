@@ -7,7 +7,7 @@ mixin SearcherPaginnationBase<T> {
 
   void withError(Object error);
 
-  void togleLoadingSearchScroll();
+  void togleLoadingSearchScroll(bool value);
 
   void togleLoadinglistFullScroll();
 }

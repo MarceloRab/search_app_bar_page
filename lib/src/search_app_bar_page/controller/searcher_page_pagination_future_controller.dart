@@ -83,6 +83,29 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
 
   final bool cache;
 
+  ListSearchBuild<T> buildPreviousList(String query) {
+    ListSearchBuild<T> listAnterior = ListSearchBuild(listSearch: <T>[]);
+    String queryStringAnterior =
+        query.replaceRange(query.length - 1, query.length, '');
+    if (mapsSearch.containsKey(queryStringAnterior)) {
+      return mapsSearch[queryStringAnterior];
+    }
+    // while (!mapsSearch.containsKey(queryStringAnterior) ||
+    while (queryStringAnterior.isNotEmpty) {
+      queryStringAnterior = queryStringAnterior.replaceRange(
+          queryStringAnterior.length - 1, queryStringAnterior.length, '');
+
+      if (mapsSearch.containsKey(queryStringAnterior)) {
+        listAnterior = mapsSearch[queryStringAnterior];
+
+        break;
+      }
+    }
+    //do {} while (queryStringAnterior.isEmpty ||
+
+    return listAnterior;
+  }
+
   ListSearchBuild<T> haveSearchQueryPage(String query, {bool restart = false}) {
     //queryProgride(query);
     pageSearch = 1;
@@ -90,17 +113,16 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
 
     // subdivisao da listSearch
     if (query.length > 1) {
-      ListSearchBuild<T> listAnterior;
+      ListSearchBuild<T> buildListAnterior;
 
-      final queryStringAnterior =
-          query.replaceRange(query.length - 1, query.length, '');
-      if (mapsSearch.containsKey(queryStringAnterior)) {
-        listAnterior = mapsSearch[queryStringAnterior];
+      //final queryStringAnterior =
+      // query.replaceRange(query.length - 1, query.length, '');
 
-        listSearch = listAnterior.listSearch
-            .where((element) => _filters(stringFilter(element), query))
-            .toList();
-      }
+      buildListAnterior = buildPreviousList(query);
+
+      listSearch = buildListAnterior.listSearch
+          .where((element) => _filters(stringFilter(element), query))
+          .toList();
 
       // tem cache da query?
       if (mapsSearch.containsKey(query)) {
@@ -114,7 +136,8 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
           return mapsSearch[query];
         }
 
-        if (listAnterior != null) {
+        if (buildListAnterior.listSearch.isNotEmpty) {
+          //Ja contem algo
           if (listSearch.length > mapsSearch[query].listSearch.length) {
             pageSearch = (listSearch.length / numItemsPage).ceil();
             if (pageSearch == 0) {
@@ -123,12 +146,12 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
             mapsSearch[query] = ListSearchBuild<T>(
                 listSearch: listSearch,
                 // se a anterior esta full a atual tb.
-                isListSearchFull: listAnterior.isListSearchFull);
+                isListSearchFull: buildListAnterior.isListSearchFull);
             mapsSearch[query].listSearch =
                 sortCompareListSearch(mapsSearch[query].listSearch);
           }
 
-          if (listAnterior.isListSearchFull) {
+          if (buildListAnterior.isListSearchFull) {
             return mapsSearch[query];
           }
         } else {
@@ -137,44 +160,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
               .where((element) => _filters(stringFilter(element), query))
               .toList();
 
-          pageSearch = (listSearch.length / numItemsPage).ceil();
-          if (pageSearch == 0) {
-            pageSearch = 1;
-          }
-
-          mapsSearch[query] = ListSearchBuild<T>(
-              listSearch: listSearch,
-              // se a anterior esta full a atual tb.
-              isListSearchFull: finishPage);
-          mapsSearch[query].listSearch =
-              sortCompareListSearch(mapsSearch[query].listSearch);
-
-          if (finishPage) {
-            return mapsSearch[query];
-          }
-        }
-        // sem cache da query
-      } else {
-        listSearch.clear();
-        listSearch = listFull
-            .where((element) => _filters(stringFilter(element), query))
-            .toList();
-        if (listAnterior != null) {
-          if (listAnterior.listSearch.length > listSearch.length) {
-            pageSearch = (listAnterior.listSearch.length / numItemsPage).ceil();
-            if (pageSearch == 0) {
-              pageSearch = 1;
-            }
-            mapsSearch[query] = ListSearchBuild<T>(
-                listSearch: listAnterior.listSearch
-                    .where((element) => _filters(stringFilter(element), query))
-                    .toList(),
-                // se a anterior esta full a atual tb.
-                isListSearchFull: listAnterior.isListSearchFull);
-
-            mapsSearch[query].listSearch =
-                sortCompareListSearch(mapsSearch[query].listSearch);
-          } else {
+          if (listSearch.length > mapsSearch[query].listSearch.length) {
             pageSearch = (listSearch.length / numItemsPage).ceil();
             if (pageSearch == 0) {
               pageSearch = 1;
@@ -184,7 +170,6 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
                 listSearch: listSearch,
                 // se a anterior esta full a atual tb.
                 isListSearchFull: finishPage);
-
             mapsSearch[query].listSearch =
                 sortCompareListSearch(mapsSearch[query].listSearch);
 
@@ -192,7 +177,28 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
               return mapsSearch[query];
             }
           }
+        }
+        // sem cache da query
+      } else {
+        if (buildListAnterior.listSearch.isNotEmpty) {
+          mapsSearch[query] = ListSearchBuild<T>(
+              listSearch: listSearch,
+              // se a anterior esta full a atual tb.
+              isListSearchFull: buildListAnterior.isListSearchFull);
+          mapsSearch[query].listSearch =
+              sortCompareListSearch(mapsSearch[query].listSearch);
+
+          pageSearch =
+              (mapsSearch[query].listSearch.length / numItemsPage).ceil();
+          if (pageSearch == 0) {
+            pageSearch = 1;
+          }
         } else {
+          listSearch.clear();
+          listSearch = listFull
+              .where((element) => _filters(stringFilter(element), query))
+              .toList();
+
           pageSearch = (listSearch.length / numItemsPage).ceil();
           if (pageSearch == 0) {
             pageSearch = 1;
@@ -305,7 +311,6 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
 
   void refazFutureSearchQuery(String searchQuery) {
     //_oneMorePage = false;
-
     if (pageSearch > 1 && snapshotScroolPage.loadingSearchScroll) {
       if ((mapsSearch[searchQuery].listSearch.length ~/ numItemsPage) == 0) {
         page--;
@@ -325,50 +330,97 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
     //snapshotScroolPage.withError(Exception('It cannot return null. 😢'));
   }
 
-  void handleListDataSearchList({@required List<T> listData}) {
+  bool oneMorePage = false;
+
+  void handleListDataSearchList(
+      {@required List<T> listData,
+      @required String query,
+      @required VoidCallback newPageFuture}) {
     if (listData == null) {
-      return;
+      oneMorePage = false;
+      refazFutureSearchQuery(query);
+
+      if (isSearchModePage) {
+        withData(mapsSearch[query].listSearch);
+      }
+
+      //return;
+    } else if (listData.isEmpty) {
+      oneMorePage = false;
+
+      mapsSearch[query].isListSearchFull = true;
+
+      if (isSearchModePage) {
+        withData(mapsSearch[query].listSearch);
+        //return;
+      }
+    } else if (listData.length - numItemsPage < 0) {
+      oneMorePage = false;
+
+      final num = (pageSearch - 1) * numItemsPage;
+      mapsSearch[query]
+          .listSearch
+          .removeRange(num, mapsSearch[query].listSearch.length);
+      mapsSearch[query].listSearch.addAll(listData);
+
+      mapsSearch[query].isListSearchFull = true;
+
+      if (isSearchModePage) {
+        withData(mapsSearch[query].listSearch);
+      }
+
+      //return;
+    } else if (listData.length - numItemsPage > 0) {
+      oneMorePage = false;
+      withError(Exception(
+          'It must return at most or number of elements on a page. 😢'));
+    } else {
+      if (oneMorePage) {
+        final num = (pageSearch - 1) * numItemsPage;
+
+        mapsSearch[query]
+            .listSearch
+            .removeRange(num, mapsSearch[query].listSearch.length);
+        mapsSearch[query].listSearch.addAll(listData);
+        oneMorePage = false;
+        pageSearch++;
+        newPageFuture();
+      } else {
+        mapsSearch[query].listSearch.addAll(listData);
+
+        if (isSearchModePage) {
+          withData(mapsSearch[query].listSearch);
+        }
+      }
     }
 
-    if (listData.isEmpty) {
-      return;
-    }
-
-    if (listData.length - numItemsPage < 0) {}
+    //listData.length == _controller.numItemsPage =
+    // == > vide metodo na view
   }
 
-  void handleListDataFullList({@required List<T> listData}) {
+  void handleListDataFullList(
+      {@required List<T> listData, @required bool scroollEndPage}) {
     //print('length  ${listData.length.toString()} ');
+
+    if (scroollEndPage) {
+      togleLoadinglistFullScroll();
+    }
+
     if (listData == null) {
       refazFutureListFull();
 
       handleListEmpty();
-
-      return;
-    }
-
-    if (listData.isEmpty) {
+    } else if (listData.isEmpty) {
       if (numItemsPage == 0) {
         withError(Exception('First return cannot have zero elements. 😢'));
-        return;
+        //return;
       }
-
       finishPage = true;
-
-      if (!isSearchModePage) {
-        togleLoadinglistFullScroll();
-      }
-
-      return;
-    }
-
-    if (listData.length < 15 && numItemsPage == 0) {
+    } else if (listData.length < 15 && numItemsPage == 0) {
       withError(Exception(
           'First return cannot be a list of less than 15 elements. 😢'));
-      return;
-    }
-
-    if (listData.length - numItemsPage < 0) {
+      //return;
+    } else if (listData.length - numItemsPage < 0) {
       wrapListFull(listData);
 
       finishPage = true;
@@ -376,17 +428,19 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
       if (!isSearchModePage) {
         withData(listFull);
       }
-      return;
-    }
+    } else if (listData.length - numItemsPage > 0 && numItemsPage != 0) {
+      withError(Exception(
+          'It must return at most or number of elements on a page. 😢'));
+    } else {
+      if (numItemsPage == 0) {
+        numItemsPage = listData.length;
+      }
 
-    if (numItemsPage == 0) {
-      numItemsPage = listData.length;
-    }
+      wrapListFull(listData);
 
-    wrapListFull(listData);
-
-    if (!isSearchModePage) {
-      withData(listFull);
+      if (!isSearchModePage) {
+        withData(listFull);
+      }
     }
   }
 
@@ -427,12 +481,12 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
       snapshotScroolPage = snapshotScroolPage.withError(error);
 
   @override
-  void togleLoadingSearchScroll() => snapshotScroolPage =
-      snapshotScroolPage.togleLoadingSearchScroll(ConnectionState.none);
+  void togleLoadingSearchScroll(bool value) =>
+      snapshotScroolPage = snapshotScroolPage.togleLoadingSearchScroll(value);
 
   @override
-  void togleLoadinglistFullScroll() => snapshotScroolPage =
-      snapshotScroolPage.togleLoadinglistFullScroll(ConnectionState.done);
+  void togleLoadinglistFullScroll() =>
+      snapshotScroolPage = snapshotScroolPage.togleLoadinglistFullScroll();
 }
 
 @immutable
@@ -464,13 +518,12 @@ class AsyncSnapshotScrollPage<T> {
       AsyncSnapshotScrollPage<T>._(
           AsyncSnapshot.withError(ConnectionState.done, error));
 
-  AsyncSnapshotScrollPage<T> togleLoadingSearchScroll(ConnectionState state) =>
-      AsyncSnapshotScrollPage<T>._(snapshot.inState(state),
-          loadingSearchScroll: !loadingSearchScroll);
+  AsyncSnapshotScrollPage<T> togleLoadingSearchScroll(bool value) =>
+      AsyncSnapshotScrollPage<T>._(snapshot.inState(ConnectionState.none),
+          loadingSearchScroll: value);
 
-  AsyncSnapshotScrollPage<T> togleLoadinglistFullScroll(
-          ConnectionState state) =>
-      AsyncSnapshotScrollPage<T>._(snapshot.inState(state),
+  AsyncSnapshotScrollPage<T> togleLoadinglistFullScroll() =>
+      AsyncSnapshotScrollPage<T>._(snapshot.inState(ConnectionState.done),
           loadinglistFullScroll: !loadinglistFullScroll);
 }
 
