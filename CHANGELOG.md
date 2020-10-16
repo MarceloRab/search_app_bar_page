@@ -1,3 +1,6 @@
+## [1.0.1+1]
+- Update to the newest version of Flutter and the dependencies used in the package.
+
 ## [1.0.1]
 - Now you can setState with initialData with number of non-multiple elements in numItemsPage without problems.
 
