@@ -281,9 +281,26 @@ class SearchAppBarPaginationTest extends StatefulWidget {
 class _SearchAppBarPaginationTestState
     extends State<SearchAppBarPaginationTest> {
   @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(const Duration(seconds: 5), () {
+      setState(() {
+        _listPerson = dataListPerson3.sublist(0, 17);
+        _numItemsPage = 15;
+      });
+    });
+  }
+
+  List<Person> _listPerson = null;
+
+  int _numItemsPage = null;
+
+  @override
   Widget build(BuildContext context) {
     return SearchAppBarPagination<Person>(
-        //initialData: _initialData,
+        initialData: _listPerson,
+        numItemsPage: _numItemsPage,
         magnifyinGlassColor: Colors.white,
         searchAppBarcenterTitle: true,
         searchAppBarhintText: 'Pesquise um Nome',

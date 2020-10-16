@@ -74,7 +74,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
         stringFilter = _defaultFilter;
       } else {
         throw Exception(
-            'Voce precisa tipar sua página ou deverá ser tipada como String');
+            'You need to type your page or it must be typed as String');
       }
     }
   }
@@ -266,8 +266,6 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
     return mapsSearch[query];
   }
 
-  //final RxList<T> listSearchFilter = <T>[].obs;
-
   set initialChangeList(List<T> list) {
     if (!bancoInit) {
       bancoInit = true;
@@ -276,7 +274,6 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
 
     listFull.addAll(list);
     sortCompareList(listFull);
-    //onSearchList(listFull);
     rxSearch('');
   }
 
@@ -330,14 +327,19 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
     //snapshotScroolPage.withError(Exception('It cannot return null. 😢'));
   }
 
-  bool oneMorePage = false;
+// Porque o resultado do Search pode ter uma quantidade de elementos quebrado
+  // dentro de uma lista nao multipla
+  bool oneMoreSearchPage = false;
+
+  // Porque o initialData pode ter uma quantidade de elementos nao multiplo
+  bool oneMoreListFullPage = false;
 
   void handleListDataSearchList(
       {@required List<T> listData,
       @required String query,
-      @required VoidCallback newPageFuture}) {
+      @required VoidCallback newSearchPageFuture}) {
     if (listData == null) {
-      oneMorePage = false;
+      oneMoreSearchPage = false;
       refazFutureSearchQuery(query);
 
       if (isSearchModePage) {
@@ -346,7 +348,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
 
       //return;
     } else if (listData.isEmpty) {
-      oneMorePage = false;
+      oneMoreSearchPage = false;
 
       mapsSearch[query].isListSearchFull = true;
 
@@ -355,7 +357,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
         //return;
       }
     } else if (listData.length - numItemsPage < 0) {
-      oneMorePage = false;
+      oneMoreSearchPage = false;
 
       final num = (pageSearch - 1) * numItemsPage;
       mapsSearch[query]
@@ -371,20 +373,20 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
 
       //return;
     } else if (listData.length - numItemsPage > 0) {
-      oneMorePage = false;
+      oneMoreSearchPage = false;
       withError(Exception(
           'It must return at most or number of elements on a page. 😢'));
     } else {
-      if (oneMorePage) {
+      if (oneMoreSearchPage) {
         final num = (pageSearch - 1) * numItemsPage;
 
         mapsSearch[query]
             .listSearch
             .removeRange(num, mapsSearch[query].listSearch.length);
         mapsSearch[query].listSearch.addAll(listData);
-        oneMorePage = false;
+        oneMoreSearchPage = false;
         pageSearch++;
-        newPageFuture();
+        newSearchPageFuture();
       } else {
         mapsSearch[query].listSearch.addAll(listData);
 
@@ -399,7 +401,9 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
   }
 
   void handleListDataFullList(
-      {@required List<T> listData, @required bool scroollEndPage}) {
+      {@required List<T> listData,
+      @required bool scroollEndPage,
+      @required VoidCallback newPageFuture}) {
     //print('length  ${listData.length.toString()} ');
 
     if (scroollEndPage) {
@@ -407,20 +411,27 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
     }
 
     if (listData == null) {
+      oneMoreListFullPage = false;
       refazFutureListFull();
 
       handleListEmpty();
     } else if (listData.isEmpty) {
+      oneMoreListFullPage = false;
+
       if (numItemsPage == 0) {
         withError(Exception('First return cannot have zero elements. 😢'));
         //return;
       }
       finishPage = true;
     } else if (listData.length < 15 && numItemsPage == 0) {
+      oneMoreListFullPage = false;
+
       withError(Exception(
           'First return cannot be a list of less than 15 elements. 😢'));
       //return;
     } else if (listData.length - numItemsPage < 0) {
+      oneMoreListFullPage = false;
+
       wrapListFull(listData);
 
       finishPage = true;
@@ -429,6 +440,8 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
         withData(listFull);
       }
     } else if (listData.length - numItemsPage > 0 && numItemsPage != 0) {
+      oneMoreListFullPage = false;
+
       withError(Exception(
           'It must return at most or number of elements on a page. 😢'));
     } else {
@@ -436,10 +449,20 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
         numItemsPage = listData.length;
       }
 
-      wrapListFull(listData);
+      if (oneMoreListFullPage) {
+        final num = (page - 1) * numItemsPage;
 
-      if (!isSearchModePage) {
-        withData(listFull);
+        listFull.removeRange(num, listFull.length);
+        listFull.addAll(listData);
+        page++;
+        oneMoreListFullPage = false;
+        newPageFuture();
+      } else {
+        wrapListFull(listData);
+
+        if (!isSearchModePage) {
+          withData(listFull);
+        }
       }
     }
   }

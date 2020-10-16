@@ -1,3 +1,6 @@
+## [1.0.1]
+- Now you can setState with initialData with number of non-multiple elements in numItemsPage without problems.
+
 ## [1.0.0]
 - Various improvements. The search engine at [SearchAppBarPagination] has been modified to minimize 
 API requests to the maximum. Name changes to improve syntax.
