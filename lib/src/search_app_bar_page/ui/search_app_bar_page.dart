@@ -138,13 +138,18 @@ class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
         stringFilter: widget.stringFilter,
         compareSort: widget.compareSort,
         filtersType: widget.filtersType)
-      ..onInit()
+      ..initFilters()
       ..onReady();
   }
 
   @override
   void didUpdateWidget(SearchAppBarPage<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    _controller.stringFilter = widget.stringFilter;
+    _controller.compareSort = widget.compareSort;
+    _controller.filtersType = widget.filtersType;
+    _controller.initFilters();
 
     if (oldWidget.listFull != widget.listFull) {
       _controller.listFull.clear();

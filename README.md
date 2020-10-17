@@ -56,15 +56,6 @@ import 'package:flutter/material.dart';
 import 'package:search_app_bar_page/search_app_bar_page.dart';
 
 class SearchPage extends StatelessWidget {
-  /*final dataStrings = [
-    'Antonio Rabelo',
-    'Raquel Lima',
-    'Roberto Costa',
-    'Alina Silva',
-    'William Lima',
-    'Flavio Assunção',
-    'Zenilda Cardoso'
-  ];*/
 
   @override
   Widget build(BuildContext context) {
@@ -145,6 +136,11 @@ class Person {
   final int age;
 
   Person({this.name, this.age});
+
+  @override
+  String toString() {
+    return 'Person{name: $name, age: $age}';
+  }
 }
 
 ```
@@ -233,11 +229,15 @@ class SearchAppBarStream extends StatelessWidget {
   }
 
   Stream<List<Person>> _streamListPerson = (() async* {
-    await Future<void>.delayed(Duration(seconds: 5));
-    yield dataListPerson;
-    await Future<void>.delayed(Duration(seconds: 10));
-    yield dataListPerson2;
-  })();
+      await Future<void>.delayed(Duration(seconds: 3));
+      //yield null;
+      yield dataListPerson;
+      await Future<void>.delayed(Duration(seconds: 4));
+      yield dataListPerson2;
+      await Future<void>.delayed(Duration(seconds: 5));
+      //throw Exception('Erro voluntario');
+      yield dataListPerson3;
+    })();
 }
 
 final dataListPerson = <Person>[
@@ -274,6 +274,11 @@ class Person {
   final int age;
 
   Person({this.name, this.age});
+
+  @override
+  String toString() {
+    return 'Person{name: $name, age: $age}';
+  }
 }
 
 ```
@@ -317,6 +322,7 @@ SearchAppBarPagination(
 #### 🔎 SearchAppBarPagination
 
 ```dart
+// ignore: must_be_immutable
 class SearchAppBarPaginationTest extends StatefulWidget {
   const SearchAppBarPaginationTest({Key key}) : super(key: key);
 
@@ -327,22 +333,23 @@ class SearchAppBarPaginationTest extends StatefulWidget {
 
 class _SearchAppBarPaginationTestState
     extends State<SearchAppBarPaginationTest> {
-  //var _initialData;
-
-  /*@override
+  @override
   void initState() {
-    Future.delayed(Duration(seconds: 6), () {
-      setState(() {
-        _initialData = dataListPerson0;
-      });
-    });
     super.initState();
-  }*/
-
+    /*Future.delayed(const Duration(seconds: 5), () {
+      setState(() {
+        _listPerson = dataListPerson3.sublist(0, 17);
+        _numItemsPage = 15;
+      });
+    });*/
+  }
+  //List<Person> _listPerson = null;
+  //int _numItemsPage = null;
   @override
   Widget build(BuildContext context) {
     return SearchAppBarPagination<Person>(
-        //initialData: _initialData,
+        //initialData: _listPerson,
+        //numItemsPage: _numItemsPage,
         magnifyinGlassColor: Colors.white,
         searchAppBarcenterTitle: true,
         searchAppBarhintText: 'Pesquise um Nome',
@@ -382,6 +389,19 @@ class _SearchAppBarPaginationTestState
                 ),
               ));
         });
+  }
+}
+
+class Person {
+  final String name;
+
+  final int age;
+
+  Person({this.name, this.age});
+
+  @override
+  String toString() {
+    return 'Person{name: $name, age: $age}';
   }
 }
 ```
@@ -442,7 +462,6 @@ Future<List<Person>> _futureListPerson(int page, String query) async {
     } else {
       final listQuery =
           dataListPerson3.where((element) => contains(element, query)).toList();
-      ;
 
       int totalQueryPages = (listQuery.length / size).ceil();
       totalQueryPages = totalQueryPages == 0 ? 1 : totalQueryPages;

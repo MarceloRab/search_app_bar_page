@@ -228,7 +228,6 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
     );
   }
 
-  //Please work your stream to not return null.
   Stream<List<Person>> _streamListPerson = (() async* {
     await Future<void>.delayed(Duration(seconds: 3));
     //yield null;
@@ -342,11 +341,6 @@ class _SearchAppBarPaginationTestState
         });
   }
 
-  ///Example of server side function. Return the list in parts or parts by
-  ///query String. We make the necessary changes on the device side to update
-  ///the page to be requested. Ex.: If numItemsPage = 6 and you receive
-  ///05 or 11 or send empty, = >>> it means that the data is over.
-  //Please work your future to not return null.
   Future<List<Person>> _futureListPerson(int page, String query) async {
     final size = 15;
     List<Person> list = [];

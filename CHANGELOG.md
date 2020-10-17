@@ -1,3 +1,6 @@
+## [1.0.2]
+- Minor corrections.
+
 ## [1.0.1+1]
 - Update to the newest version of Flutter and the dependencies used in the package.
 

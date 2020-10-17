@@ -24,10 +24,10 @@ class SearcherPageController<T> extends SeacherBase {
 
   Function(Iterable<T>) get onSearchList => listSearch.assignAll;
 
-  final FiltersTypes filtersType;
+  FiltersTypes filtersType;
   Filter<String> _filters;
   StringFilter<T> stringFilter;
-  final Compare<T> compareSort;
+  Compare<T> compareSort;
 
   Worker _worker;
 
@@ -60,7 +60,7 @@ class SearcherPageController<T> extends SeacherBase {
     onSearchList(listFull);
   }
 
-  void onInit() {
+  void initFilters() {
     if (filtersType.toString() == FiltersTypes.startsWith.toString()) {
       _filters = Filters.startsWith;
     } else if (filtersType.toString() == FiltersTypes.equals.toString()) {
