@@ -52,7 +52,7 @@ class SearcherPageController<T> extends SeacherBase {
         stringFilter = _defaultFilter;
       } else {
         throw Exception(
-            'Voce precisa tipar sua página ou deverá ser tipada como String');
+            'You need to type your page or it must be typed as String');
       }
     }
     _bancoInit.close();

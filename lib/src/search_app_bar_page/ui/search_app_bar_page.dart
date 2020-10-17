@@ -117,7 +117,8 @@ class SearchAppBarPage<T> extends StatefulWidget {
     this.drawerEdgeDragWidth,
     this.drawerEnableOpenDragGesture = true,
     this.endDrawerEnableOpenDragGesture = true,
-  }) : super(key: key);
+  })  : assert(listFull != null),
+        super(key: key);
 
   @override
   _SearchAppBarPageState<T> createState() => _SearchAppBarPageState<T>();

@@ -1,3 +1,6 @@
+## [1.0.3]
+- Improved setState in [SearchAppBarPage].
+
 ## [1.0.2]
 - Minor corrections.
 
