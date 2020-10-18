@@ -127,14 +127,19 @@ class SearchAppBarPagination<T> extends StatefulWidget {
   ///[compare] Your list will be ordered by the same function [stringFilter].
   /// True by default.
   final bool compare;
-
-  final bool cache;
+  //final bool cache;
 
   const SearchAppBarPagination({
     Key key,
     @required this.futureFetchPageItems,
     @required this.paginationItemBuilder,
-    this.cache = false,
+    this.compare = true,
+    this.numItemsPage,
+    this.widgetEndScrollPage,
+    this.initialData,
+    this.filtersType,
+    this.stringFilter,
+    //this.cache = false,
     this.searchAppBartitle,
     this.searchAppBarcenterTitle = false,
     this.searchAppBariconTheme,
@@ -174,13 +179,6 @@ class SearchAppBarPagination<T> extends StatefulWidget {
     this.drawerEdgeDragWidth,
     this.drawerEnableOpenDragGesture = true,
     this.endDrawerEnableOpenDragGesture = true,
-    this.initialData,
-    this.filtersType,
-    this.stringFilter,
-    //this.compareSort,
-    this.compare = true,
-    this.numItemsPage,
-    this.widgetEndScrollPage,
   }) : /*assert(numItemsPage != null && numItemsPage < 15,
             'The minimum value for the number of elements is 15.'),
         assert(

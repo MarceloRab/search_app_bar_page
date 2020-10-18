@@ -62,7 +62,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase<T>
   Future<List<T>> functionFuturePageItems(FutureFetchPageItems<T> func) =>
       func(page, rxSearch.value);
 
-  StringFilter<T> get _defaultFilter => (T value) => value as String;
+  //StringFilter<T> get _defaultFilter => (T value) => value as String;
 
   Map<String, ListSearchBuild<T>> mapsSearch = {};
 
@@ -75,7 +75,8 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase<T>
   }) {
     if (stringFilter == null) {
       if (T == String) {
-        stringFilter = _defaultFilter;
+        //stringFilter = _defaultFilter;
+        stringFilter = (T value) => value as String;
       } else {
         throw Exception(
             'You need to type your page or it must be typed as String');

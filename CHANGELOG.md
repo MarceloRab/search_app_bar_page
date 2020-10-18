@@ -1,3 +1,7 @@
+## [1.1.0]
+- There is no more need to pass the function to make a sort compare on the list. 
+Just pass compare = false to not organize your list.
+
 ## [1.0.3]
 - Improved setState in [SearchAppBarPage].
 

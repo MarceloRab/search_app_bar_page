@@ -25,6 +25,7 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
   FiltersTypes filtersType;
   Filter<String> _filters;
   StringFilter<T> stringFilter;
+
   //Compare<T> compareSort;
   bool haveInitialData = false;
 
@@ -39,7 +40,7 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
 
   set snapshot(AsyncSnapshot<List<T>> value) => _rxSnapshot.value = value;
 
-  StringFilter<T> get _defaultFilter => (T value) => value as String;
+  //StringFilter<T> get _defaultFilter => (T value) => value as String;
 
   SearcherPageStreamController({
     //@required this.listStream,
@@ -49,7 +50,8 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
   }) {
     if (stringFilter == null) {
       if (T == String) {
-        stringFilter = _defaultFilter;
+        //stringFilter = _defaultFilter;
+        stringFilter = (T value) => value as String;
       } else {
         throw Exception(
             'You need to type your page or it must be typed as String');

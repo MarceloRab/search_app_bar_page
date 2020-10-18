@@ -29,6 +29,7 @@ class SearcherPageController<T> extends SeacherBase<T> {
   FiltersTypes filtersType;
   Filter<String> _filters;
   StringFilter<T> stringFilter;
+
   //Compare<T> compareSort;
 
   Worker _worker;
@@ -41,7 +42,7 @@ class SearcherPageController<T> extends SeacherBase<T> {
   @override
   bool get bancoInit => _bancoInit.value;
 
-  StringFilter<T> get _defaultFilter => (T value) => value as String;
+  //StringFilter<T> get _defaultFilter => (T value) => value as String;
 
   SearcherPageController({
     @required this.listFull,
@@ -51,7 +52,8 @@ class SearcherPageController<T> extends SeacherBase<T> {
   }) {
     if (stringFilter == null) {
       if (T == String) {
-        stringFilter = _defaultFilter;
+        //stringFilter = _defaultFilter;
+        stringFilter = (T value) => value as String;
       } else {
         throw Exception(
             'You need to type your page or it must be typed as String');

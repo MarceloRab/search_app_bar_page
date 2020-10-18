@@ -71,7 +71,7 @@ class SearchPage extends StatelessWidget {
       //listFull: dataList, // Lista String
       listFull: dataListPerson2,
       stringFilter: (Person person) => person.name,
-      compareSort: (Person a, Person b) => a.name.compareTo(b.name),
+      //compare: false,
       filtersType: FiltersTypes.contains,
       listBuilder: (list, isModSearch) {
         // Rertorne seu widget com a lista para o body da page
@@ -190,7 +190,7 @@ class SearchAppBarStream extends StatelessWidget {
       ),
       listStream: _streamListPerson,
       stringFilter: (Person person) => person.name,
-      compareSort: (Person a, Person b) => a.name.compareTo(b.name),
+      //compare: false,
       filtersType: FiltersTypes.contains,
       listBuilder: (list, isModSearch) {
         // Rertorne seu widget com a lista para o body da page
@@ -359,7 +359,7 @@ class _SearchAppBarPaginationTestState
         ),
         futureFetchPageItems: _futureListPerson,
         stringFilter: (Person person) => person.name,
-        compareSort: (Person a, Person b) => a.name.compareTo(b.name),
+        //compare: false,
         filtersType: FiltersTypes.contains,
         paginationItemBuilder:
             (BuildContext context, int index, Person objectIndex) {
