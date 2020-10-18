@@ -11,7 +11,7 @@ typedef CallBack = void Function();
 
 typedef CallBackListData<T> = void Function(List<T> listData);
 
-class SearcherPagePaginationFutureController<T> extends SeacherBase
+class SearcherPagePaginationFutureController<T> extends SeacherBase<T>
     with SearcherPaginnationBase<T> {
   final RxBool _isModSearch = false.obs;
 
@@ -22,6 +22,9 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
 
   @override
   set isModSearch(bool value) => _isModSearch.value = value;
+
+  @override
+  bool compare = true;
 
   @override
   final rxSearch = ''.obs;
@@ -49,7 +52,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
   Filter<String> _filters;
   StringFilter<T> stringFilter;
 
-  Compare<T> compareSort;
+  //Compare<T> compareSort;
 
   int page = 1;
   int pageSearch = 1;
@@ -65,7 +68,8 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
 
   SearcherPagePaginationFutureController({
     this.stringFilter,
-    this.compareSort,
+    //this.compareSort,
+    this.compare,
     this.filtersType = FiltersTypes.contains,
     this.cache = false,
   }) {
@@ -467,15 +471,24 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase
     }
   }
 
+  @override
   void sortCompareList(List<T> list) {
-    if (compareSort != null) {
+    /*if (compareSort != null) {
       list.sort(compareSort);
+    }*/
+
+    if (compare) {
+      list.sort((a, b) => stringFilter(a).compareTo(stringFilter(b)));
     }
   }
 
   List<T> sortCompareListSearch(List<T> list) {
-    if (compareSort != null) {
+    /*if (compareSort != null) {
       list.sort(compareSort);
+    }
+    */
+    if (compare) {
+      list.sort((a, b) => stringFilter(a).compareTo(stringFilter(b)));
     }
 
     return list;

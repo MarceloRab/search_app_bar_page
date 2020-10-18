@@ -90,9 +90,7 @@ class SearchPage extends StatelessWidget {
       //listFull: dataList, // Lista String
       listFull: dataListPerson2,
       stringFilter: (Person person) => person.name,
-
-      /// Caso queira sort escolha como fazer
-      compareSort: (Person a, Person b) => a.name.compareTo(b.name),
+      //compare: false,
       filtersType: FiltersTypes.contains,
       listBuilder: (context, list, isModSearch) {
         // Rertorne seu widget com a lista para o body da page
@@ -100,9 +98,9 @@ class SearchPage extends StatelessWidget {
         if (list.isEmpty) {
           return Center(
               child: Text(
-            'NOTHING FOUND',
-            style: TextStyle(fontSize: 14),
-          ));
+                'NOTHING FOUND',
+                style: TextStyle(fontSize: 14),
+              ));
         }
         return ListView.builder(
           itemCount: list.length,
@@ -160,7 +158,7 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
       ),
       listStream: _streamListPerson,
       stringFilter: (Person person) => person.name,
-      compareSort: (Person a, Person b) => a.name.compareTo(b.name),
+      //compare: false,
       filtersType: FiltersTypes.contains,
       listBuilder: (context, list, isModSearch) {
         // Rertorne seu widget com a lista para o body da page
@@ -168,9 +166,9 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
         if (list.isEmpty) {
           return Center(
               child: Text(
-            'NOTHING FOUND',
-            style: TextStyle(fontSize: 14),
-          ));
+                'NOTHING FOUND',
+                style: TextStyle(fontSize: 14),
+              ));
         }
         return Column(
           children: [
@@ -298,8 +296,8 @@ class _SearchAppBarPaginationTestState
   @override
   Widget build(BuildContext context) {
     return SearchAppBarPagination<Person>(
-        //initialData: _listPerson,
-        //numItemsPage: _numItemsPage,
+      //initialData: _listPerson,
+      //numItemsPage: _numItemsPage,
         magnifyinGlassColor: Colors.white,
         searchAppBarcenterTitle: true,
         searchAppBarhintText: 'Pesquise um Nome',
@@ -309,7 +307,7 @@ class _SearchAppBarPaginationTestState
         ),
         futureFetchPageItems: _futureListPerson,
         stringFilter: (Person person) => person.name,
-        compareSort: (Person a, Person b) => a.name.compareTo(b.name),
+        //compare: false,
         filtersType: FiltersTypes.contains,
         paginationItemBuilder:
             (BuildContext context, int index, Person objectIndex) {
@@ -320,7 +318,7 @@ class _SearchAppBarPaginationTestState
               // color: Theme.of(context).primaryColorDark,
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 130.0, vertical: 20),
+                const EdgeInsets.symmetric(horizontal: 130.0, vertical: 20),
                 child: Row(
                   children: [
                     Expanded(
@@ -380,7 +378,7 @@ class _SearchAppBarPaginationTestState
       }*/
     } else {
       final listQuery =
-          dataListPerson3.where((element) => contains(element, query)).toList();
+      dataListPerson3.where((element) => contains(element, query)).toList();
 
       int totalQueryPages = (listQuery.length / size).ceil();
       totalQueryPages = totalQueryPages == 0 ? 1 : totalQueryPages;

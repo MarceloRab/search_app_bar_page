@@ -1,6 +1,6 @@
 import 'package:get_state_manager/get_state_manager.dart';
 
-abstract class SeacherBase {
+abstract class SeacherBase<T> {
   final RxBool _isModSearch = false.obs;
 
   bool get isModSearch => _isModSearch.value;
@@ -14,4 +14,8 @@ abstract class SeacherBase {
   set bancoInit(bool value) => _bancoInit.value = value;
 
   bool get bancoInit => _bancoInit.value;
+
+  void sortCompareList(List<T> list);
+
+  bool compare = true;
 }

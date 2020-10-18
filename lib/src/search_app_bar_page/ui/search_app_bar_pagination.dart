@@ -124,10 +124,9 @@ class SearchAppBarPagination<T> extends StatefulWidget {
   /// The list will be filtered by the person.name contains (default) a query.
   final StringFilter<T> stringFilter;
 
-  ///[compareSort] If you want your list to be sorted, pass the function on.
-  /// Example: (Person a, Person b) => a.name.compareTo(b.name),
-  /// This list will be ordered by the object name parameter.
-  final Compare<T> compareSort;
+  ///[compare] Your list will be ordered by the same function [stringFilter].
+  /// True by default.
+  final bool compare;
 
   final bool cache;
 
@@ -178,7 +177,8 @@ class SearchAppBarPagination<T> extends StatefulWidget {
     this.initialData,
     this.filtersType,
     this.stringFilter,
-    this.compareSort,
+    //this.compareSort,
+    this.compare = true,
     this.numItemsPage,
     this.widgetEndScrollPage,
   }) : /*assert(numItemsPage != null && numItemsPage < 15,
@@ -234,7 +234,8 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
 
     _controller = SearcherPagePaginationFutureController<T>(
         stringFilter: widget.stringFilter,
-        compareSort: widget.compareSort,
+        //compareSort: widget.compareSort,
+        compare: widget.compare,
         filtersType: widget.filtersType)
       ..onInitFilter();
 
@@ -546,7 +547,8 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
     super.didUpdateWidget(oldWidget);
 
     _controller.stringFilter = widget.stringFilter;
-    _controller.compareSort = widget.compareSort;
+    //_controller.compareSort = widget.compareSort;
+    _controller.compare = widget.compare;
     _controller.filtersType = widget.filtersType;
     _controller.onInitFilter();
 

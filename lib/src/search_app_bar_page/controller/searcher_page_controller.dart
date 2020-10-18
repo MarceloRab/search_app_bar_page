@@ -6,7 +6,7 @@ import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_b
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 
-class SearcherPageController<T> extends SeacherBase {
+class SearcherPageController<T> extends SeacherBase<T> {
   final RxBool _isModSearch = false.obs;
 
   @override
@@ -16,8 +16,10 @@ class SearcherPageController<T> extends SeacherBase {
   set isModSearch(bool value) => _isModSearch.value = value;
 
   @override
-  // ignore: overridden_fields
   final RxString rxSearch = ''.obs;
+
+  @override
+  bool compare = true;
 
   final listSearch = <T>[].obs;
   final List<T> listFull;
@@ -27,7 +29,7 @@ class SearcherPageController<T> extends SeacherBase {
   FiltersTypes filtersType;
   Filter<String> _filters;
   StringFilter<T> stringFilter;
-  Compare<T> compareSort;
+  //Compare<T> compareSort;
 
   Worker _worker;
 
@@ -44,7 +46,7 @@ class SearcherPageController<T> extends SeacherBase {
   SearcherPageController({
     @required this.listFull,
     this.stringFilter,
-    this.compareSort,
+    this.compare,
     this.filtersType = FiltersTypes.contains,
   }) {
     if (stringFilter == null) {
@@ -85,9 +87,14 @@ class SearcherPageController<T> extends SeacherBase {
     onSearchList(list);
   }
 
+  @override
   void sortCompareList(List<T> list) {
-    if (compareSort != null) {
+    /*if (compareSort != null) {
       list.sort(compareSort);
+    }*/
+
+    if (compare) {
+      list.sort((a, b) => stringFilter(a).compareTo(stringFilter(b)));
     }
   }
 

@@ -113,10 +113,14 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
   /// The list will be filtered by the person.name contains (default) a query.
   final StringFilter<T> stringFilter;
 
-  ///[compareSort] If you want your list to be sorted, pass the function on.
+  ///If you want your list to be sorted, pass the function on.
   /// Example: (Person a, Person b) => a.name.compareTo(b.name),
   /// This list will be ordered by the object name parameter.
-  final Compare<T> compareSort;
+  //final Compare<T> compareSort;
+
+  ///[compare] Your list will be ordered by the same function [stringFilter].
+  /// True by default.
+  final bool compare;
 
   const SearchAppBarPageStream({
     Key key,
@@ -126,7 +130,8 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
     this.widgetWaiting,
     this.widgetErrorBuilder,
     this.stringFilter,
-    this.compareSort,
+    //this.compareSort,
+    this.compare = true,
     this.filtersType,
     this.searchAppBartitle,
     this.searchAppBarcenterTitle = false,
@@ -219,7 +224,8 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
     _controller = SearcherPageStreamController<T>(
         //listStream: widget._stream,
         stringFilter: widget.stringFilter,
-        compareSort: widget.compareSort,
+        //compareSort: widget.compareSort,
+        compare: widget.compare,
         filtersType: widget.filtersType)
       ..onInitFilter();
     //..subscribeWorker();
@@ -252,7 +258,8 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
     }*/
 
     _controller.stringFilter = widget.stringFilter;
-    _controller.compareSort = widget.compareSort;
+    //_controller.compareSort = widget.compareSort;
+    _controller.compare = widget.compare;
     _controller.filtersType = widget.filtersType;
     _controller.onInitFilter();
 

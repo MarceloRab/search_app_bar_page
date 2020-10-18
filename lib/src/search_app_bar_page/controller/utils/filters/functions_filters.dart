@@ -5,7 +5,7 @@ typedef Filter<T> = bool Function(T test, String query);
 
 typedef StringFilter<T> = String Function(T test);
 
-typedef Compare<T> = int Function(T a, T b);
+//typedef Compare<T> = int Function(T a, T b);
 
 //typedef WidgetsListBuilder<T> = Widget Function(
 //BuildContext context, RxList<T> list, bool isModSearch);

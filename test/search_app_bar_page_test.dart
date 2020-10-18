@@ -7,7 +7,7 @@ import 'infra_fakes_data/fake_get_api_function.dart';
 final controllerPagination = SearcherPagePaginationFutureController<Person>(
   //listStream: widget._stream,
   stringFilter: (Person person) => person.name,
-  compareSort: (Person a, Person b) => a.name.compareTo(b.name),
+  //compareSort: (Person a, Person b) => a.name.compareTo(b.name),
   //filtersType: FiltersTypes.contains
 )..onInitFilter();
 
