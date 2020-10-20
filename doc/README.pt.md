@@ -399,7 +399,8 @@ Ex: Se numItemsPage = 20 (total de itens em uma página) e você envia uma lista
 - Lista maior a numItemsPage ```(list.length > numItemsPage)``` = return an Exception. Calcula-se a página atual depende do numItemsPage ser constante.
 - Retorno nulo. Se você enviar null: se ainda não houver dados, retorne uma Exceção; se um dado já existe, ele retorna os mesmos dados no cache. Por enquanto o cahe é reiniciado quando a tela recebe dispose;
 
-##### Tive que passar algumas horas testando-o para que não houvesse erros. Faça testes e se encontrar algum erro, ficarei feliz em resolvê-los o mais rápido possível.
+####❕ Dica: Construa um cache de suas solicitações para a API e configure sua página sem problemas.
+###### Tive que passar algumas horas testando-o para que não houvesse erros. Faça testes e se encontrar algum erro, ficarei feliz em resolvê-los o mais rápido possível.
 
 ```dart
 Future<List<Person>> _futureListPerson(int page, String query) async {
@@ -463,6 +464,141 @@ Future<List<Person>> _futureListPerson(int page, String query) async {
     return list;
   }
 
+```
+
+🔎 <span> </span> ```SimpleAppBarPage``` você precisa fazer o trabalho de montar sua página manualmente.
+Inicie seu controlador, feche-o e implemente o método didUpdateWidget para setState ou
+Hot Reload em sua página. Já existe um widget para caber no corpo da sua página => [RxListWidget].
+
+```dart
+class SimpleAppBarPage extends StatefulWidget {
+  final StringFilter<Person> stringFilter;
+  final FiltersTypes filtersType;
+  final List<Person> listFull;
+  final bool compare;
+
+  const SimpleAppBarPage(
+      {Key key,
+        @required this.stringFilter,
+        this.filtersType,
+        this.listFull,
+        this.compare})
+      : super(key: key);
+
+  @override
+  _SimpleAppPageState createState() => _SimpleAppPageState();
+}
+
+class _SimpleAppPageState extends State<SimpleAppBarPage> {
+  SimpleAppBarController<Person> _controller;
+
+  @override
+  void initState() {
+    /// -------------------------------------------
+    /// É necessário inicializar o controlador.
+    /// -------------------------------------------
+    _controller = SimpleAppBarController<Person>(
+      listFull: widget.listFull,
+      stringFilter: widget.stringFilter,
+      compare: widget.compare,
+      filtersType: widget.filtersType,
+    );
+    super.initState();
+  }
+  /// -------------------------------------------------------------------------
+  /// Foi necessário implementar didUpdateWidget para setState e hot reload.
+  /// -------------------------------------------------------------------------
+  @override
+  void didUpdateWidget(covariant SimpleAppBarPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _controller.stringFilter = widget.stringFilter;
+    //_controller.compareSort = widget.compareSort;
+    _controller.compare = widget.compare;
+    _controller.filtersType = widget.filtersType;
+    _controller.filter = widget.filtersType;
+
+    if (oldWidget.listFull != widget.listFull) {
+      _controller.listFull.clear();
+      _controller.listFull.addAll(widget.listFull);
+      _controller.sortCompareList(widget.listFull);
+
+      if (_controller.rxSearch.value.isNotEmpty) {
+        _controller.refreshSeachList(_controller.rxSearch.value);
+      } else {
+        _controller.onSearchList(widget.listFull);
+      }
+    }
+  }
+  /// ---------------------------------------
+  /// É necessário fazer close do controlador.
+  /// ---------------------------------------
+  @override
+  void dispose() {
+    _controller.onClose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: SearchAppBar(
+          controller: _controller,
+          title: Text(
+            'Search Manual Page',
+            style: TextStyle(fontSize: 20),
+          ),
+          centerTitle: true,
+          hintText: 'Search for a name',
+          magnifyinGlassColor: Colors.white),
+      /// -------------------------------------
+      /// Widget reativo para a lista filtrada.
+      /// -------------------------------------
+      body: RxListWidget<Person>(
+        controller: _controller,
+        listBuilder: (context, list, isModSearch) {
+          if (list.isEmpty) {
+            return Center(
+                child: Text(
+                  'NOTHING FOUND',
+                  style: TextStyle(fontSize: 14),
+                ));
+          }
+          return ListView.builder(
+            itemCount: list.length,
+            itemBuilder: (_, index) {
+              return Card(
+                  margin:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)),
+                  // color: Theme.of(context).primaryColorDark,
+                  child: Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Name: ${list[index].name}',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            'Age: ${list[index].age.toStringAsFixed(2)}',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        )
+                      ],
+                    ),
+                  ));
+            },
+          );
+        },
+      ),
+    );
+  }
+}
 ```
 
 #### Vide [Example full](https://pub.dev/packages/search_app_bar_page/example) for more details.

@@ -15,6 +15,17 @@ class SimpleAppBarController<T> implements SeacherBase<T> {
 
   FiltersTypes filtersType;
   Filter<String> _filters;
+
+  set filter(FiltersTypes value) {
+    if (filtersType == FiltersTypes.startsWith) {
+      _filters = Filters.startsWith;
+    } else if (filtersType.toString() == FiltersTypes.equals.toString()) {
+      _filters = Filters.equals;
+    } else {
+      _filters = Filters.contains;
+    }
+  }
+
   StringFilter<T> stringFilter;
 
   final RxBool _isModSearch = false.obs;
@@ -59,18 +70,8 @@ class SimpleAppBarController<T> implements SeacherBase<T> {
     _bancoInit.close();
     sortCompareList(listFull);
     onSearchList(listFull);
-    initFilters();
+    filter = filtersType;
     _onReady();
-  }
-
-  void initFilters() {
-    if (filtersType == FiltersTypes.startsWith) {
-      _filters = Filters.startsWith;
-    } else if (filtersType.toString() == FiltersTypes.equals.toString()) {
-      _filters = Filters.equals;
-    } else {
-      _filters = Filters.contains;
-    }
   }
 
   void _onReady() {

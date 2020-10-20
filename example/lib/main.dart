@@ -29,7 +29,7 @@ class AppPages {
     GetPage(name: Routes.PAGE_1, page: () => SearchAppBarStream()),
     GetPage(name: Routes.PAGE_2, page: () => SearchPage()),
     GetPage(name: Routes.PAGE_3, page: () => SearchAppBarPaginationTest()),
-    GetPage(name: Routes.PAGE_4, page: () => SearchPage()),
+    GetPage(name: Routes.PAGE_4, page: () => SimpleAppBarManual()),
   ];
 }
 
@@ -46,14 +46,6 @@ class HomePage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            MaterialButton(
-                onPressed: () {
-                  Get.toNamed(Routes.PAGE_2);
-                },
-                child: Text(
-                  'Go to the SimpleAppBar',
-                  style: TextStyle(fontSize: 20),
-                )),
             MaterialButton(
                 onPressed: () {
                   Get.toNamed(Routes.PAGE_2);
@@ -78,99 +70,16 @@ class HomePage extends StatelessWidget {
                   'Go to the SearchAppBarPagination',
                   style: TextStyle(fontSize: 20),
                 )),
+            MaterialButton(
+                onPressed: () {
+                  Get.toNamed(Routes.PAGE_4);
+                },
+                child: Text(
+                  'Go to the SimpleAppBar',
+                  style: TextStyle(fontSize: 20),
+                )),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class SimpleAppBarPage extends StatefulWidget {
-  @override
-  _SimpleAppPageState createState() => _SimpleAppPageState();
-}
-
-class _SimpleAppPageState extends State<SimpleAppBarPage> {
-  SimpleAppBarController<Person> _controller;
-
-  @override
-  void initState() {
-    ///It is necessary to initialize the controller.
-    _controller = SimpleAppBarController<Person>(
-      listFull: dataListPerson2,
-      stringFilter: (Person person) => person.name,
-      //compare: false,
-      filtersType: FiltersTypes.contains,
-    );
-    super.initState();
-  }
-
-  /// NOTE: if you want to change the filtering type, call the
-  /// initFilters method.
-  /// Example:
-  /// _controller.filtersType = FiltersTypes.contains;
-  /// _controller.initFilters();
-
-  @override
-  void dispose() {
-    ///It is necessary to dispose of the contoller.
-    _controller.onClose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: SearchAppBar(
-          controller: _controller,
-          title: Text(
-            'Search Page',
-            style: TextStyle(fontSize: 20),
-          ),
-          centerTitle: true,
-          hintText: 'Search for a name',
-          magnifyinGlassColor: Colors.white),
-      body: RxListWidget<Person>(
-        controller: _controller,
-        listBuilder: (context, list, isModSearch) {
-          if (list.isEmpty) {
-            return Center(
-                child: Text(
-              'NOTHING FOUND',
-              style: TextStyle(fontSize: 14),
-            ));
-          }
-          return ListView.builder(
-            itemCount: list.length,
-            itemBuilder: (_, index) {
-              return Card(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4)),
-                  // color: Theme.of(context).primaryColorDark,
-                  child: Padding(
-                    padding: const EdgeInsets.all(14.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Name: ${list[index].name}',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            'Age: ${list[index].age.toStringAsFixed(2)}',
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        )
-                      ],
-                    ),
-                  ));
-            },
-          );
-        },
       ),
     );
   }
@@ -559,6 +468,148 @@ final dataListPerson3 = <Person>[
   Person(name: 'Mae Querida', age: 45),
   Person(name: 'Exausto Nome', age: 81),
 ];
+
+class SimpleAppBarManual extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SimpleAppBarPage(
+      listFull: dataListPerson2,
+      stringFilter: (Person person) => person.name,
+    );
+  }
+}
+
+class SimpleAppBarPage extends StatefulWidget {
+  final StringFilter<Person> stringFilter;
+  final FiltersTypes filtersType;
+  final List<Person> listFull;
+  final bool compare;
+
+  const SimpleAppBarPage(
+      {Key key,
+      @required this.stringFilter,
+      this.filtersType,
+      this.listFull,
+      this.compare})
+      : super(key: key);
+
+  @override
+  _SimpleAppPageState createState() => _SimpleAppPageState();
+}
+
+class _SimpleAppPageState extends State<SimpleAppBarPage> {
+  SimpleAppBarController<Person> _controller;
+
+  @override
+  void initState() {
+    /// -------------------------------------------
+    /// It is necessary to initialize the controller.
+    /// -------------------------------------------
+    _controller = SimpleAppBarController<Person>(
+      listFull: widget.listFull,
+      stringFilter: widget.stringFilter,
+      compare: widget.compare,
+      filtersType: widget.filtersType,
+    );
+    super.initState();
+  }
+
+  /// -------------------------------------------------------------------------
+  /// It was necessary to implement didUpdateWidget for setState and hot reload.
+  /// -------------------------------------------------------------------------
+  @override
+  void didUpdateWidget(covariant SimpleAppBarPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _controller.stringFilter = widget.stringFilter;
+    //_controller.compareSort = widget.compareSort;
+    _controller.compare = widget.compare;
+    _controller.filtersType = widget.filtersType;
+    _controller.filter = widget.filtersType;
+
+    if (oldWidget.listFull != widget.listFull) {
+      _controller.listFull.clear();
+      _controller.listFull.addAll(widget.listFull);
+      _controller.sortCompareList(widget.listFull);
+
+      if (_controller.rxSearch.value.isNotEmpty) {
+        _controller.refreshSeachList(_controller.rxSearch.value);
+      } else {
+        _controller.onSearchList(widget.listFull);
+      }
+    }
+  }
+
+  /// ----------------------------
+  /// Controller close-up required.
+  /// ----------------------------
+  @override
+  void dispose() {
+    _controller.onClose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: SearchAppBar(
+          controller: _controller,
+          title: Text(
+            'Search Page',
+            style: TextStyle(fontSize: 20),
+          ),
+          centerTitle: true,
+          hintText: 'Search for a name',
+          magnifyinGlassColor: Colors.white),
+
+      /// -------------------------------------
+      /// Reactive widget for the filtered list.
+      /// -------------------------------------
+      body: RxListWidget<Person>(
+        controller: _controller,
+        listBuilder: (context, list, isModSearch) {
+          if (list.isEmpty) {
+            return Center(
+                child: Text(
+              'NOTHING FOUND',
+              style: TextStyle(fontSize: 14),
+            ));
+          }
+          return ListView.builder(
+            itemCount: list.length,
+            itemBuilder: (_, index) {
+              return Card(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)),
+                  // color: Theme.of(context).primaryColorDark,
+                  child: Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Name: ${list[index].name}',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            'Age: ${list[index].age.toStringAsFixed(2)}',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        )
+                      ],
+                    ),
+                  ));
+            },
+          );
+        },
+      ),
+    );
+  }
+}
 
 //class Person extends CacheJson {
 class Person {

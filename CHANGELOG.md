@@ -1,3 +1,6 @@
+## [1.2.0]
+- Now you can build it without AppBar by placing the body of your list wherever you want.
+
 ## [1.1.0]
 - There is no more need to pass the function to make a sort compare on the list. 
 Just pass compare = false to not organize your list.

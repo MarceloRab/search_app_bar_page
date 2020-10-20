@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 typedef Filter<T> = bool Function(T test, String query);
 
-typedef StringFilter<T> = String Function(T test);
+//typedef StringFilter<T> = String Function(T test);
 
 //typedef Compare<T> = int Function(T a, T b);
 

@@ -23,7 +23,7 @@ for more than 01 year and has not responded to my request for changes by email.
 
 ## Required parameters
 
-We have three pages: <blockquote> SearchAppBarPage, SearchAppBarPageStream and  SearchAppBarPagination</blockquote>
+We have four pages: <blockquote> SearchAppBarPage, SearchAppBarPageStream, SearchAppBarPagination and SimpleAppBarPage</blockquote>
 
 🔎 <span> </span> ```SearchAppBarPage``` needs a list that is the complete list to be filtered and a function that is passed on to build
 the Widget depending on the filtered list. If you type the page, you need [stringFilter]. This is a function that receives 
@@ -420,8 +420,8 @@ Ex: If numItemsPage = 20 (total items on a page) and you send a list with a leng
 - List longer than numItemsPage ```(list.length> numItemsPage)``` = return an Exception. The current page is calculated depending on the numItemsPage being constant.
 - Null return. If you send null: if there is still no data, return an Exception; if a data already exists, it returns the same data in the cache. For now the cahe is restarted when the screen receives dispose.
 
-
-##### I had to spend a few hours testing it so there were no mistakes. Do tests and if you find an error, I would be happy to resolve them as soon as possible.
+#####❕Tip: Build a cache of your requests for the API and setState your page without problems.
+###### I had to spend a few hours testing it so there were no mistakes. Do tests and if you find an error, I would be happy to resolve them as soon as possible.
 
 ```dart
 Future<List<Person>> _futureListPerson(int page, String query) async {
@@ -483,7 +483,141 @@ Future<List<Person>> _futureListPerson(int page, String query) async {
 
     return list;
   }
+```
 
+🔎 <span> </span> ```SimpleAppBarPage``` you need to do the work of assembling your page manually. 
+Start your controller, close it and implement the didUpdateWidget method for setState or 
+Hot Reload on your page. There is already a widget to fit the body of your page => [RxListWidget].
+
+```dart
+class SimpleAppBarPage extends StatefulWidget {
+  final StringFilter<Person> stringFilter;
+  final FiltersTypes filtersType;
+  final List<Person> listFull;
+  final bool compare;
+
+  const SimpleAppBarPage(
+      {Key key,
+        @required this.stringFilter,
+        this.filtersType,
+        this.listFull,
+        this.compare})
+      : super(key: key);
+
+  @override
+  _SimpleAppPageState createState() => _SimpleAppPageState();
+}
+
+class _SimpleAppPageState extends State<SimpleAppBarPage> {
+  SimpleAppBarController<Person> _controller;
+
+  @override
+  void initState() {
+    /// -------------------------------------------
+    /// It is necessary to initialize the controller.
+    /// -------------------------------------------
+    _controller = SimpleAppBarController<Person>(
+      listFull: widget.listFull,
+      stringFilter: widget.stringFilter,
+      compare: widget.compare,
+      filtersType: widget.filtersType,
+    );
+    super.initState();
+  }
+  /// -------------------------------------------------------------------------
+  /// It was necessary to implement didUpdateWidget for setState and hot reload.
+  /// -------------------------------------------------------------------------
+  @override
+  void didUpdateWidget(covariant SimpleAppBarPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _controller.stringFilter = widget.stringFilter;
+    //_controller.compareSort = widget.compareSort;
+    _controller.compare = widget.compare;
+    _controller.filtersType = widget.filtersType;
+    _controller.filter = widget.filtersType;
+
+    if (oldWidget.listFull != widget.listFull) {
+      _controller.listFull.clear();
+      _controller.listFull.addAll(widget.listFull);
+      _controller.sortCompareList(widget.listFull);
+
+      if (_controller.rxSearch.value.isNotEmpty) {
+        _controller.refreshSeachList(_controller.rxSearch.value);
+      } else {
+        _controller.onSearchList(widget.listFull);
+      }
+    }
+  }
+  /// ----------------------------
+  /// It is necessary to close the controller.
+  /// ----------------------------
+  @override
+  void dispose() {
+    _controller.onClose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: SearchAppBar(
+          controller: _controller,
+          title: Text(
+            'Search Manual Page',
+            style: TextStyle(fontSize: 20),
+          ),
+          centerTitle: true,
+          hintText: 'Search for a name',
+          magnifyinGlassColor: Colors.white),
+      /// -------------------------------------
+      /// Reactive widget for the filtered list.
+      /// -------------------------------------
+      body: RxListWidget<Person>(
+        controller: _controller,
+        listBuilder: (context, list, isModSearch) {
+          if (list.isEmpty) {
+            return Center(
+                child: Text(
+                  'NOTHING FOUND',
+                  style: TextStyle(fontSize: 14),
+                ));
+          }
+          return ListView.builder(
+            itemCount: list.length,
+            itemBuilder: (_, index) {
+              return Card(
+                  margin:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)),
+                  // color: Theme.of(context).primaryColorDark,
+                  child: Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Name: ${list[index].name}',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            'Age: ${list[index].age.toStringAsFixed(2)}',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        )
+                      ],
+                    ),
+                  ));
+            },
+          );
+        },
+      ),
+    );
+  }
+}
 ```
 
 #### Vide [Example full](https://pub.dev/packages/search_app_bar_page/example) for more details.
