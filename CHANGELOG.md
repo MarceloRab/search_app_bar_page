@@ -1,3 +1,6 @@
+## [1.2.1]
+- Minor corrections.
+
 ## [1.2.0]
 - Now you can build it without AppBar by placing the body of your list wherever you want.
 

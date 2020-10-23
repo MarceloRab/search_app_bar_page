@@ -29,7 +29,7 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
   //Compare<T> compareSort;
   bool haveInitialData = false;
 
-  Worker _worker;
+  //Worker _worker;
 
   final Rx<AsyncSnapshot<List<T>>> _rxSnapshot =
       AsyncSnapshot<List<T>>.waiting().obs;
@@ -116,9 +116,10 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
   }
 
   FutureOr onClose() {
-    _worker?.dispose();
+    //_worker?.dispose();
     _isModSearch.close();
     rxSearch.close();
+    _rxSnapshot.close();
     //listSearch.close();
   }
 
