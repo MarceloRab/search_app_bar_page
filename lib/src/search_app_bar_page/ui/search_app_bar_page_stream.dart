@@ -7,6 +7,7 @@ import 'package:search_app_bar_page/src/search_app_bar_page/controller/connecty_
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 
+import '../../../search_app_bar_page.dart';
 import '../controller/searcher_page_stream_controller.dart';
 import 'core/search_app_bar/search_app_bar.dart';
 
@@ -62,12 +63,12 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
   /// [listStream] error.
   final WidgetsErrorBuilder widgetErrorBuilder;
 
-  /// [searchePageFloaActionButton] , [searchePageFloaActionButton] ,
+  /// [searchePageFloatingActionButton] , [searchePageFloatingActionButton] ,
   /// [searchePageFloatingActionButtonLocation] ,
   /// [searchePageFloatingActionButtonAnimator]  ...
   /// ...
   /// are passed on to the Scaffold.
-  final Widget searchePageFloaActionButton;
+  final Widget searchePageFloatingActionButton;
   final FloatingActionButtonLocation searchePageFloatingActionButtonLocation;
   final FloatingActionButtonAnimator searchePageFloatingActionButtonAnimator;
   final List<Widget> searchePagePersistentFooterButtons;
@@ -103,9 +104,9 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
   /// startsWith, equals, contains. Default = FiltersTypes.contains;
   final FiltersTypes filtersType;
 
-  /// [listBuilder] Function applied when receiving data
+  /// [obxListBuilder] Function applied when receiving data
   /// through Stream or filtering in search.
-  final WidgetsListBuilder<T> listBuilder;
+  final WidgetsListBuilder<T> obxListBuilder;
 
   /// [stringFilter] Required if you type.
   ///If not, it is understood that the type will be String.
@@ -122,16 +123,21 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
   /// True by default.
   final bool compare;
 
+  ///  [rxBoolAuth] Insert your RxBool here that changes with the auth
+  /// status to have reactivity.
+  final RxBoolAuth rxBoolAuth;
+
   const SearchAppBarPageStream({
     Key key,
     @required this.listStream,
-    @required this.listBuilder,
+    @required this.obxListBuilder,
     this.initialData,
     this.widgetWaiting,
     this.widgetErrorBuilder,
     this.stringFilter,
     //this.compareSort,
     this.compare = true,
+    this.rxBoolAuth,
     this.filtersType,
     this.searchAppBartitle,
     this.searchAppBarcenterTitle = false,
@@ -150,7 +156,7 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
     this.hideDefaultConnectyIconOffAppBar = false,
     this.iconConnectyOffAppBar,
     this.widgetOffConnectyWaiting,
-    this.searchePageFloaActionButton,
+    this.searchePageFloatingActionButton,
     this.searchePageFloatingActionButtonLocation,
     this.searchePageFloatingActionButtonAnimator,
     this.searchePagePersistentFooterButtons,
@@ -329,7 +335,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
             keyboardType: widget.searchAppBarKeyboardType,
             magnifyinGlassColor: widget.magnifyinGlassColor),
         body: buildBody(),
-        floatingActionButton: widget.searchePageFloaActionButton,
+        floatingActionButton: widget.searchePageFloatingActionButton,
         floatingActionButtonLocation:
             widget.searchePageFloatingActionButtonLocation,
         floatingActionButtonAnimator:
@@ -359,8 +365,9 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
     }
 
     return Obx(() {
-      //print(widget.searcher.snapshotScroolPage.snapshot.connectionState
-      //.toString());
+      if (widget.rxBoolAuth?.auth?.value == false) {
+        return widget.rxBoolAuth.authFalseWidget();
+      }
       if (_controller.snapshot.connectionState == ConnectionState.waiting) {
         return _widgetWaiting;
       }
@@ -370,7 +377,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
       }
 
       //final isListFull = widget.searcher.rxSearch.value.isEmpty;
-      return widget.listBuilder(
+      return widget.obxListBuilder(
           context, _controller.snapshot.data, _controller.isModSearch);
     });
   }

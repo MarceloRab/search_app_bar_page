@@ -8,6 +8,7 @@ import 'package:search_app_bar_page/src/search_app_bar_page/controller/connecty_
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 
+import '../../../search_app_bar_page.dart';
 import '../controller/searcher_page_pagination_future_controller.dart';
 import 'core/search_app_bar/search_app_bar.dart';
 
@@ -127,7 +128,12 @@ class SearchAppBarPagination<T> extends StatefulWidget {
   ///[compare] Your list will be ordered by the same function [stringFilter].
   /// True by default.
   final bool compare;
+
   //final bool cache;
+
+  ///  [rxBoolAuth] Insert your RxBool here that changes with the auth
+  /// status to have reactivity.
+  final RxBoolAuth rxBoolAuth;
 
   const SearchAppBarPagination({
     Key key,
@@ -140,6 +146,7 @@ class SearchAppBarPagination<T> extends StatefulWidget {
     this.filtersType,
     this.stringFilter,
     //this.cache = false,
+    this.rxBoolAuth,
     this.searchAppBartitle,
     this.searchAppBarcenterTitle = false,
     this.searchAppBariconTheme,
@@ -473,6 +480,9 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
     }
 
     return Obx(() {
+      if (widget.rxBoolAuth?.auth?.value == false) {
+        return widget.rxBoolAuth.authFalseWidget();
+      }
       if (_controller.snapshotScroolPage.snapshot.connectionState ==
           ConnectionState.waiting) {
         return _widgetWaiting;
@@ -482,22 +492,22 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
         return buildwidgetError(_controller.snapshotScroolPage.snapshot.error);
       }
 
-      if (_controller.snapshotScroolPage.snapshot.data.isEmpty) {
+      if (_controller.data.isEmpty) {
         return _widgetNothingFound;
       }
       return ListView.builder(
         controller: _scrollController,
         itemCount: (_controller.snapshotScroolPage.loadingSearchScroll ||
                 _controller.snapshotScroolPage.loadinglistFullScroll)
-            ? _controller.snapshotScroolPage.snapshot.data.length + 1
-            : _controller.snapshotScroolPage.snapshot.data.length,
+            ? _controller.data.length + 1
+            : _controller.data.length,
         itemBuilder: (ctx, index) {
-          if (index == _controller.snapshotScroolPage.snapshot.data.length) {
+          if (index == _controller.data.length) {
             return _widgetEndScrollPage;
           }
 
-          return widget.paginationItemBuilder(context, index,
-              _controller.snapshotScroolPage.snapshot.data[index]);
+          return widget.paginationItemBuilder(
+              context, index, _controller.data[index]);
         },
       );
     });

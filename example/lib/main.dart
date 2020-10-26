@@ -9,8 +9,16 @@ void main() {
       title: 'SearchAppBarPage',
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
+      initialBinding: MyBinddings(),
     ),
   );
+}
+
+class MyBinddings extends Bindings {
+  @override
+  void dependencies() {
+    Get.put(TestController());
+  }
 }
 
 abstract class Routes {
@@ -29,7 +37,12 @@ class AppPages {
     GetPage(name: Routes.PAGE_1, page: () => SearchAppBarStream()),
     GetPage(name: Routes.PAGE_2, page: () => SearchPage()),
     GetPage(name: Routes.PAGE_3, page: () => SearchAppBarPaginationTest()),
-    GetPage(name: Routes.PAGE_4, page: () => SimpleAppBarManual()),
+    GetPage(
+        name: Routes.PAGE_4,
+        page: () => SimpleAppBarPage(
+              listFull: dataListPerson2,
+              stringFilter: (Person person) => person.name,
+            )),
   ];
 }
 
@@ -85,7 +98,54 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class SearchPage extends StatelessWidget {
+class TestController extends GetxController {
+  final rxAuth = false.obs;
+
+  set changeAuth(bool value) => rxAuth.value = value;
+
+  get isAuth => rxAuth.value;
+
+  final rxList = <Person>[].obs;
+}
+
+class SearchPage extends StatefulWidget {
+  @override
+  _SearchPageState createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  TestController controll_1;
+
+  /// ## ✳️ Learning both ways to add reactive variables.
+  @override
+  void initState() {
+    ///-------------------------------------------------------------------
+    ///  Add other reactive parameters inside the body.
+    /// ✅  Boot your controller into a StatefulWidget.
+    ///-------------------------------------------------------------------
+    controll_1 = Get.find<TestController>();
+    super.initState();
+
+    Future.delayed(const Duration(seconds: 4), () {
+      ///------------------------------------------
+      /// Test to check the reactivity of the screen.
+      /// Reactive variable as parameter - [rxBoolAuth]
+      ///------------------------------------------
+      /// 👇🏼
+      controll_1.changeAuth = true;
+    });
+
+    Future.delayed(const Duration(seconds: 6), () {
+      ///------------------------------------------
+      /// Test to check the reactivity of the screen.
+      ///
+      /// Reactive variable as parameter within the function [obxListBuilder]
+      ///------------------------------------------
+      /// 👇🏼
+      controll_1.rxList.update((value) {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     //return SearchAppBarPage<String>(
@@ -101,10 +161,33 @@ class SearchPage extends StatelessWidget {
       listFull: dataListPerson2,
       stringFilter: (Person person) => person.name,
       //compare: false,
+      ///--------------------------------------------
+      /// ✅ Add the auth reactive parameters.
+      ///  The body will be rebuilt when the auth is false.
+      ///---------------------------------------------
+      rxBoolAuth: RxBoolAuth.input(
+          rxBoolAuthm: Get.find<TestController>().rxAuth,
+          authFalseWidget: () => Center(
+                child: Text(
+                  'Please login.',
+                  style: TextStyle(fontSize: 22),
+                ),
+              )),
       filtersType: FiltersTypes.contains,
-      listBuilder: (context, list, isModSearch) {
-        // Rertorne seu widget com a lista para o body da page
-        // Pode alterar a tela relacionando o tipo de procura
+      obxListBuilder: (context, list, isModSearch) {
+        // ☑️ This function is inside an Obx.
+        // Place other reactive verables into it.
+
+        ///----------------------------------------------------
+        /// Changes to the rxList will also rebuild the widget.
+        ///----------------------------------------------------
+
+        print(' TEST -- ${controll_1.rxList.length.toString()} ');
+
+        ///-------------------------------------------------------------
+        /// Changes to the filtered list will also reconstruct the body.
+        ///-------------------------------------------------------------
+
         if (list.isEmpty) {
           return Center(
               child: Text(
@@ -170,9 +253,9 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
       stringFilter: (Person person) => person.name,
       //compare: false,
       filtersType: FiltersTypes.contains,
-      listBuilder: (context, list, isModSearch) {
-        // Rertorne seu widget com a lista para o body da page
-        // Pode alterar a tela relacionando o tipo de procura
+      obxListBuilder: (context, list, isModSearch) {
+        // ☑️ This function is inside an Obx.
+        // Place other reactive verables into it.
         if (list.isEmpty) {
           return Center(
               child: Text(
@@ -469,16 +552,6 @@ final dataListPerson3 = <Person>[
   Person(name: 'Exausto Nome', age: 81),
 ];
 
-class SimpleAppBarManual extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SimpleAppBarPage(
-      listFull: dataListPerson2,
-      stringFilter: (Person person) => person.name,
-    );
-  }
-}
-
 class SimpleAppBarPage extends StatefulWidget {
   final StringFilter<Person> stringFilter;
   final FiltersTypes filtersType;
@@ -488,8 +561,8 @@ class SimpleAppBarPage extends StatefulWidget {
   const SimpleAppBarPage(
       {Key key,
       @required this.stringFilter,
+      @required this.listFull,
       this.filtersType,
-      this.listFull,
       this.compare})
       : super(key: key);
 
@@ -508,7 +581,7 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
     _controller = SimpleAppBarController<Person>(
       listFull: widget.listFull,
       stringFilter: widget.stringFilter,
-      compare: widget.compare,
+      compare: widget.compare ?? true,
       filtersType: widget.filtersType,
     );
     super.initState();

@@ -37,7 +37,7 @@ class SimpleAppBarController<T> implements SeacherBase<T> {
   set isModSearch(bool value) => _isModSearch.value = value;
 
   @override
-  bool compare;
+  bool compare = true;
 
   Worker _worker;
 

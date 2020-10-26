@@ -45,6 +45,8 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase<T>
   AsyncSnapshotScrollPage<T> get snapshotScroolPage =>
       _snapshotScroolPage.value;
 
+  List<T> get data => snapshotScroolPage.snapshot.data;
+
   set snapshotScroolPage(AsyncSnapshotScrollPage<T> value) =>
       _snapshotScroolPage.value = value;
 

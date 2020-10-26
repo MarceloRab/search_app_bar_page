@@ -6,6 +6,7 @@ import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/fil
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 import '../controller/searcher_page_controller.dart';
 import 'core/search_app_bar/search_app_bar.dart';
+import 'infra/rx_get_type.dart';
 
 class SearchAppBarPage<T> extends StatefulWidget {
   /// Paramentros do SearchAppBar
@@ -26,7 +27,7 @@ class SearchAppBarPage<T> extends StatefulWidget {
 
   /// Parametros para o Scaffold
 
-  final Widget searchePageFloaActionButton;
+  final Widget searchePageFloatingActionButton;
   final FloatingActionButtonLocation searchePageFloatingActionButtonLocation;
   final FloatingActionButtonAnimator searchePageFloatingActionButtonAnimator;
   final List<Widget> searchePagePersistentFooterButtons;
@@ -57,8 +58,8 @@ class SearchAppBarPage<T> extends StatefulWidget {
   /// Default = FiltersTypes.contains;
   final FiltersTypes filtersType;
 
-  /// [listBuilder] Function applied when it is filtered.
-  final WidgetsListBuilder<T> listBuilder;
+  /// [obxListBuilder] Function applied when it is filtered.
+  final WidgetsListBuilder<T> obxListBuilder;
 
   /// [stringFilter] Required if you type.
   ///If not, it is understood that the type will be String.
@@ -70,53 +71,58 @@ class SearchAppBarPage<T> extends StatefulWidget {
   /// True by default.
   final bool compare;
 
-  const SearchAppBarPage({
-    Key key,
+  ///  [rxBoolAuth] Insert your RxBool here that changes with the auth
+  /// status to have reactivity.
+  final RxBoolAuth rxBoolAuth;
 
-    /// Parametros para o SearcherGetController
-    @required this.listFull,
-    @required this.listBuilder,
-    this.compare = true,
-    this.filtersType,
-    this.stringFilter,
+  const SearchAppBarPage(
+      {Key key,
 
-    /// Paramentros do SearchAppBar
-    this.searchAppBartitle,
-    this.searchAppBarcenterTitle = false,
-    this.searchAppBariconTheme,
-    this.searchAppBarbackgroundColor,
-    this.searchAppBarModeSearchBackgroundColor,
-    this.searchAppBarElementsColor,
-    this.searchAppBarhintText,
-    this.searchAppBarflattenOnSearch = false,
-    this.searchAppBarcapitalization = TextCapitalization.none,
-    this.searchAppBaractions = const <Widget>[],
-    this.searchAppBarElevation = 4.0,
-    this.searchAppBarKeyboardType,
-    this.magnifyinGlassColor,
+      /// Parametros para o SearcherGetController
+      @required this.listFull,
+      @required this.obxListBuilder,
+      this.compare = true,
+      this.filtersType,
+      this.stringFilter,
+      this.rxBoolAuth,
 
-    /// Parametros para o Scaffold
+      /// Paramentros do SearchAppBar
+      this.searchAppBartitle,
+      this.searchAppBarcenterTitle = false,
+      this.searchAppBariconTheme,
+      this.searchAppBarbackgroundColor,
+      this.searchAppBarModeSearchBackgroundColor,
+      this.searchAppBarElementsColor,
+      this.searchAppBarhintText,
+      this.searchAppBarflattenOnSearch = false,
+      this.searchAppBarcapitalization = TextCapitalization.none,
+      this.searchAppBaractions = const <Widget>[],
+      this.searchAppBarElevation = 4.0,
+      this.searchAppBarKeyboardType,
+      this.magnifyinGlassColor,
 
-    this.searchePageFloaActionButton,
-    this.searchePageFloatingActionButtonLocation,
-    this.searchePageFloatingActionButtonAnimator,
-    this.searchePagePersistentFooterButtons,
-    this.searchePageDrawer,
-    this.searchePageEndDrawer,
-    this.searchePageBottomNavigationBar,
-    this.searchePageBottomSheet,
-    this.searchPageBackgroundColor,
-    this.resizeToAvoidBottomPadding,
-    this.resizeToAvoidBottomInset,
-    this.primary = true,
-    this.drawerDragStartBehavior = DragStartBehavior.start,
-    this.extendBody = false,
-    this.extendBodyBehindAppBar = false,
-    this.drawerScrimColor,
-    this.drawerEdgeDragWidth,
-    this.drawerEnableOpenDragGesture = true,
-    this.endDrawerEnableOpenDragGesture = true,
-  })  : assert(listFull != null),
+      /// Parametros para o Scaffold
+
+      this.searchePageFloatingActionButton,
+      this.searchePageFloatingActionButtonLocation,
+      this.searchePageFloatingActionButtonAnimator,
+      this.searchePagePersistentFooterButtons,
+      this.searchePageDrawer,
+      this.searchePageEndDrawer,
+      this.searchePageBottomNavigationBar,
+      this.searchePageBottomSheet,
+      this.searchPageBackgroundColor,
+      this.resizeToAvoidBottomPadding,
+      this.resizeToAvoidBottomInset,
+      this.primary = true,
+      this.drawerDragStartBehavior = DragStartBehavior.start,
+      this.extendBody = false,
+      this.extendBodyBehindAppBar = false,
+      this.drawerScrimColor,
+      this.drawerEdgeDragWidth,
+      this.drawerEnableOpenDragGesture = true,
+      this.endDrawerEnableOpenDragGesture = true})
+      : assert(listFull != null),
         super(key: key);
 
   @override
@@ -190,9 +196,14 @@ class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
             actions: widget.searchAppBaractions,
             keyboardType: widget.searchAppBarKeyboardType,
             magnifyinGlassColor: widget.magnifyinGlassColor),
-        body: Obx(() => widget.listBuilder(
-            context, _controller.listSearch, _controller.isModSearch)),
-        floatingActionButton: widget.searchePageFloaActionButton,
+        body: Obx(() {
+          if (widget.rxBoolAuth?.auth?.value == false) {
+            return widget.rxBoolAuth.authFalseWidget();
+          }
+          return widget.obxListBuilder(
+              context, _controller.listSearch, _controller.isModSearch);
+        }),
+        floatingActionButton: widget.searchePageFloatingActionButton,
         floatingActionButtonLocation:
             widget.searchePageFloatingActionButtonLocation,
         floatingActionButtonAnimator:

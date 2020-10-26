@@ -30,6 +30,24 @@ the Widget depending on the filtered list. If you type the page, you need [strin
 the parameter T (type of list) and you choose it as the Return String from the object. As in the example below. It was typed
 as Person and returned person.name. This will be used to filter by the search query. 
 
+## Tips
+
+The function ```[obxListBuilder]``` is inside an Obx. Place reactive verables into it.
+
+##### ✳️ There are two ways to add reactive variables.
+1 ) Boot your controller into a StatefulWidget. <p>
+1.2 - Pass the reactive variable inside this function ```[obxListBuilder]```
+in SearchAppBarPage and SearchAppBarPageStream.
+-----
+2 ) Add reactive authentication parameters. Insert your RxBool that changes with the authentication status to
+reactivity. The body will be rebuilt when authentication is false.
+Set ```[rxBoolAuth]``` to SearchAppBarPage, SearchAppBarPageStream and SearchAppBarPagination.
+
+[Example full](https://pub.dev/packages/search_app_bar_page/example) for more details.
+Both examples in SearchAppBarPage.
+-----
+
+
 ```dart
 class SearchAppBarPage<T> extends StatefulWidget {
           //...
@@ -561,6 +579,9 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      /// -------------------------------------------
+      /// Import SearchAppBar
+      /// -------------------------------------------
       appBar: SearchAppBar(
           controller: _controller,
           title: Text(
@@ -570,9 +591,9 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
           centerTitle: true,
           hintText: 'Search for a name',
           magnifyinGlassColor: Colors.white),
-      /// -------------------------------------
-      /// Reactive widget for the filtered list.
-      /// -------------------------------------
+      /// -------------------------------------------
+      /// Import reactive widget for the filtered list.
+      /// -------------------------------------------
       body: RxListWidget<Person>(
         controller: _controller,
         listBuilder: (context, list, isModSearch) {
