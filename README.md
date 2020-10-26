@@ -35,11 +35,11 @@ as Person and returned person.name. This will be used to filter by the search qu
 The function ```[obxListBuilder]``` is inside an Obx. Place reactive verables into it.
 
 ##### ✳️ There are two ways to add reactive variables.
-1 ) Boot your controller into a StatefulWidget. <p>
-1.2 - Pass the reactive variable inside this function ```[obxListBuilder]```
-in SearchAppBarPage and SearchAppBarPageStream.
+
+* Boot your controller into a StatefulWidget. <p>
+- Pass the reactive variable inside this function ```[obxListBuilder]``` in SearchAppBarPage and SearchAppBarPageStream.
 -----
-2 ) Add reactive authentication parameters. Insert your RxBool that changes with the authentication status to
+* Add reactive authentication parameters. Insert your RxBool that changes with the authentication status to
 reactivity. The body will be rebuilt when authentication is false.
 Set ```[rxBoolAuth]``` to SearchAppBarPage, SearchAppBarPageStream and SearchAppBarPagination.
 

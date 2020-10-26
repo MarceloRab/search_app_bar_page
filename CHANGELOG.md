@@ -1,3 +1,12 @@
+## [1.3.1+1]
+* Correction in the readme. One more time.
+
+## [1.3.1+1]
+* Correction in the readme
+
+## [1.3.0+1]
+* Correction in the readme
+
 ## [1.3.0]
 * Learned the creative way to add bool parameter of auth to your page. configures ```[rxBoolAuth]```. 
 * To add other Rx parameters, just configure them within the ```[obxListBuilder]``` function in SearchAppBarPage and SearchAppBarPageStream. See complete example for details. So your page will be complete.
