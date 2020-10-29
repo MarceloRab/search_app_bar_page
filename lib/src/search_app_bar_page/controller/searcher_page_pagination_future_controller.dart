@@ -61,8 +61,8 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase<T>
 
   int numItemsPage = 0;
 
-  Future<List<T>> functionFuturePageItems(FutureFetchPageItems<T> func) =>
-      func(page, rxSearch.value);
+  //Future<List<T>> functionFuturePageItems(FutureFetchPageItems<T> func) =>
+  //func(page, rxSearch.value);
 
   //StringFilter<T> get _defaultFilter => (T value) => value as String;
 
@@ -70,10 +70,9 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase<T>
 
   SearcherPagePaginationFutureController({
     this.stringFilter,
-    //this.compareSort,
     this.compare,
     this.filtersType = FiltersTypes.contains,
-    this.cache = false,
+    //this.cache = false,
   }) {
     if (stringFilter == null) {
       if (T == String) {
@@ -88,7 +87,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase<T>
 
   var listFull = <T>[];
 
-  final bool cache;
+  //final bool cache;
 
   ListSearchBuild<T> buildPreviousList(String query) {
     ListSearchBuild<T> listAnterior = ListSearchBuild(listSearch: <T>[]);

@@ -201,29 +201,6 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
 
   SearcherPageStreamController<T> _controller;
 
-  /*void initial(List<T> data) =>
-      _controller.snapshot =
-      AsyncSnapshot<List<T>>.withData(ConnectionState.none, data);
-
-  void afterConnected() =>
-      _controller.snapshot =
-          _controller.snapshot.inState(ConnectionState.waiting);
-
-  void afterData(List<T> data) =>
-      _controller.snapshot = _controller.snapshot =
-      AsyncSnapshot<List<T>>.withData(ConnectionState.active, data);
-
-  void afterError(Object error) =>
-      _controller.snapshot =
-      AsyncSnapshot<List<T>>.withError(ConnectionState.active, error);
-
-  void afterDone() =>
-      _controller.snapshot = _controller.snapshot.inState(ConnectionState.done);
-
-  void afterDisconnected() =>
-      _controller.snapshot =
-      _controller.snapshot.inState(ConnectionState.none);*/
-
   @override
   void initState() {
     super.initState();

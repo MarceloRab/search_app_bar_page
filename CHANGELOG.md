@@ -1,11 +1,11 @@
+## [1.3.3]
+* Corrections in didUpdateWidget for setState.
+
+## [1.3.2]
+* Minor corrections.
+
 ## [1.3.1+1]
 * Correction in the readme. One more time.
-
-## [1.3.1+1]
-* Correction in the readme
-
-## [1.3.0+1]
-* Correction in the readme
 
 ## [1.3.0]
 * Learned the creative way to add bool parameter of auth to your page. configures ```[rxBoolAuth]```. 

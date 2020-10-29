@@ -575,8 +575,12 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
           }
           if (widget.initialData.length > _controller.listFull.length) {
             _unsubscribeListFullCallBack();
+
             _controller.page =
                 (widget.initialData.length / widget.numItemsPage).ceil();
+
+            if (_controller.page == 0) _controller.page = 1;
+
             _controller.listFull.clear();
             _controller.listFull.addAll(widget.initialData);
             _controller.sortCompareList(_controller.listFull);
