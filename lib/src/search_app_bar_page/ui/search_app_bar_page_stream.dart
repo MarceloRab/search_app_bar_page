@@ -119,9 +119,9 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
   /// This list will be ordered by the object name parameter.
   //final Compare<T> compareSort;
 
-  ///[compare] Your list will be ordered by the same function [stringFilter].
-  /// True by default.
-  final bool compare;
+  ///[sortCompare] Your list will be ordered by the same function
+  ///[stringFilter]. True by default.
+  final bool sortCompare;
 
   ///  [rxBoolAuth] Insert your RxBool here that changes with the auth
   /// status to have reactivity.
@@ -136,7 +136,7 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
     this.widgetErrorBuilder,
     this.stringFilter,
     //this.compareSort,
-    this.compare = true,
+    this.sortCompare = true,
     this.rxBoolAuth,
     this.filtersType,
     this.searchAppBartitle,
@@ -208,7 +208,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
         //listStream: widget._stream,
         stringFilter: widget.stringFilter,
         //compareSort: widget.compareSort,
-        compare: widget.compare,
+        sortCompare: widget.sortCompare,
         filtersType: widget.filtersType)
       ..onInitFilter();
     //..subscribeWorker();
@@ -242,7 +242,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
 
     _controller.stringFilter = widget.stringFilter;
     //_controller.compareSort = widget.compareSort;
-    _controller.compare = widget.compare;
+    _controller.sortCompare = widget.sortCompare;
     _controller.filtersType = widget.filtersType;
     _controller.onInitFilter();
 

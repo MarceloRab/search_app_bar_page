@@ -20,7 +20,7 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
   @override
   final rxSearch = ''.obs;
   @override
-  bool compare = true;
+  bool sortCompare = true;
 
   FiltersTypes filtersType;
   Filter<String> _filters;
@@ -45,7 +45,7 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
   SearcherPageStreamController({
     //@required this.listStream,
     this.stringFilter,
-    this.compare,
+    this.sortCompare,
     this.filtersType = FiltersTypes.contains,
   }) {
     if (stringFilter == null) {
@@ -110,7 +110,7 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
       list.sort(compareSort);
     }*/
 
-    if (compare) {
+    if (sortCompare) {
       list.sort((a, b) => stringFilter(a).compareTo(stringFilter(b)));
     }
   }

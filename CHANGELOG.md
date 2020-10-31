@@ -1,3 +1,6 @@
+## [1.4.0]
+* Testing with a real API. See complete example.
+
 ## [1.3.3]
 * Corrections in didUpdateWidget for setState.
 

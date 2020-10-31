@@ -11,7 +11,7 @@ typedef CallBack = void Function();
 
 typedef CallBackListData<T> = void Function(List<T> listData);
 
-class SearcherPagePaginationFutureController<T> extends SeacherBase<T>
+class SearcherPagePaginationController<T> extends SeacherBase<T>
     with SearcherPaginnationBase<T> {
   final RxBool _isModSearch = false.obs;
 
@@ -24,7 +24,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase<T>
   set isModSearch(bool value) => _isModSearch.value = value;
 
   @override
-  bool compare = true;
+  bool sortCompare = true;
 
   @override
   final rxSearch = ''.obs;
@@ -68,9 +68,9 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase<T>
 
   Map<String, ListSearchBuild<T>> mapsSearch = {};
 
-  SearcherPagePaginationFutureController({
+  SearcherPagePaginationController({
     this.stringFilter,
-    this.compare,
+    this.sortCompare,
     this.filtersType = FiltersTypes.contains,
     //this.cache = false,
   }) {
@@ -130,7 +130,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase<T>
           .where((element) => _filters(stringFilter(element), query))
           .toList();
 
-      // tem cache da query?
+      // tem cache da query.
       if (mapsSearch.containsKey(query)) {
         if (mapsSearch[query].isListSearchFull) {
           pageSearch =
@@ -161,6 +161,15 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase<T>
             return mapsSearch[query];
           }
         } else {
+          if (buildListAnterior.isListSearchFull) {
+            mapsSearch[query] = ListSearchBuild<T>(
+                listSearch: listSearch,
+                // se a anterior esta full a atual tb.
+                isListSearchFull: true);
+            mapsSearch[query].listSearch =
+                sortCompareListSearch(mapsSearch[query].listSearch);
+            return mapsSearch[query];
+          }
           listSearch.clear();
           listSearch = listFull
               .where((element) => _filters(stringFilter(element), query))
@@ -184,7 +193,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase<T>
             }
           }
         }
-        // sem cache da query
+        // sem cache da query.
       } else {
         if (buildListAnterior.listSearch.isNotEmpty) {
           mapsSearch[query] = ListSearchBuild<T>(
@@ -200,6 +209,15 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase<T>
             pageSearch = 1;
           }
         } else {
+          if (buildListAnterior.isListSearchFull) {
+            mapsSearch[query] = ListSearchBuild<T>(
+                listSearch: listSearch,
+                // se a anterior esta full a atual tb.
+                isListSearchFull: true);
+            mapsSearch[query].listSearch =
+                sortCompareListSearch(mapsSearch[query].listSearch);
+            return mapsSearch[query];
+          }
           listSearch.clear();
           listSearch = listFull
               .where((element) => _filters(stringFilter(element), query))
@@ -394,6 +412,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase<T>
         pageSearch++;
         newSearchPageFuture();
       } else {
+        oneMoreSearchPage = false;
         mapsSearch[query].listSearch.addAll(listData);
 
         if (isSearchModePage) {
@@ -479,7 +498,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase<T>
       list.sort(compareSort);
     }*/
 
-    if (compare) {
+    if (sortCompare) {
       list.sort((a, b) => stringFilter(a).compareTo(stringFilter(b)));
     }
   }
@@ -489,7 +508,7 @@ class SearcherPagePaginationFutureController<T> extends SeacherBase<T>
       list.sort(compareSort);
     }
     */
-    if (compare) {
+    if (sortCompare) {
       list.sort((a, b) => stringFilter(a).compareTo(stringFilter(b)));
     }
 

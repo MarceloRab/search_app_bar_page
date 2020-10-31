@@ -37,7 +37,7 @@ class SimpleAppBarController<T> implements SeacherBase<T> {
   set isModSearch(bool value) => _isModSearch.value = value;
 
   @override
-  bool compare = true;
+  bool sortCompare = true;
 
   Worker _worker;
 
@@ -55,7 +55,7 @@ class SimpleAppBarController<T> implements SeacherBase<T> {
   SimpleAppBarController({
     @required this.listFull,
     this.stringFilter,
-    this.compare,
+    this.sortCompare,
     this.filtersType = FiltersTypes.contains,
   }) {
     if (stringFilter == null) {
@@ -91,7 +91,7 @@ class SimpleAppBarController<T> implements SeacherBase<T> {
 
   @override
   void sortCompareList(List<T> list) {
-    if (compare) {
+    if (sortCompare) {
       list.sort((a, b) => stringFilter(a).compareTo(stringFilter(b)));
     }
   }

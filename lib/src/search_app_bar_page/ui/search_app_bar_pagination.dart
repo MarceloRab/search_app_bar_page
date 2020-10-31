@@ -9,7 +9,7 @@ import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/fil
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 
 import '../../../search_app_bar_page.dart';
-import '../controller/searcher_page_pagination_future_controller.dart';
+import '../controller/searcher_page_pagination_controller.dart';
 import 'core/search_app_bar/search_app_bar.dart';
 
 class SearchAppBarPagination<T> extends StatefulWidget {
@@ -125,9 +125,9 @@ class SearchAppBarPagination<T> extends StatefulWidget {
   /// The list will be filtered by the person.name contains (default) a query.
   final StringFilter<T> stringFilter;
 
-  ///[compare] Your list will be ordered by the same function [stringFilter].
-  /// True by default.
-  final bool compare;
+  ///[sortCompare] Your list will be ordered by the same function
+  ///[stringFilter]. True by default.
+  final bool sortCompare;
 
   //final bool cache;
 
@@ -139,7 +139,7 @@ class SearchAppBarPagination<T> extends StatefulWidget {
     Key key,
     @required this.futureFetchPageItems,
     @required this.paginationItemBuilder,
-    this.compare = true,
+    this.sortCompare = true,
     this.numItemsPage,
     this.widgetEndScrollPage,
     this.initialData,
@@ -222,7 +222,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
   Widget _widgetNothingFound;
   Widget _widgetEndScrollPage;
 
-  SearcherPagePaginationFutureController<T> _controller;
+  SearcherPagePaginationController<T> _controller;
 
   @override
   void initState() {
@@ -237,10 +237,10 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
     }
     super.initState();
 
-    _controller = SearcherPagePaginationFutureController<T>(
+    _controller = SearcherPagePaginationController<T>(
         stringFilter: widget.stringFilter,
         //compareSort: widget.compareSort,
-        compare: widget.compare,
+        sortCompare: widget.sortCompare,
         filtersType: widget.filtersType)
       ..onInitFilter();
 
@@ -336,26 +336,26 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
     if (_activeListSearchCallbackIdentity != null) {
       _unsubscribeSearhCallBack();
     }
-    final SearchCallBack callbackIdentity = SearchCallBack(query);
-    _activeListSearchCallbackIdentity = callbackIdentity;
+    final SearchCallBack callbackSearchIdentity = SearchCallBack(query);
+    _activeListSearchCallbackIdentity = callbackSearchIdentity;
     if (!scroollEndPage) {
       _controller.waiting();
     }
 
     widget.futureFetchPageItems(_controller.pageSearch, query).then((data) {
-      if (_activeListSearchCallbackIdentity == callbackIdentity) {
+      if (_activeListSearchCallbackIdentity == callbackSearchIdentity) {
         _controller.handleListDataSearchList(
             listData: data,
-            query: callbackIdentity.query,
+            query: callbackSearchIdentity.query,
             newSearchPageFuture: () {
               //Nova pagina pela pagina anterior incompleta
               _futureSearchPageQuery(query, scroollEndPage: true);
             });
       }
     }, onError: (Object error) {
-      if (_activeListSearchCallbackIdentity == callbackIdentity) {
+      if (_activeListSearchCallbackIdentity == callbackSearchIdentity) {
         _controller.oneMoreSearchPage = false;
-        _controller.refazFutureSearchQuery(callbackIdentity.query);
+        _controller.refazFutureSearchQuery(callbackSearchIdentity.query);
 
         _controller.withError(error);
       }
@@ -379,7 +379,6 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
               _controller.withData(listBuilder.listSearch);
             } else {
               debugPrint('listFullSearchQuery '
-                  // ignore: lines_longer_than_80_chars
                   '${listBuilder.listSearch.toString()}');
 
               if (listBuilder.listSearch.length -
@@ -538,6 +537,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
         _controller.withData(listBuilder.listSearch);
       } else {
         if (listBuilder.listSearch.length < _controller.numItemsPage) {
+          _controller.mapsSearch[query].listSearch.clear();
           _futureSearchPageQuery(query);
         } else {
           _controller.withData(listBuilder.listSearch);
@@ -556,7 +556,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
 
     _controller.stringFilter = widget.stringFilter;
     //_controller.compareSort = widget.compareSort;
-    _controller.compare = widget.compare;
+    _controller.sortCompare = widget.sortCompare;
     _controller.filtersType = widget.filtersType;
     _controller.onInitFilter();
 

@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_page_pagination_future_controller.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_page_pagination_controller.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 
 import 'data_fake_api/list_person.dart';
 
-final controllerPagination = SearcherPagePaginationFutureController<Person>(
+final controllerPagination = SearcherPagePaginationController<Person>(
   //listStream: widget._stream,
   stringFilter: (Person person) => person.name,
   //compareSort: (Person a, Person b) => a.name.compareTo(b.name),

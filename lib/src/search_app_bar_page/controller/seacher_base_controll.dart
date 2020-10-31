@@ -17,5 +17,5 @@ abstract class SeacherBase<T> {
 
   void sortCompareList(List<T> list);
 
-  bool compare = true;
+  bool sortCompare = true;
 }

@@ -1,4 +1,5 @@
 import 'package:diacritic/diacritic.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:search_app_bar_page/search_app_bar_page.dart';
@@ -368,23 +369,44 @@ class SearchAppBarPaginationTest extends StatefulWidget {
       _SearchAppBarPaginationTestState();
 }
 
+class InterteceptorDio {}
+
 class _SearchAppBarPaginationTestState
     extends State<SearchAppBarPaginationTest> {
-  @override
-  void initState() {
-    super.initState();
+  Dio _dio;
 
-    /*Future.delayed(const Duration(seconds: 5), () {
-      setState(() {
-        _listPerson = dataListPerson3.sublist(0, 17);
-        _numItemsPage = 15;
-      });
-    });*/
+  Future<List<Person>> _futureList(int page, String query) async {
+    final response = await _dio.get('/users', queryParameters: {
+      /// It is necessary to insert sortBy to not bring names
+      /// in wrong API orders.
+      'sortBy': 'name',
+      'name': query,
+      'page': page,
+      'limit': 15
+    });
+
+    return (response.data as List)
+        .map((element) => Person.fromMap(element))
+        .toList();
   }
 
-  //List<Person> _listPerson = null;
+  @override
+  void initState() {
+    _dio = Dio(
+        BaseOptions(baseUrl: 'https://5f988a5242706e001695875d.mockapi.io'));
 
-  //int _numItemsPage = null;
+    /*_dio.interceptors
+        .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
+      debugPrint(options.uri.toString());
+      return options;
+    }, onResponse: (Response response) async {
+      // debugPrint(prettyJson(response.data, indent: 2));
+      return response;
+    }, onError: (DioError e) async {
+      return e;
+    }));*/
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -398,7 +420,8 @@ class _SearchAppBarPaginationTestState
           'Search Pagination',
           style: TextStyle(fontSize: 20),
         ),
-        futureFetchPageItems: _futureListPerson,
+        //futureFetchPageItems: _futureListPerson,
+        futureFetchPageItems: _futureList,
         stringFilter: (Person person) => person.name,
         //compare: false,
         filtersType: FiltersTypes.contains,
@@ -408,30 +431,37 @@ class _SearchAppBarPaginationTestState
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4)),
-              // color: Theme.of(context).primaryColorDark,
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 130.0, vertical: 20),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Name: ${objectIndex.name}',
-                        style: TextStyle(fontSize: 16),
+                padding: const EdgeInsets.all(14.0),
+                child: ListTile(
+                  contentPadding: EdgeInsets.symmetric(vertical: 10),
+                  title: Container(
+                    height: 200,
+                    width: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withAlpha(50),
+                      image: DecorationImage(
+                        fit: BoxFit.fitWidth,
+                        image: NetworkImage(
+                          '${objectIndex.avatar}',
+                        ),
                       ),
                     ),
-                    Expanded(
-                      child: Text(
-                        'Age: ${objectIndex.age.toStringAsFixed(2)}',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    )
-                  ],
+                  ),
+                  subtitle: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      '${objectIndex.name}',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ),
               ));
         });
   }
 
+  /// How to configure the server side.
   Future<List<Person>> _futureListPerson(int page, String query) async {
     final size = 15;
     List<Person> list = [];
@@ -455,9 +485,7 @@ class _SearchAppBarPaginationTestState
       int totalPages = (dataListPerson3.length / size).ceil();
       totalPages = totalPages == 0 ? 1 : totalPages;
 
-      //print('TotalPages = ' + totalPages.toString());
       if (page > totalPages) {
-        //print('--TEM--nada');
         return list;
       }
 
@@ -466,9 +494,6 @@ class _SearchAppBarPaginationTestState
           lastElement > dataListPerson3.length
               ? dataListPerson3.length
               : lastElement);
-      /*if (list.length < size) {
-        print('-###-  Last  ---Page --- Full');
-      }*/
     } else {
       final listQuery =
           dataListPerson3.where((element) => contains(element, query)).toList();
@@ -476,19 +501,12 @@ class _SearchAppBarPaginationTestState
       int totalQueryPages = (listQuery.length / size).ceil();
       totalQueryPages = totalQueryPages == 0 ? 1 : totalQueryPages;
 
-      //print('TotalQueryPages = ' + totalQueryPages.toString());
-
       if (page > totalQueryPages) {
-        //print('--TEM---nada');
         return list;
       }
 
       list = listQuery.sublist(fistElement,
           lastElement > listQuery.length ? listQuery.length : lastElement);
-
-      /*if (list.length < size) {
-        print('-###-  LAst -- Page --- Search');
-      }*/
     }
 
     //throw Exception('Voluntary Error');
@@ -581,7 +599,7 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
     _controller = SimpleAppBarController<Person>(
       listFull: widget.listFull,
       stringFilter: widget.stringFilter,
-      compare: widget.compare ?? true,
+      sortCompare: widget.compare ?? true,
       filtersType: widget.filtersType,
     );
     super.initState();
@@ -596,7 +614,7 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
 
     _controller.stringFilter = widget.stringFilter;
     //_controller.compareSort = widget.compareSort;
-    _controller.compare = widget.compare;
+    _controller.sortCompare = widget.compare;
     _controller.filtersType = widget.filtersType;
     _controller.filter = widget.filtersType;
 
@@ -689,27 +707,40 @@ class Person {
   final String name;
 
   final int age;
+  final String id;
+  final String avatar;
+  final String username;
 
-  Person({this.name, this.age});
+  Person({
+    this.name,
+    this.age,
+    this.id,
+    this.avatar,
+    this.username,
+  });
 
   @override
   String toString() {
     return 'Person{name: $name, age: $age}';
   }
 
-/* @override
-   CacheJson fromMap(Map<String, dynamic> map) {
-    return Person(
+  factory Person.fromMap(Map<String, dynamic> map) {
+    return new Person(
       name: map['name'] as String,
-      age: map['age'] as int,
+      age: map['age'] as int ?? 0,
+      id: map['id'] as String,
+      avatar: map['avatar'] as String,
+      username: map['username'] as String,
     );
   }
 
-  @override
   Map<String, dynamic> toMap() {
     return {
       'name': this.name,
       'age': this.age,
+      'id': this.id,
+      'avatar': this.avatar,
+      'username': this.username,
     };
-  }*/
+  }
 }
