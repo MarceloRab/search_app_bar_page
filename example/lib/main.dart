@@ -161,7 +161,7 @@ class _SearchPageState extends State<SearchPage> {
       //listFull: dataList, // Lista String
       listFull: dataListPerson2,
       stringFilter: (Person person) => person.name,
-      //compare: false,
+      //sortCompare: false,
       ///--------------------------------------------
       /// ✅ Add the auth reactive parameters.
       ///  The body will be rebuilt when the auth is false.
@@ -252,7 +252,7 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
       ),
       listStream: _streamListPerson,
       stringFilter: (Person person) => person.name,
-      //compare: false,
+      //sortCompare: false,
       filtersType: FiltersTypes.contains,
       obxListBuilder: (context, list, isModSearch) {
         // ☑️ This function is inside an Obx.
@@ -369,8 +369,6 @@ class SearchAppBarPaginationTest extends StatefulWidget {
       _SearchAppBarPaginationTestState();
 }
 
-class InterteceptorDio {}
-
 class _SearchAppBarPaginationTestState
     extends State<SearchAppBarPaginationTest> {
   Dio _dio;
@@ -423,7 +421,7 @@ class _SearchAppBarPaginationTestState
         //futureFetchPageItems: _futureListPerson,
         futureFetchPageItems: _futureList,
         stringFilter: (Person person) => person.name,
-        //compare: false,
+        //sortCompare: false,
         filtersType: FiltersTypes.contains,
         paginationItemBuilder:
             (BuildContext context, int index, Person objectIndex) {
@@ -658,7 +656,10 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
       /// -------------------------------------
       body: RxListWidget<Person>(
         controller: _controller,
-        listBuilder: (context, list, isModSearch) {
+        obxListBuilder: (context, list, isModSearch) {
+          // ☑️ This function is inside an Obx.
+          // Place other reactive verables into it.
+
           if (list.isEmpty) {
             return Center(
                 child: Text(

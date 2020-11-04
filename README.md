@@ -57,8 +57,8 @@ SearchAppBarPage(
        /// Parameters para o SearcherGetController
        /// final List<T> listFull;
        @required this.listFull, 
-        /// [listBuilder] Function applied when it is filtering in search.
-       @required this.listBuilder,
+        /// [obxListBuilder] Function applied when it is filtering in search.
+       @required this.obxListBuilder,
         /// [stringFilter] Required if you type. 
        ///You should at least type with String.
        this.stringFilter
@@ -73,7 +73,43 @@ SearchAppBarPage(
 import 'package:flutter/material.dart';
 import 'package:search_app_bar_page/search_app_bar_page.dart';
 
-class SearchPage extends StatelessWidget {
+class SearchPage extends StatefulWidget {
+  @override
+  _SearchPageState createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  TestController controll_1;
+
+  /// ## ✳️ Learning both ways to add reactive variables.
+  @override
+  void initState() {
+    ///-------------------------------------------------------------------
+    ///  Add other reactive parameters inside the body.
+    /// ✅  Boot your controller into a StatefulWidget.
+    ///-------------------------------------------------------------------
+    controll_1 = Get.find<TestController>();
+    super.initState();
+
+    Future.delayed(const Duration(seconds: 4), () {
+      ///------------------------------------------
+      /// Test to check the reactivity of the screen.
+      /// Reactive variable as parameter - [rxBoolAuth]
+      ///------------------------------------------
+      /// 👇🏼
+      controll_1.changeAuth = true;
+    });
+
+    Future.delayed(const Duration(seconds: 6), () {
+      ///------------------------------------------
+      /// Test to check the reactivity of the screen.
+      ///
+      /// Reactive variable as parameter within the function [obxListBuilder]
+      ///------------------------------------------
+      /// 👇🏼
+      controll_1.rxList.update((value) {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +117,7 @@ class SearchPage extends StatelessWidget {
     return SearchAppBarPage<Person>(
       magnifyinGlassColor: Colors.white,
       searchAppBarcenterTitle: true,
-      searchAppBarhintText: 'Pesquise um Nome',
+      searchAppBarhintText: 'Search for a name',
       searchAppBartitle: Text(
         'Search Page',
         style: TextStyle(fontSize: 20),
@@ -89,11 +125,41 @@ class SearchPage extends StatelessWidget {
       //listFull: dataList, // Lista String
       listFull: dataListPerson2,
       stringFilter: (Person person) => person.name,
-      //sortCompare: false,
+      //compare: false,
+      ///--------------------------------------------
+      /// ✅ Add the auth reactive parameters.
+      ///  The body will be rebuilt when the auth is false.
+      ///---------------------------------------------
+      rxBoolAuth: RxBoolAuth.input(
+          rxBoolAuthm: Get.find<TestController>().rxAuth,
+          authFalseWidget: () => Center(
+                child: Text(
+                  'Please login.',
+                  style: TextStyle(fontSize: 22),
+                ),
+              )),
       filtersType: FiltersTypes.contains,
-      listBuilder: (list, isModSearch) {
-        // Rertorne seu widget com a lista para o body da page
-        // Pode alterar a tela relacionando o tipo de procura
+      obxListBuilder: (context, list, isModSearch) {
+        // ☑️ This function is inside an Obx.
+        // Place other reactive verables into it.
+
+        ///----------------------------------------------------
+        /// Changes to the rxList will also rebuild the widget.
+        ///----------------------------------------------------
+
+        print(' TEST -- ${controll_1.rxList.length.toString()} ');
+
+        ///-------------------------------------------------------------
+        /// Changes to the filtered list will also reconstruct the body.
+        ///-------------------------------------------------------------
+
+        if (list.isEmpty) {
+          return Center(
+              child: Text(
+            'NOTHING FOUND',
+            style: TextStyle(fontSize: 14),
+          ));
+        }
         return ListView.builder(
           itemCount: list.length,
           itemBuilder: (_, index) {
@@ -126,6 +192,7 @@ class SearchPage extends StatelessWidget {
       },
     );
   }
+}
 
   final dataListPerson2 = <Person>[
     Person(name: 'Rafaela Pinho', age: 30),
@@ -146,7 +213,6 @@ class SearchPage extends StatelessWidget {
     Person(name: 'Rafael Peireira', age: 15),
     Person(name: 'Nome Comum', age: 33),
   ];
-}
 
 class Person {
   final String name;
@@ -176,9 +242,9 @@ SearchAppBarPageStream(
         //...
     /// final Stream<List<T>> listStream;
     @required this.listStream, 
-    ///final FunctionList<T> listBuilder; 
+    ///final FunctionList<T> obxListBuilder; 
     /// Function applied when receiving data through Stream or filtering in search.
-    @required this.listBuilder,
+    @required this.obxListBuilder,
     /// [stringFilter] Required if you type. 
        ///You should at least type with String.
     this.stringFilter
@@ -195,67 +261,105 @@ import 'package:flutter/material.dart';
 import 'package:search_app_bar_page/search_app_bar_page.dart';
 
 // ignore: must_be_immutable
-class SearchAppBarStream extends StatelessWidget {
+class SearchAppBarStream extends StatefulWidget {
+  const SearchAppBarStream({Key key}) : super(key: key);
+
+  @override
+  _SearchAppBarStreamState createState() => _SearchAppBarStreamState();
+}
+
+class _SearchAppBarStreamState extends State<SearchAppBarStream> {
   @override
   Widget build(BuildContext context) {
     return SearchAppBarPageStream<Person>(
+      //initialData: _initialData,
       magnifyinGlassColor: Colors.white,
       searchAppBarcenterTitle: true,
-      searchAppBarhintText: 'Pesquise um Nome',
+      searchAppBarhintText: 'Search for a name',
       searchAppBartitle: Text(
         'Search Stream Page',
         style: TextStyle(fontSize: 20),
       ),
       listStream: _streamListPerson,
       stringFilter: (Person person) => person.name,
-      //sortCompare: false,
+      //compare: false,
       filtersType: FiltersTypes.contains,
-      listBuilder: (list, isModSearch) {
-        // Rertorne seu widget com a lista para o body da page
-        // Pode alterar a tela relacionando o tipo de procura
-        return ListView.builder(
-          itemCount: list.length,
-          itemBuilder: (_, index) {
-            return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4)),
-                // color: Theme.of(context).primaryColorDark,
-                child: Padding(
-                  padding: const EdgeInsets.all(14.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'Name: ${list[index].name}',
-                          style: TextStyle(fontSize: 16),
+      obxListBuilder: (context, list, isModSearch) {
+        // ☑️ This function is inside an Obx.
+        // Place other reactive verables into it.
+        if (list.isEmpty) {
+          return Center(
+              child: Text(
+            'NOTHING FOUND',
+            style: TextStyle(fontSize: 14),
+          ));
+        }
+        return Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: list.length,
+                itemBuilder: (_, index) {
+                  return Card(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 4),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4)),
+                      // color: Theme.of(context).primaryColorDark,
+                      child: Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Name: ${list[index].name}',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                'Age: ${list[index].age.toStringAsFixed(2)}',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                            )
+                          ],
                         ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          'Age: ${list[index].age.toStringAsFixed(2)}',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      )
-                    ],
-                  ),
-                ));
-          },
+                      ));
+                },
+              ),
+            ),
+            MaterialButton(
+                onPressed: () {
+                  Get.toNamed(Routes.PAGE_2);
+                },
+                child: Text(
+                  'Ir para SearchPage',
+                  style: TextStyle(fontSize: 20),
+                )),
+            MaterialButton(
+                onPressed: () {
+                  setState(() {});
+                },
+                child: Text(
+                  'SetState',
+                  style: TextStyle(fontSize: 20),
+                )),
+          ],
         );
       },
     );
   }
 
   Stream<List<Person>> _streamListPerson = (() async* {
-      await Future<void>.delayed(Duration(seconds: 3));
-      //yield null;
-      yield dataListPerson;
-      await Future<void>.delayed(Duration(seconds: 4));
-      yield dataListPerson2;
-      await Future<void>.delayed(Duration(seconds: 5));
-      //throw Exception('Erro voluntario');
-      yield dataListPerson3;
-    })();
+    await Future<void>.delayed(Duration(seconds: 3));
+    //yield null;
+    yield dataListPerson;
+    await Future<void>.delayed(Duration(seconds: 4));
+    yield dataListPerson2;
+    await Future<void>.delayed(Duration(seconds: 5));
+    //throw Exception('Erro voluntario');
+    yield dataListPerson3;
+  })();
 }
 
 final dataListPerson = <Person>[
@@ -351,18 +455,31 @@ class SearchAppBarPaginationTest extends StatefulWidget {
 
 class _SearchAppBarPaginationTestState
     extends State<SearchAppBarPaginationTest> {
+  Dio _dio;
+
+  Future<List<Person>> _futureList(int page, String query) async {
+    final response = await _dio.get('/users', queryParameters: {
+      /// It is necessary to insert sortBy to not bring names
+      /// in wrong API orders.
+      'sortBy': 'name',
+      'name': query,
+      'page': page,
+      'limit': 15
+    });
+
+    return (response.data as List)
+        .map((element) => Person.fromMap(element))
+        .toList();
+  }
+
   @override
   void initState() {
+    _dio = Dio(
+        BaseOptions(baseUrl: 'https://5f988a5242706e001695875d.mockapi.io'));
+
     super.initState();
-    /*Future.delayed(const Duration(seconds: 5), () {
-      setState(() {
-        _listPerson = dataListPerson3.sublist(0, 17);
-        _numItemsPage = 15;
-      });
-    });*/
   }
-  //List<Person> _listPerson = null;
-  //int _numItemsPage = null;
+
   @override
   Widget build(BuildContext context) {
     return SearchAppBarPagination<Person>(
@@ -375,9 +492,10 @@ class _SearchAppBarPaginationTestState
           'Search Pagination',
           style: TextStyle(fontSize: 20),
         ),
-        futureFetchPageItems: _futureListPerson,
+        //futureFetchPageItems: _futureListPerson,
+        futureFetchPageItems: _futureList,
         stringFilter: (Person person) => person.name,
-        //sortCompare: false,
+        //compare: false,
         filtersType: FiltersTypes.contains,
         paginationItemBuilder:
             (BuildContext context, int index, Person objectIndex) {
@@ -385,25 +503,31 @@ class _SearchAppBarPaginationTestState
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4)),
-              // color: Theme.of(context).primaryColorDark,
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 130.0, vertical: 20),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Name: ${objectIndex.name}',
-                        style: TextStyle(fontSize: 16),
+                padding: const EdgeInsets.all(14.0),
+                child: ListTile(
+                  contentPadding: EdgeInsets.symmetric(vertical: 10),
+                  title: Container(
+                    height: 200,
+                    width: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withAlpha(50),
+                      image: DecorationImage(
+                        fit: BoxFit.fitWidth,
+                        image: NetworkImage(
+                          '${objectIndex.avatar}',
+                        ),
                       ),
                     ),
-                    Expanded(
-                      child: Text(
-                        'Age: ${objectIndex.age.toStringAsFixed(2)}',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    )
-                  ],
+                  ),
+                  subtitle: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      '${objectIndex.name}',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ),
               ));
         });
@@ -512,14 +636,14 @@ class SimpleAppBarPage extends StatefulWidget {
   final StringFilter<Person> stringFilter;
   final FiltersTypes filtersType;
   final List<Person> listFull;
-  final bool sortCompare;
+  final bool compare;
 
   const SimpleAppBarPage(
       {Key key,
-        @required this.stringFilter,
-        this.filtersType,
-        this.listFull,
-        this.sortCompare})
+      @required this.stringFilter,
+      @required this.listFull,
+      this.filtersType,
+      this.compare})
       : super(key: key);
 
   @override
@@ -537,11 +661,12 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
     _controller = SimpleAppBarController<Person>(
       listFull: widget.listFull,
       stringFilter: widget.stringFilter,
-      sortCompare: widget.sortCompare,
+      sortCompare: widget.compare ?? true,
       filtersType: widget.filtersType,
     );
     super.initState();
   }
+
   /// -------------------------------------------------------------------------
   /// It was necessary to implement didUpdateWidget for setState and hot reload.
   /// -------------------------------------------------------------------------
@@ -551,7 +676,7 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
 
     _controller.stringFilter = widget.stringFilter;
     //_controller.compareSort = widget.compareSort;
-    _controller.sortCompare = widget.sortCompare;
+    _controller.sortCompare = widget.compare;
     _controller.filtersType = widget.filtersType;
     _controller.filter = widget.filtersType;
 
@@ -567,8 +692,9 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
       }
     }
   }
+
   /// ----------------------------
-  /// It is necessary to close the controller.
+  /// Controller close-up required.
   /// ----------------------------
   @override
   void dispose() {
@@ -579,37 +705,38 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /// -------------------------------------------
-      /// Import SearchAppBar
-      /// -------------------------------------------
       appBar: SearchAppBar(
           controller: _controller,
           title: Text(
-            'Search Manual Page',
+            'Search Page',
             style: TextStyle(fontSize: 20),
           ),
           centerTitle: true,
           hintText: 'Search for a name',
           magnifyinGlassColor: Colors.white),
-      /// -------------------------------------------
-      /// Import reactive widget for the filtered list.
-      /// -------------------------------------------
+
+      /// -------------------------------------
+      /// Reactive widget for the filtered list.
+      /// -------------------------------------
       body: RxListWidget<Person>(
         controller: _controller,
-        listBuilder: (context, list, isModSearch) {
+        obxListBuilder: (context, list, isModSearch) {
+          // ☑️ This function is inside an Obx.
+          // Place other reactive verables into it.
+
           if (list.isEmpty) {
             return Center(
                 child: Text(
-                  'NOTHING FOUND',
-                  style: TextStyle(fontSize: 14),
-                ));
+              'NOTHING FOUND',
+              style: TextStyle(fontSize: 14),
+            ));
           }
           return ListView.builder(
             itemCount: list.length,
             itemBuilder: (_, index) {
               return Card(
                   margin:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4)),
                   // color: Theme.of(context).primaryColorDark,

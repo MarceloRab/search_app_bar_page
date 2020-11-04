@@ -4,15 +4,15 @@ import 'package:search_app_bar_page/src/search_app_bar_page/controller/simple_ap
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 
 class RxListWidget<T> extends StatelessWidget {
-  /// [listBuilder] Function applied when it is filtered.
-  final WidgetsListBuilder<T> listBuilder;
+  /// [obxListBuilder] Function applied when it is filtered.
+  final WidgetsListBuilder<T> obxListBuilder;
   final SimpleAppBarController<T> controller;
 
   const RxListWidget(
-      {Key key, @required this.controller, @required this.listBuilder})
+      {Key key, @required this.controller, @required this.obxListBuilder})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) => Obx(() =>
-      listBuilder(context, controller.listSearch, controller.isModSearch));
+      obxListBuilder(context, controller.listSearch, controller.isModSearch));
 }

@@ -1,5 +1,9 @@
-## [1.4.0]
-* Testing with a real API. See complete example.
+## [1.4.1]
+* Now the builders methods have been changed to obxBuilders, as they can receive Rx variables to 
+reconstruct the screens.
+
+## [1.4.0+1]
+* Testing SearchAppBarPagination with a real API. See complete example. 
 
 ## [1.3.3]
 * Corrections in didUpdateWidget for setState.
