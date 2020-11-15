@@ -1,3 +1,6 @@
+## [1.4.2]
+* Only improvements in the presentation of exceptions.
+
 ## [1.4.1]
 * Now the builders methods have been changed to obxBuilders, as they can receive Rx variables to 
 reconstruct the screens.

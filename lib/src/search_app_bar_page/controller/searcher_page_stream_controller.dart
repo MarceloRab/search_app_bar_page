@@ -54,7 +54,9 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
         stringFilter = (T value) => value as String;
       } else {
         throw Exception(
-            'You need to type your page or it must be typed as String');
+            'You need to construct your object s return String in the '
+            'stringFilter function. If there is no return String, your '
+            'list object must be a String.');
       }
     }
   }
