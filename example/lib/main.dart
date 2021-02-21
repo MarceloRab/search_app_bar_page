@@ -143,7 +143,7 @@ class _SearchPageState extends State<SearchPage> {
       /// Reactive variable as parameter within the function [obxListBuilder]
       ///------------------------------------------
       /// 👇🏼
-      controll_1.rxList.update((value) {});
+      controll_1.rxList.refresh();
     });
   }
 

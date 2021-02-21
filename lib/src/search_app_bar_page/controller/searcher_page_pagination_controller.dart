@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:get_state_manager/get_state_manager.dart';
+import 'package:get/state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
@@ -11,8 +11,8 @@ typedef CallBack = void Function();
 
 typedef CallBackListData<T> = void Function(List<T> listData);
 
-class SearcherPagePaginationController<T> extends SeacherBase<T>
-    with SearcherPaginnationBase<T> {
+class SearcherPagePaginationController<T>
+    implements SeacherBase<T>, SearcherPaginnationBase<T> {
   final RxBool _isModSearch = false.obs;
 
   @override
@@ -29,13 +29,14 @@ class SearcherPagePaginationController<T> extends SeacherBase<T>
   @override
   final rxSearch = ''.obs;
 
-  final RxBool _bancoInit = false.obs;
+  @override
+  final RxBool bancoInit = false.obs;
 
   @override
-  set bancoInit(bool value) => _bancoInit.value = value;
+  set bancoInitValue(bool value) => bancoInit.value = value;
 
   @override
-  bool get bancoInit => _bancoInit.value;
+  bool get bancoInitValue => bancoInit.value;
 
   bool finishPage = false;
 
@@ -291,9 +292,11 @@ class SearcherPagePaginationController<T> extends SeacherBase<T>
   }
 
   set initialChangeList(List<T> list) {
-    if (!bancoInit) {
-      bancoInit = true;
-      _bancoInit.close();
+    if (!bancoInitValue) {
+      bancoInitValue = true;
+      if (bancoInit.canUpdate) {
+        bancoInit.close();
+      }
     }
 
     listFull.addAll(list);
@@ -313,9 +316,11 @@ class SearcherPagePaginationController<T> extends SeacherBase<T>
 
   void wrapListFull(List<T> listData) {
     // para aparecer a lupa no AppBar
-    if (!bancoInit) {
-      bancoInit = true;
-      _bancoInit.close();
+    if (!bancoInitValue) {
+      bancoInitValue = true;
+      if (bancoInit.canUpdate) {
+        bancoInit.close();
+      }
     }
 
     listFull.addAll(listData);

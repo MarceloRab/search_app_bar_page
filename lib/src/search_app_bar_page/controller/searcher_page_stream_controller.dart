@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:get_state_manager/get_state_manager.dart';
+import 'package:get/state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
@@ -63,25 +63,19 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
 
   var listFull = <T>[];
 
-  set initialChangeList(List<T> list) {
-    if (!bancoInit) {
-      bancoInit = true;
-      _bancoInit.close();
+  /*set initialChangeList(List<T> list) {
+    if (!bancoInitValue) {
+      bancoInitValue = true;
+      if (bancoInit.canUpdate) {
+        bancoInit.close();
+      }
     }
 
     listFull = list;
     sortCompareList(listFull);
     //onSearchList(list);
     rxSearch('');
-  }
-
-  final RxBool _bancoInit = false.obs;
-
-  @override
-  set bancoInit(bool value) => _bancoInit.value = value;
-
-  @override
-  bool get bancoInit => _bancoInit.value;
+  }*/
 
   void onInitFilter() {
     if (filtersType.toString() == FiltersTypes.startsWith.toString()) {
@@ -91,10 +85,6 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
     } else {
       _filters = Filters.contains;
     }
-  }
-
-  void bancoInitClose() {
-    _bancoInit.close();
   }
 
   List<T> refreshSeachList2(String value) {

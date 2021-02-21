@@ -1,3 +1,7 @@
+## [1.5.0]
+* Update packages. Need to change from get_state_manager to get. 
+  The get_state_manager package has been deprecated.
+
 ## [1.4.2]
 * Only improvements in the presentation of exceptions.
 

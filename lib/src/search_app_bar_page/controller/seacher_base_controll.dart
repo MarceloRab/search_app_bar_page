@@ -1,4 +1,4 @@
-import 'package:get_state_manager/get_state_manager.dart';
+import 'package:get/state_manager.dart';
 
 abstract class SeacherBase<T> {
   final RxBool _isModSearch = false.obs;
@@ -9,11 +9,11 @@ abstract class SeacherBase<T> {
 
   final RxString rxSearch = ''.obs;
 
-  final RxBool _bancoInit = false.obs;
+  final RxBool bancoInit = false.obs;
 
-  set bancoInit(bool value) => _bancoInit.value = value;
+  set bancoInitValue(bool value) => bancoInit.value = value;
 
-  bool get bancoInit => _bancoInit.value;
+  bool get bancoInitValue => bancoInit.value;
 
   void sortCompareList(List<T> list);
 

@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:get_state_manager/get_state_manager.dart';
+import 'package:get/state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/widgets/connecty_widget.dart';
 
@@ -189,7 +189,7 @@ class _SearchAppBarState extends State<SearchAppBar>
     }
 
     return Obx(() {
-      if (widget.controller.bancoInit)
+      if (widget.controller.bancoInitValue)
         // if (widget.controller.listSearch != null)
         return AppBar(
           backgroundColor:

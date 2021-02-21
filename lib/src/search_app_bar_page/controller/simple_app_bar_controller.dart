@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:get_state_manager/get_state_manager.dart';
+import 'package:get/state_manager.dart';
 import 'package:meta/meta.dart';
 import 'package:search_app_bar_page/search_app_bar_page.dart';
 
@@ -41,16 +41,20 @@ class SimpleAppBarController<T> implements SeacherBase<T> {
 
   Worker _worker;
 
-  final RxBool _bancoInit = true.obs;
+  /* @override
+  set bancoInitValue(bool value) => bancoInit.value = value;
 
   @override
-  set bancoInit(bool value) => _bancoInit.value = value;
+  bool get bancoInitValue => bancoInit.value;*/
 
   @override
-  bool get bancoInit => _bancoInit.value;
+  final RxBool bancoInit = false.obs;
 
   @override
   final RxString rxSearch = ''.obs;
+
+  @override
+  bool get bancoInitValue => bancoInit.value;
 
   SimpleAppBarController({
     @required this.listFull,
@@ -67,7 +71,10 @@ class SimpleAppBarController<T> implements SeacherBase<T> {
             'You need to type your page or it must be typed as String');
       }
     }
-    _bancoInit.close();
+
+    if (bancoInit.canUpdate) {
+      bancoInit.close();
+    }
     sortCompareList(listFull);
     onSearchList(listFull);
     filter = filtersType;
@@ -102,4 +109,7 @@ class SimpleAppBarController<T> implements SeacherBase<T> {
     rxSearch.close();
     listSearch.close();
   }
+
+  @override
+  set bancoInitValue(bool value) => bancoInit.value = value;
 }

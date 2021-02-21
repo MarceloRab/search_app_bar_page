@@ -2,7 +2,7 @@ import 'dart:async';
 //import 'dart:io';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:get_state_manager/get_state_manager.dart';
+import 'package:get/state_manager.dart';
 
 class ConnectController {
   Connectivity connectivity;

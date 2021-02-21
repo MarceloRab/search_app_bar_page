@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:get_state_manager/get_state_manager.dart';
+import 'package:get/state_manager.dart';
 import 'package:meta/meta.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
@@ -21,6 +21,15 @@ class SearcherPageController<T> extends SeacherBase<T> {
   @override
   bool sortCompare = true;
 
+  @override
+  set bancoInitValue(bool value) => bancoInit.value = value;
+
+  @override
+  bool get bancoInitValue => bancoInit.value;
+
+  @override
+  final RxBool bancoInit = true.obs;
+
   final listSearch = <T>[].obs;
   final List<T> listFull;
 
@@ -33,14 +42,6 @@ class SearcherPageController<T> extends SeacherBase<T> {
   //Compare<T> compareSort;
 
   Worker _worker;
-
-  final RxBool _bancoInit = true.obs;
-
-  @override
-  set bancoInit(bool value) => _bancoInit.value = value;
-
-  @override
-  bool get bancoInit => _bancoInit.value;
 
   //StringFilter<T> get _defaultFilter => (T value) => value as String;
 
@@ -59,7 +60,11 @@ class SearcherPageController<T> extends SeacherBase<T> {
             'You need to type your page or it must be typed as String');
       }
     }
-    _bancoInit.close();
+
+    //bancoInit.close();
+    /*if (bancoInit.canUpdate) {
+      bancoInit.close();
+    }*/
     sortCompareList(listFull);
     onSearchList(listFull);
   }

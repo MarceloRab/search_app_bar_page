@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get_state_manager/get_state_manager.dart';
+import 'package:get/state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
 
 class SearchWidget extends StatefulWidget implements PreferredSizeWidget {

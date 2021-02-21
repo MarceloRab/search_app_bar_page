@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:get_state_manager/get_state_manager.dart';
+import 'package:get/state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/connecty_controller.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
@@ -204,10 +204,9 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
   @override
   void initState() {
     super.initState();
+
     _controller = SearcherPageStreamController<T>(
-        //listStream: widget._stream,
         stringFilter: widget.stringFilter,
-        //compareSort: widget.compareSort,
         sortCompare: widget.sortCompare,
         filtersType: widget.filtersType)
       ..onInitFilter();
@@ -364,7 +363,10 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
     _unsubscribeStream();
     _unsubscribeConnecty();
     _controller.onClose();
-    _worker?.dispose();
+    if (_worker?.disposed == true) {
+      _worker?.dispose();
+    }
+
     super.dispose();
   }
 
@@ -377,10 +379,12 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
           _controller.afterError(Exception('It cannot return null. 😢'));
         return;
       } else {
-        if (!_controller.bancoInit) {
+        if (!_controller.bancoInitValue) {
           // Mostrar lupa do Search
-          _controller.bancoInit = true;
-          _controller.bancoInitClose();
+          _controller.bancoInitValue = true;
+          if (_controller.bancoInit.canUpdate) {
+            _controller.bancoInit.close();
+          }
         }
       }
       downConnectyWithoutData = false;

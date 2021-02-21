@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:get_state_manager/get_state_manager.dart';
+import 'package:get/state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/connecty_controller.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
@@ -620,7 +620,10 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
     _scrollController.removeListener(pagesListener);
     _scrollController.dispose();
     _unsubscribeConnecty();
-    _worker?.dispose();
+    if (_worker?.disposed == true) {
+      _worker?.dispose();
+    }
+
     super.dispose();
   }
 
