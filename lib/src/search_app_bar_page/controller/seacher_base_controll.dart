@@ -15,6 +15,12 @@ abstract class SeacherBase<T> {
 
   bool get bancoInitValue => bancoInit.value;
 
+  /* final StreamController<bool> bancoInit = StreamController<bool>();
+
+  set bancoInitValue(bool value) => bancoInit.stream.last = value;
+
+  bool get bancoInitValue => bancoInit.value;
+*/
   void sortCompareList(List<T> list);
 
   bool sortCompare = true;

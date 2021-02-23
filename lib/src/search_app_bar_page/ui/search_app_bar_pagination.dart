@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/state_manager.dart';
+import 'package:get/get.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/connecty_controller.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
@@ -237,12 +238,12 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
     }
     super.initState();
 
-    _controller = SearcherPagePaginationController<T>(
+    _controller = Get.put(SearcherPagePaginationController<T>(
         stringFilter: widget.stringFilter,
         //compareSort: widget.compareSort,
         sortCompare: widget.sortCompare,
         filtersType: widget.filtersType)
-      ..onInitFilter();
+      ..onInitFilter());
 
     _scrollController = ScrollController();
     _scrollController.addListener(pagesListener);

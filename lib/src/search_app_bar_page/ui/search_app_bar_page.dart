@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
+import 'package:get/get.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 import '../controller/searcher_page_controller.dart';
@@ -139,14 +140,14 @@ class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
   @override
   void initState() {
     super.initState();
-    _controller = SearcherPageController<T>(
+    _controller = Get.put(SearcherPageController<T>(
         listFull: widget.listFull,
         stringFilter: widget.stringFilter,
         //compareSort: widget.compareSort,
         sortCompare: widget.sortCompare,
         filtersType: widget.filtersType)
       ..initFilters()
-      ..onReady();
+      ..onReady());
   }
 
   @override

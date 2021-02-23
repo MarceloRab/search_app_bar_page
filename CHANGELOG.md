@@ -1,3 +1,6 @@
+## [1.5.1]
+* Small improvement.
+
 ## [1.5.0]
 * Update packages. Need to change from get_state_manager to get. 
   The get_state_manager package has been deprecated.
