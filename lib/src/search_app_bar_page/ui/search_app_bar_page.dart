@@ -37,7 +37,7 @@ class SearchAppBarPage<T> extends StatefulWidget {
   final Widget searchePageBottomNavigationBar;
   final Widget searchePageBottomSheet;
   final Color searchPageBackgroundColor;
-  final bool resizeToAvoidBottomPadding;
+  //final bool resizeToAvoidBottomPadding;
   final bool resizeToAvoidBottomInset;
   final bool primary;
   final DragStartBehavior drawerDragStartBehavior;
@@ -113,7 +113,7 @@ class SearchAppBarPage<T> extends StatefulWidget {
       this.searchePageBottomNavigationBar,
       this.searchePageBottomSheet,
       this.searchPageBackgroundColor,
-      this.resizeToAvoidBottomPadding,
+      //this.resizeToAvoidBottomPadding,
       this.resizeToAvoidBottomInset,
       this.primary = true,
       this.drawerDragStartBehavior = DragStartBehavior.start,
@@ -215,7 +215,7 @@ class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
         bottomNavigationBar: widget.searchePageBottomNavigationBar,
         bottomSheet: widget.searchePageBottomSheet,
         backgroundColor: widget.searchPageBackgroundColor,
-        resizeToAvoidBottomPadding: widget.resizeToAvoidBottomPadding,
+        //resizeToAvoidBottomPadding: widget.resizeToAvoidBottomPadding,
         resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
         primary: widget.primary,
         drawerDragStartBehavior: widget.drawerDragStartBehavior,

@@ -1,3 +1,7 @@
+## [1.6.0]
+* Added ```[GertStreamPage]``` and ```[GetStreamWidget]``` merging another package to make life 
+  easier for the developer. Updated packages in use. Waiting for this package to update to null-safe.
+
 ## [1.5.1]
 * Small improvement.
 

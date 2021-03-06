@@ -28,6 +28,8 @@ abstract class Routes {
   static const PAGE_2 = '/page-2';
   static const PAGE_3 = '/page-3';
   static const PAGE_4 = '/page-4';
+  static const PAGE_5 = '/page-5';
+  static const PAGE_6 = '/page-6';
 }
 
 class AppPages {
@@ -44,6 +46,20 @@ class AppPages {
               listFull: dataListPerson2,
               stringFilter: (Person person) => person.name,
             )),
+    GetPage(
+        name: Routes.PAGE_5,
+        page: () {
+          Get.put(Test2Controller());
+          changeAuth();
+          return TestGetStreamPage();
+        }),
+    GetPage(
+        name: Routes.PAGE_6,
+        page: () {
+          Get.put(Test2Controller());
+          changeAuth();
+          return TestStreamWidget();
+        }),
   ];
 }
 
@@ -90,6 +106,22 @@ class HomePage extends StatelessWidget {
                 },
                 child: Text(
                   'Go to the SimpleAppBar',
+                  style: TextStyle(fontSize: 20),
+                )),
+            MaterialButton(
+                onPressed: () {
+                  Get.toNamed(Routes.PAGE_5);
+                },
+                child: Text(
+                  'Go to the StreamPage',
+                  style: TextStyle(fontSize: 20),
+                )),
+            MaterialButton(
+                onPressed: () {
+                  Get.toNamed(Routes.PAGE_6);
+                },
+                child: Text(
+                  'Go to the StreamWidget',
                   style: TextStyle(fontSize: 20),
                 )),
           ],
@@ -252,6 +284,7 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
       ),
       listStream: _streamListPerson,
       stringFilter: (Person person) => person.name,
+      //stringFilter: (Person person) => person.age.toString(),
       //sortCompare: false,
       filtersType: FiltersTypes.contains,
       obxListBuilder: (context, list, isModSearch) {
@@ -744,4 +777,203 @@ class Person {
       'username': this.username,
     };
   }
+}
+
+void changeAuth() {
+  Future.delayed(const Duration(seconds: 8), () {
+    ///------------------------------------------
+    /// Test to check the reactivity of the screen.
+    ///------------------------------------------
+    /// 1) 👇🏼
+    Get.find<Test2Controller>().rxList.addAll(dataListPerson);
+    if (!Get.find<Test2Controller>().isAuth) {
+      Get.find<Test2Controller>().changeAuth = true;
+    }
+  });
+}
+
+// ignore: must_be_immutable
+class TestGetStreamPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () {
+        Get.find<Test2Controller>().changeAuth = false;
+        Get.find<Test2Controller>().rxList.clear();
+        return Future.value(true);
+      },
+      child: GetStreamPage<List<Person>>(
+        title: Text(
+          'Stream Page',
+          style: TextStyle(fontSize: 18),
+        ),
+        stream: streamListPerson,
+
+        ///--------------------------------------------
+        /// ✅ Add RxBool auth and build the widget if it is false.
+        ///---------------------------------------------
+        rxBoolAuth: RxBoolAuth.input(
+            rxBoolAuthm: Get.find<Test2Controller>().rxAuth,
+            authFalseWidget: () => Center(
+                  child: Text(
+                    'Please login.',
+                    style: TextStyle(fontSize: 22),
+                  ),
+                )),
+        obxWidgetBuilder: (context, objesctStream) {
+          ///------------------------------------------
+          /// Build your body from the stream data.
+          ///------------------------------------------
+          final list = objesctStream;
+          if (list.isEmpty) {
+            return Center(
+                child: Text(
+              'NOTHING FOUND',
+              style: TextStyle(fontSize: 14),
+            ));
+          }
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: list.length,
+                  itemBuilder: (_, index) {
+                    return Card(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 4),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(14.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'Name: ${list[index].name}',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  // ignore: lines_longer_than_80_chars
+                                  'Age: ${list[index].age.toStringAsFixed(2)}',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              )
+                            ],
+                          ),
+                        ));
+                  },
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Stream<List<Person>> streamListPerson = (() async* {
+    await Future<void>.delayed(Duration(seconds: 3));
+    //yield null;
+    yield dataListPerson;
+    await Future<void>.delayed(Duration(seconds: 4));
+    yield dataListPerson2;
+    await Future<void>.delayed(Duration(seconds: 5));
+    //throw Exception('Erro voluntario');
+    yield dataListPerson3;
+  })();
+}
+
+// ignore: must_be_immutable
+class TestStreamWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('GetStreamWidget'),
+        centerTitle: true,
+      ),
+      body: WillPopScope(
+        onWillPop: () {
+          Get.find<Test2Controller>().changeAuth = false;
+          Get.find<Test2Controller>().rxList.clear();
+          return Future.value(true);
+        },
+        child: GetStreamWidget<List<Person>>(
+          stream: streamListPerson,
+          obxWidgetBuilder: (context, objesctStream) {
+            ///------------------------------------------
+            /// Build your body from the stream data.
+            ///------------------------------------------
+            final list = objesctStream;
+            if (list.isEmpty) {
+              return Center(
+                  child: Text(
+                'NOTHING FOUND',
+                style: TextStyle(fontSize: 14),
+              ));
+            }
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: list.length,
+                    itemBuilder: (_, index) {
+                      return Card(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 4),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(14.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    'Name: ${list[index].name}',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    // ignore: lines_longer_than_80_chars
+                                    'Age: ${list[index].age.toStringAsFixed(2)}',
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ));
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Stream<List<Person>> streamListPerson = (() async* {
+    await Future<void>.delayed(Duration(seconds: 3));
+    //yield null;
+    yield dataListPerson;
+    await Future<void>.delayed(Duration(seconds: 4));
+    yield dataListPerson2;
+    await Future<void>.delayed(Duration(seconds: 5));
+    //throw Exception('Erro voluntario');
+    yield dataListPerson3;
+  })();
+}
+
+class Test2Controller extends GetxController {
+  final rxAuth = false.obs;
+
+  set changeAuth(bool value) => rxAuth.value = value;
+
+  get isAuth => rxAuth.value;
+
+  final rxList = <Person>[].obs;
 }

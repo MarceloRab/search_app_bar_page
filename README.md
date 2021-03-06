@@ -804,3 +804,137 @@ The initial design of this package has an animation provided in a tutorial by Ni
 at: https://blog.usejournal.com/change-app-bar-in-flutter-with-animation-cfffb3413e8a
 
 All merits for Rodolfo (rodolfoggp@gmail.com) and Nishant Desai.
+
+------
+ New Components
+------
+#### ✷ GetStreamPage
+
+A reactive page on GetX in a super simple way from your stream without a search.
+
+There is already a Scaffold waiting for the parameters.
+```dart
+class TestGetStreamPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () {
+        Get.find<Test2Controller>().changeAuth = false;
+        Get.find<Test2Controller>().rxList.clear();
+        return Future.value(true);
+      },
+      child: GetStreamPage<List<Person>>(
+        title: Text(
+          'Stream Page',
+          style: TextStyle(fontSize: 18),
+        ),
+        stream: streamListPerson,
+
+        ///--------------------------------------------
+        /// ✅ Add RxBool auth and build the widget if it is false.
+        ///---------------------------------------------
+        rxBoolAuth: RxBoolAuth.input(
+            rxBoolAuthm: Get.find<Test2Controller>().rxAuth,
+            authFalseWidget: () => Center(
+                  child: Text(
+                    'Please login.',
+                    style: TextStyle(fontSize: 22),
+                  ),
+                )),
+        obxWidgetBuilder: (context, objesctStream) {
+          ///------------------------------------------
+          /// Build your body from the stream data.
+          ///------------------------------------------
+          final list = objesctStream;
+          if (list.isEmpty) {
+            return Center(
+                child: Text(
+              'NOTHING FOUND',
+              style: TextStyle(fontSize: 14),
+            ));
+          }
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: list.length,
+                  itemBuilder: (_, index) {
+                    return Card(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 4),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(14.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'Name: ${list[index].name}',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  // ignore: lines_longer_than_80_chars
+                                  'Age: ${list[index].age.toStringAsFixed(2)}',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              )
+                            ],
+                          ),
+                        ));
+                  },
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Stream<List<Person>> streamListPerson = (() async* {
+    await Future<void>.delayed(Duration(seconds: 3));
+    //yield null;
+    yield dataListPerson;
+    await Future<void>.delayed(Duration(seconds: 4));
+    yield dataListPerson2;
+    await Future<void>.delayed(Duration(seconds: 5));
+    //throw Exception('Erro voluntario');
+    yield dataListPerson3;
+  })();
+}
+
+class Test2Controller extends GetxController {
+  final rxAuth = false.obs;
+
+  set changeAuth(bool value) => rxAuth.value = value;
+
+  get isAuth => rxAuth.value;
+
+  final rxList = <Person>[].obs;
+}
+
+class Test3Controller extends GetxController {
+  final rx_2 = ''.obs;
+
+  set rx_2(value) => rx_2.value = value;
+}
+
+class Person {
+  final String name;
+
+  final int age;
+
+  Person({this.name, this.age});
+
+  @override
+  String toString() {
+    return 'Person{name: $name, age: $age}';
+  }
+}
+```
+#### ✷ GetStreamWidget without Scaffold parameters.
+
+#### Vide [Example full](https://pub.dev/packages/search_app_bar_page/example) for more details.
