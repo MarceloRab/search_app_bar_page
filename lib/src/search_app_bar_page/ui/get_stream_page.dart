@@ -13,17 +13,17 @@ import 'widgets/connecty_widget.dart';
 class GetStreamPage<T> extends StatefulWidget {
   ///  [rxBoolAuth] Insert your RxBool here that changes with the auth
   /// status to have reactivity.
-  final RxBoolAuth rxBoolAuth;
+  final RxBoolAuth? rxBoolAuth;
 
   ///[stream] Just pass your stream and you will receive streamObject which is
   ///snapshot.data to build your page.
   final Stream<T> stream;
 
-  final T initialData;
+  final T? initialData;
 
   /// [widgetErrorBuilder] Widget built by the Object error returned by the
   /// [stream] error.
-  final WidgetsErrorBuilder widgetErrorBuilder;
+  final WidgetsErrorBuilder? widgetErrorBuilder;
 
   /// [obxWidgetBuilder] This function starts every time we receive
   ///snapshot.data through the stream. To set up your page, you receive
@@ -33,48 +33,48 @@ class GetStreamPage<T> extends StatefulWidget {
   /// [widgetOffConnectyWaiting] Only shows something when it is disconnected
   /// and still doesn't have the first value in the stream. If the connection
   /// comes back starts showing [widgetWaiting] until it shows the first data
-  final Widget widgetWaiting;
-  final Widget widgetOffConnectyWaiting;
+  final Widget? widgetWaiting;
+  final Widget? widgetOffConnectyWaiting;
 
   /// [floatingActionButton] , [pageDrawer] ,
   /// [floatingActionButtonLocation] ,
   /// [floatingActionButtonAnimator]  ...
   /// are passed on to the Scaffold.
-  final Widget floatingActionButton;
-  final FloatingActionButtonLocation floatingActionButtonLocation;
-  final FloatingActionButtonAnimator floatingActionButtonAnimator;
-  final List<Widget> persistentFooterButtons;
-  final Widget pageDrawer;
-  final Widget pageEndDrawer;
-  final Widget pageBottomNavigationBar;
-  final Widget pageBottomSheet;
-  final Color pageBackgroundColor;
+  final Widget? floatingActionButton;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
+  final FloatingActionButtonAnimator? floatingActionButtonAnimator;
+  final List<Widget>? persistentFooterButtons;
+  final Widget? pageDrawer;
+  final Widget? pageEndDrawer;
+  final Widget? pageBottomNavigationBar;
+  final Widget? pageBottomSheet;
+  final Color? pageBackgroundColor;
 
   //final bool resizeToAvoidBottomPadding;
-  final bool resizeToAvoidBottomInset;
+  final bool? resizeToAvoidBottomInset;
   final bool primary;
   final DragStartBehavior drawerDragStartBehavior;
   final bool extendBody;
   final bool extendBodyBehindAppBar;
-  final Color drawerScrimColor;
-  final double drawerEdgeDragWidth;
+  final Color? drawerScrimColor;
+  final double? drawerEdgeDragWidth;
   final bool drawerEnableOpenDragGesture;
   final bool endDrawerEnableOpenDragGesture;
 
   ///AppBar parameters
 
-  final Color appBarbackgroundColor;
-  final Widget title;
+  final Color? appBarbackgroundColor;
+  final Widget? title;
   final bool centerTitle;
-  final IconThemeData iconTheme;
+  final IconThemeData? iconTheme;
   final double elevation;
   final List<Widget> actions;
 
   /// [iconConnectyOffAppBar] Displayed on the AppBar when the internet
   /// connection is switched off.
   /// It is always the closest to the center.
-  final Widget iconConnectyOffAppBar;
-  final Color iconConnectyOffAppBarColor;
+  final Widget? iconConnectyOffAppBar;
+  final Color? iconConnectyOffAppBarColor;
 
   ///[iconConnectyOffAppBar] Appears when the connection status is off.
   ///There is already a default icon. If you don't want to present a choice
@@ -84,9 +84,9 @@ class GetStreamPage<T> extends StatefulWidget {
   final bool hideDefaultConnectyIconOffAppBar;
 
   const GetStreamPage(
-      {Key key,
-      @required this.stream,
-      @required this.obxWidgetBuilder,
+      {Key? key,
+      required this.stream,
+      required this.obxWidgetBuilder,
       this.initialData,
       this.rxBoolAuth,
       this.widgetErrorBuilder,
@@ -128,31 +128,31 @@ class GetStreamPage<T> extends StatefulWidget {
 }
 
 class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
-  StreamSubscription<T> _subscription;
+  StreamSubscription? _subscription;
 
-  GetStreamController<T> _controller;
+  late GetStreamController<T> _controller;
 
-  Widget _widgetWaiting;
+  Widget? _widgetWaiting;
 
   bool downConnectyWithoutData = false;
 
-  Widget _widgetConnecty;
+  Widget? _widgetConnecty;
 
-  StreamSubscription _subscriptionConnecty;
-  ConnectController _connectyController;
+  StreamSubscription? _subscriptionConnecty;
+  late ConnectController _connectyController;
 
   bool haveData = false;
 
-  Widget _iconConnectyOffAppBar;
+  Widget? _iconConnectyOffAppBar;
 
   @override
   void initState() {
     //_controller = GetStreamController();
-    _controller = Get.put<GetStreamController<T>>(GetStreamController());
+    _controller = Get.put<GetStreamController<T>>(GetStreamController())!;
     super.initState();
 
     if (widget.initialData != null) {
-      _controller.initial(widget.initialData);
+      _controller.initial(widget.initialData!);
     }
     _subscribeStream();
     _subscribeConnecty();
@@ -173,10 +173,10 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.initialData != widget.initialData) {
-      if (_controller.snapshot.connectionState == ConnectionState.none) {
-        _controller.initial(widget.initialData);
+      if (_controller.snapshot!.connectionState == ConnectionState.none) {
+        _controller.initial(widget.initialData!);
       } else {
-        _controller.afterData(widget.initialData);
+        _controller.afterData(widget.initialData!);
       }
     }
 
@@ -214,7 +214,7 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
 
   void _unsubscribeStream() {
     if (_subscription != null) {
-      _subscription.cancel();
+      _subscription!.cancel();
       _subscription = null;
     }
   }
@@ -222,8 +222,8 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
   void _subscribeConnecty() {
     _connectyController = ConnectController();
     _subscriptionConnecty =
-        _connectyController.connectStream.listen((bool isConnected) {
-      if (!isConnected) {
+        _connectyController.rxConnect.stream.listen((isConnected) {
+      if (!isConnected!) {
         //lançar _widgetConnecty
         setState(() {
           downConnectyWithoutData = true;
@@ -240,7 +240,7 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
 
   void _unsubscribeConnecty() {
     if (_subscriptionConnecty != null) {
-      _subscriptionConnecty.cancel();
+      _subscriptionConnecty!.cancel();
       _subscriptionConnecty = null;
       _connectyController.onClose();
     }
@@ -260,7 +260,7 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
   }
 
   AppBar _buildAppBar(BuildContext context) {
-    final increasedActions = <Widget>[];
+    final increasedActions = <Widget?>[];
     increasedActions.addAll(widget.actions);
 
     if (_iconConnectyOffAppBar != null) {
@@ -274,29 +274,30 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
       title: widget.title,
       elevation: widget.elevation,
       centerTitle: widget.centerTitle,
-      actions: increasedActions,
+      actions: increasedActions as List<Widget>?,
     );
   }
 
   Widget buildBody() {
     return Obx(() {
-      if (widget.rxBoolAuth?.auth?.value == false) {
-        return widget.rxBoolAuth.authFalseWidget();
+      if (widget.rxBoolAuth?.auth.value == false) {
+        return widget.rxBoolAuth!.authFalseWidget();
       }
       if (downConnectyWithoutData) {
         /// Apenas anuncia quando nao tem a primeira data e esta sem conexao
-        return _widgetConnecty;
+        return _widgetConnecty!;
       }
 
-      if (_controller.snapshot.connectionState == ConnectionState.waiting) {
-        return _widgetWaiting;
+      if (_controller.snapshot!.connectionState == ConnectionState.waiting) {
+        return _widgetWaiting!;
       }
 
-      if (_controller.snapshot.hasError) {
-        return buildWidgetError(_controller.snapshot.error);
+      if (_controller.snapshot!.hasError) {
+        return buildWidgetError(_controller.snapshot!.error);
       }
 
-      return widget.obxWidgetBuilder(context, _controller.snapshot.data);
+      // ignore: null_check_on_nullable_type_parameter
+      return widget.obxWidgetBuilder(context, _controller.snapshot!.data!);
     });
   }
 
@@ -326,7 +327,7 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
         endDrawerEnableOpenDragGesture: widget.endDrawerEnableOpenDragGesture);
   }
 
-  Widget buildWidgetError(Object error) {
+  Widget buildWidgetError(Object? error) {
     if (widget.widgetErrorBuilder == null) {
       return Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -348,7 +349,7 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
             )
           ]);
     } else {
-      return widget.widgetErrorBuilder(error);
+      return widget.widgetErrorBuilder!(error);
     }
   }
 

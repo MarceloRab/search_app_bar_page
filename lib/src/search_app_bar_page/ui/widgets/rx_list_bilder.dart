@@ -9,7 +9,7 @@ class RxListWidget<T> extends StatelessWidget {
   final SimpleAppBarController<T> controller;
 
   const RxListWidget(
-      {Key key, @required this.controller, @required this.obxListBuilder})
+      {Key? key, required this.controller, required this.obxListBuilder})
       : super(key: key);
 
   @override

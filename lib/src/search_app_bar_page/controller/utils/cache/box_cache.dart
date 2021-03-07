@@ -5,7 +5,7 @@ abstract class CacheJson {
 }
 
 class BoxJsonCache<T extends CacheJson> {
-  T object;
+  late T object;
 
   Map<String, dynamic> jsonEncode() => object.toMap();
 

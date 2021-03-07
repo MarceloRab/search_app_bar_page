@@ -12,39 +12,40 @@ import 'infra/rx_get_type.dart';
 class SearchAppBarPage<T> extends StatefulWidget {
   /// Paramentros do SearchAppBar
 
-  final Widget searchAppBartitle;
+  final Widget? searchAppBartitle;
   final bool searchAppBarcenterTitle;
-  final IconThemeData searchAppBariconTheme;
-  final Color searchAppBarbackgroundColor;
-  final Color searchAppBarModeSearchBackgroundColor;
-  final Color searchAppBarElementsColor;
-  final String searchAppBarhintText;
+  final IconThemeData? searchAppBariconTheme;
+  final Color? searchAppBarbackgroundColor;
+  final Color? searchAppBarModeSearchBackgroundColor;
+  final Color? searchAppBarElementsColor;
+  final String? searchAppBarhintText;
   final bool searchAppBarflattenOnSearch;
   final TextCapitalization searchAppBarcapitalization;
   final List<Widget> searchAppBaractions;
   final double searchAppBarElevation;
-  final TextInputType searchAppBarKeyboardType;
-  final Color magnifyinGlassColor;
+  final TextInputType? searchAppBarKeyboardType;
+  final Color? magnifyinGlassColor;
 
   /// Parametros para o Scaffold
 
-  final Widget searchePageFloatingActionButton;
-  final FloatingActionButtonLocation searchePageFloatingActionButtonLocation;
-  final FloatingActionButtonAnimator searchePageFloatingActionButtonAnimator;
-  final List<Widget> searchePagePersistentFooterButtons;
-  final Widget searchePageDrawer;
-  final Widget searchePageEndDrawer;
-  final Widget searchePageBottomNavigationBar;
-  final Widget searchePageBottomSheet;
-  final Color searchPageBackgroundColor;
+  final Widget? searchePageFloatingActionButton;
+  final FloatingActionButtonLocation? searchePageFloatingActionButtonLocation;
+  final FloatingActionButtonAnimator? searchePageFloatingActionButtonAnimator;
+  final List<Widget>? searchePagePersistentFooterButtons;
+  final Widget? searchePageDrawer;
+  final Widget? searchePageEndDrawer;
+  final Widget? searchePageBottomNavigationBar;
+  final Widget? searchePageBottomSheet;
+  final Color? searchPageBackgroundColor;
+
   //final bool resizeToAvoidBottomPadding;
-  final bool resizeToAvoidBottomInset;
+  final bool? resizeToAvoidBottomInset;
   final bool primary;
   final DragStartBehavior drawerDragStartBehavior;
   final bool extendBody;
   final bool extendBodyBehindAppBar;
-  final Color drawerScrimColor;
-  final double drawerEdgeDragWidth;
+  final Color? drawerScrimColor;
+  final double? drawerEdgeDragWidth;
   final bool drawerEnableOpenDragGesture;
   final bool endDrawerEnableOpenDragGesture;
 
@@ -57,7 +58,7 @@ class SearchAppBarPage<T> extends StatefulWidget {
   /// filter the list. Divide the filters into three types:
   ///  enum FiltersTypes { startsWith, equals, contains }
   /// Default = FiltersTypes.contains;
-  final FiltersTypes filtersType;
+  final FiltersTypes? filtersType;
 
   /// [obxListBuilder] Function applied when it is filtered.
   final WidgetsListBuilder<T> obxListBuilder;
@@ -66,7 +67,7 @@ class SearchAppBarPage<T> extends StatefulWidget {
   ///If not, it is understood that the type will be String.
   /// ex.: stringFilter: (Person person) => person.name,
   /// The list will be filtered by the person.name contains (default) a query.
-  final StringFilter<T> stringFilter;
+  final StringFilter<T>? stringFilter;
 
   ///[sortCompare] Your list will be ordered by the same function
   ///[stringFilter]. True by default.
@@ -74,14 +75,14 @@ class SearchAppBarPage<T> extends StatefulWidget {
 
   ///  [rxBoolAuth] Insert your RxBool here that changes with the auth
   /// status to have reactivity.
-  final RxBoolAuth rxBoolAuth;
+  final RxBoolAuth? rxBoolAuth;
 
   const SearchAppBarPage(
-      {Key key,
+      {Key? key,
 
       /// Parametros para o SearcherGetController
-      @required this.listFull,
-      @required this.obxListBuilder,
+      required this.listFull,
+      required this.obxListBuilder,
       this.sortCompare = true,
       this.filtersType,
       this.stringFilter,
@@ -123,7 +124,8 @@ class SearchAppBarPage<T> extends StatefulWidget {
       this.drawerEdgeDragWidth,
       this.drawerEnableOpenDragGesture = true,
       this.endDrawerEnableOpenDragGesture = true})
-      : assert(listFull != null),
+      :
+        //assert(listFull != null),
         super(key: key);
 
   @override
@@ -131,7 +133,7 @@ class SearchAppBarPage<T> extends StatefulWidget {
 }
 
 class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
-  SearcherPageController<T> _controller;
+  SearcherPageController<T>? _controller;
 
   //Worker _worker;
 
@@ -154,28 +156,28 @@ class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
   void didUpdateWidget(SearchAppBarPage<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _controller.stringFilter = widget.stringFilter;
+    _controller!.stringFilter = widget.stringFilter;
     //_controller.compareSort = widget.compareSort;
-    _controller.sortCompare = widget.sortCompare;
-    _controller.filtersType = widget.filtersType;
-    _controller.initFilters();
+    _controller!.sortCompare = widget.sortCompare;
+    _controller!.filtersType = widget.filtersType;
+    _controller!.initFilters();
 
     if (oldWidget.listFull != widget.listFull) {
-      _controller.listFull.clear();
-      _controller.listFull.addAll(widget.listFull);
-      _controller.sortCompareList(widget.listFull);
+      _controller!.listFull.clear();
+      _controller!.listFull.addAll(widget.listFull);
+      _controller!.sortCompareList(widget.listFull);
 
-      if (_controller.rxSearch.value.isNotEmpty) {
-        _controller.refreshSeachList(_controller.rxSearch.value);
+      if (_controller!.rxSearch.value!.isNotEmpty) {
+        _controller!.refreshSeachList(_controller!.rxSearch.value);
       } else {
-        _controller.onSearchList(widget.listFull);
+        _controller!.onSearchList(widget.listFull);
       }
     }
   }
 
   @override
   void dispose() {
-    _controller.onClose();
+    _controller!.onClose();
     super.dispose();
   }
 
@@ -183,7 +185,7 @@ class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: SearchAppBar(
-            controller: _controller,
+            controller: _controller!,
             title: widget.searchAppBartitle,
             centerTitle: widget.searchAppBarcenterTitle,
             elevation: widget.searchAppBarElevation,
@@ -198,11 +200,11 @@ class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
             keyboardType: widget.searchAppBarKeyboardType,
             magnifyinGlassColor: widget.magnifyinGlassColor),
         body: Obx(() {
-          if (widget.rxBoolAuth?.auth?.value == false) {
-            return widget.rxBoolAuth.authFalseWidget();
+          if (widget.rxBoolAuth?.auth.value == false) {
+            return widget.rxBoolAuth!.authFalseWidget();
           }
           return widget.obxListBuilder(
-              context, _controller.listSearch, _controller.isModSearch);
+              context, _controller!.listSearch, _controller!.isModSearch);
         }),
         floatingActionButton: widget.searchePageFloatingActionButton,
         floatingActionButtonLocation:

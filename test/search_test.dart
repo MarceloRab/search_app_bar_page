@@ -33,32 +33,32 @@ void main() {
   controllerPagination.listFull = dataListPerson3;
 
   test('Search Page com query empty. Deve retornar 20 elementos', () {
-    final listBuilder = controllerPagination.haveSearchQueryPage('');
+    final listBuilder = controllerPagination.haveSearchQueryPage('')!;
 
     expect(listBuilder.listSearch.length, 43);
     //expect(listBuilder.isListSearchFull, false);
   });
 
   test('Retornar lista filtrada por m', () {
-    final listBuilder = controllerPagination.haveSearchQueryPage('m');
+    final listBuilder = controllerPagination.haveSearchQueryPage('m')!;
 
     expect(
         listBuilder.listSearch,
         controllerPagination.sortCompareListSearch(controllerPagination.listFull
             .where((element) => Filters.contains(
-                controllerPagination.stringFilter(element), 'm'))
+                controllerPagination.stringFilter!(element), 'm'))
             .toList()));
     //expect(listBuilder.isListSearchFull, false);
   });
 
   test('Retornar lista filtrada por ma', () {
-    final listBuilder = controllerPagination.haveSearchQueryPage('ma');
+    final listBuilder = controllerPagination.haveSearchQueryPage('ma')!;
 
     expect(
         listBuilder.listSearch,
         controllerPagination.sortCompareListSearch(controllerPagination.listFull
             .where((element) => Filters.contains(
-                controllerPagination.stringFilter(element), 'ma'))
+                controllerPagination.stringFilter!(element), 'ma'))
             .toList()));
     //expect(listBuilder.isListSearchFull, false);
   });
@@ -73,17 +73,17 @@ void main() {
             controllerPagination.stringFilter(element), 'ma'))
             .toList()));
             */
-    final listBuilder = controllerPagination.haveSearchQueryPage('marcelo');
+    final listBuilder = controllerPagination.haveSearchQueryPage('marcelo')!;
     //print('${listBuilder.listSearch.length.toString()}');
 
     expect(
         listBuilder.listSearch,
         controllerPagination.sortCompareListSearch(controllerPagination.listFull
             .where((element) => Filters.contains(
-                controllerPagination.stringFilter(element), 'ma'))
+                controllerPagination.stringFilter!(element), 'ma'))
             .toList()
             .where((element) => Filters.contains(
-                controllerPagination.stringFilter(element), 'marcelo'))
+                controllerPagination.stringFilter!(element), 'marcelo'))
             .toList()));
     //expect(listBuilder.isListSearchFull, false);
   });

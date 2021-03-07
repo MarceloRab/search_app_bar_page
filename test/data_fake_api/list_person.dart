@@ -45,9 +45,9 @@ final dataListPerson3 = <Person>[
 ];
 
 class Person {
-  final String name;
+  final String? name;
 
-  final int age;
+  final int? age;
 
   Person({this.name, this.age});
 

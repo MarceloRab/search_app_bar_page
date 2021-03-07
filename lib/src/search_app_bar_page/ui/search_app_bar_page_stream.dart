@@ -15,26 +15,26 @@ import 'core/search_app_bar/search_app_bar.dart';
 class SearchAppBarPageStream<T> extends StatefulWidget {
   /// Paramentros do SearchAppBar
 
-  final Widget searchAppBartitle;
+  final Widget? searchAppBartitle;
   final bool searchAppBarcenterTitle;
-  final IconThemeData searchAppBariconTheme;
-  final Color searchAppBarbackgroundColor;
-  final Color searchAppBarModeSearchBackgroundColor;
-  final Color searchAppBarElementsColor;
+  final IconThemeData? searchAppBariconTheme;
+  final Color? searchAppBarbackgroundColor;
+  final Color? searchAppBarModeSearchBackgroundColor;
+  final Color? searchAppBarElementsColor;
 
   /// [searchAppBarIconConnectyOffAppBarColor] You can change the color of
   /// [iconConnectyOffAppBar]. By default = Colors.redAccent.
-  final Color searchAppBarIconConnectyOffAppBarColor;
-  final String searchAppBarhintText;
+  final Color? searchAppBarIconConnectyOffAppBarColor;
+  final String? searchAppBarhintText;
   final bool searchAppBarflattenOnSearch;
   final TextCapitalization searchAppBarcapitalization;
   final List<Widget> searchAppBaractions;
   final double searchAppBarelevation;
-  final TextInputType searchAppBarKeyboardType;
+  final TextInputType? searchAppBarKeyboardType;
 
   /// [magnifyinGlassColor] Changes the color of the magnifying glass.
   /// Keeps IconTheme color by default.
-  final Color magnifyinGlassColor;
+  final Color? magnifyinGlassColor;
 
   ///[iconConnectyOffAppBar] Appears when the connection status is off.
   ///There is already a default icon. If you don't want to present a choice
@@ -46,7 +46,7 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
   /// [iconConnectyOffAppBar] Displayed on the AppBar when the internet
   /// connection is switched off.
   /// It is always the closest to the center.
-  final Widget iconConnectyOffAppBar;
+  final Widget? iconConnectyOffAppBar;
 
   ///  [iconConnectyOffAppBar] Aparece quando o status da conexao é off.
   ///  já existe um icone default. Caso nao queira apresentar escolha
@@ -57,35 +57,36 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
   ///  [widgetOffConnectyWaiting] Apenas mostra algo quando esta sem conexao
   ///  e ainda nao tem o primeiro valor da stream. Se a conexao voltar
   ///  passa a mostrar o [widgetWaiting] até apresentar o primeiro dado
-  final Widget widgetWaiting;
-  final Widget widgetOffConnectyWaiting;
+  final Widget? widgetWaiting;
+  final Widget? widgetOffConnectyWaiting;
 
   /// [widgetErrorBuilder] Widget built by the Object error returned by the
   /// [listStream] error.
-  final WidgetsErrorBuilder widgetErrorBuilder;
+  final WidgetsErrorBuilder? widgetErrorBuilder;
 
   /// [searchePageFloatingActionButton] , [searchePageFloatingActionButton] ,
   /// [searchePageFloatingActionButtonLocation] ,
   /// [searchePageFloatingActionButtonAnimator]  ...
   /// ...
   /// are passed on to the Scaffold.
-  final Widget searchePageFloatingActionButton;
-  final FloatingActionButtonLocation searchePageFloatingActionButtonLocation;
-  final FloatingActionButtonAnimator searchePageFloatingActionButtonAnimator;
-  final List<Widget> searchePagePersistentFooterButtons;
-  final Widget searchePageDrawer;
-  final Widget searchePageEndDrawer;
-  final Widget searchePageBottomNavigationBar;
-  final Widget searchePageBottomSheet;
-  final Color searchPageBackgroundColor;
+  final Widget? searchePageFloatingActionButton;
+  final FloatingActionButtonLocation? searchePageFloatingActionButtonLocation;
+  final FloatingActionButtonAnimator? searchePageFloatingActionButtonAnimator;
+  final List<Widget>? searchePagePersistentFooterButtons;
+  final Widget? searchePageDrawer;
+  final Widget? searchePageEndDrawer;
+  final Widget? searchePageBottomNavigationBar;
+  final Widget? searchePageBottomSheet;
+  final Color? searchPageBackgroundColor;
+
   //final bool resizeToAvoidBottomPadding;
-  final bool resizeToAvoidBottomInset;
+  final bool? resizeToAvoidBottomInset;
   final bool primary;
   final DragStartBehavior drawerDragStartBehavior;
   final bool extendBody;
   final bool extendBodyBehindAppBar;
-  final Color drawerScrimColor;
-  final double drawerEdgeDragWidth;
+  final Color? drawerScrimColor;
+  final double? drawerEdgeDragWidth;
   final bool drawerEnableOpenDragGesture;
   final bool endDrawerEnableOpenDragGesture;
 
@@ -94,7 +95,7 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
   /// [initialData] List to be filtered by Search.
   /// These widgets will not be displayed. [widgetOffConnectyWaiting] and
   /// [widgetWaiting]
-  final List<T> initialData;
+  final List<T>? initialData;
 
   /// [listStream] Just pass the Stream and we are already in charge
   /// of working with the data. There is a StremBuilder in background.
@@ -103,7 +104,7 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
   /// [filtersType] These are the filters that the Controller uses to
   /// filter the list. Divide the filters into three types:
   /// startsWith, equals, contains. Default = FiltersTypes.contains;
-  final FiltersTypes filtersType;
+  final FiltersTypes? filtersType;
 
   /// [obxListBuilder] Function applied when receiving data
   /// through Stream or filtering in search.
@@ -113,7 +114,7 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
   ///If not, it is understood that the type will be String.
   /// ex.: stringFilter: (Person person) => person.name,
   /// The list will be filtered by the person.name contains (default) a query.
-  final StringFilter<T> stringFilter;
+  final StringFilter<T>? stringFilter;
 
   ///If you want your list to be sorted, pass the function on.
   /// Example: (Person a, Person b) => a.name.compareTo(b.name),
@@ -126,12 +127,12 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
 
   ///  [rxBoolAuth] Insert your RxBool here that changes with the auth
   /// status to have reactivity.
-  final RxBoolAuth rxBoolAuth;
+  final RxBoolAuth? rxBoolAuth;
 
   const SearchAppBarPageStream({
-    Key key,
-    @required this.listStream,
-    @required this.obxListBuilder,
+    Key? key,
+    required this.listStream,
+    required this.obxListBuilder,
     this.initialData,
     this.widgetWaiting,
     this.widgetErrorBuilder,
@@ -185,22 +186,23 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
 
 /// State for [StreamBuilderBase].
 class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
-  StreamSubscription<List<T>> _subscription;
-  StreamSubscription _subscriptionConnecty;
+  // ignore: cancel_subscriptions
+  StreamSubscription? _subscription;
+  StreamSubscription? _subscriptionConnecty;
 
   // T as List
 
-  bool _haveInitialData;
+  late bool _haveInitialData;
 
-  ConnectController _connectyController;
+  late ConnectController _connectyController;
   bool downConnectyWithoutData = false;
 
-  Widget _widgetConnecty;
-  Widget _widgetWaiting;
+  Widget? _widgetConnecty;
+  Widget? _widgetWaiting;
 
-  Worker _worker;
+  Worker? _worker;
 
-  SearcherPageStreamController<T> _controller;
+  SearcherPageStreamController<T>? _controller;
 
   @override
   void initState() {
@@ -219,9 +221,9 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
     if (!_haveInitialData) {
       _subscribeConnecty();
     } else {
-      _controller.listFull.addAll(widget.initialData);
-      _controller.sortCompareList(_controller.listFull);
-      _controller.initial(_controller.listFull);
+      _controller!.listFull.addAll(widget.initialData!);
+      _controller!.sortCompareList(_controller!.listFull);
+      _controller!.initial(_controller!.listFull);
     }
 
     buildWidgetsDefault();
@@ -231,11 +233,11 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
   void didUpdateWidget(SearchAppBarPageStream<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _controller.stringFilter = widget.stringFilter;
+    _controller!.stringFilter = widget.stringFilter;
     //_controller.compareSort = widget.compareSort;
-    _controller.sortCompare = widget.sortCompare;
-    _controller.filtersType = widget.filtersType;
-    _controller.onInitFilter();
+    _controller!.sortCompare = widget.sortCompare;
+    _controller!.filtersType = widget.filtersType;
+    _controller!.onInitFilter();
 
     if (oldWidget.initialData != widget.initialData) {
       //_initialData = widget.getInitialData;
@@ -246,25 +248,25 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
         downConnectyWithoutData = false;
         _unsubscribeConnecty();
 
-        if (widget.initialData.length > _controller.listFull.length) {
-          _controller.listFull.clear();
-          _controller.listFull.addAll(widget.initialData);
-          _controller.sortCompareList(_controller.listFull);
-          _controller.initial(_controller.listFull);
+        if (widget.initialData!.length > _controller!.listFull.length) {
+          _controller!.listFull.clear();
+          _controller!.listFull.addAll(widget.initialData!);
+          _controller!.sortCompareList(_controller!.listFull);
+          _controller!.initial(_controller!.listFull);
         }
-      } else if (_controller.listFull.isEmpty &&
+      } else if (_controller!.listFull.isEmpty &&
           _subscriptionConnecty != null) {
         _subscribeConnecty();
       }
     }
 
-    if (_controller.listFull.isNotEmpty) {
-      if (_controller.rxSearch.value.isNotEmpty) {
-        _controller.afterData(
-            _controller.refreshSeachList2(_controller.rxSearch.value));
+    if (_controller!.listFull.isNotEmpty) {
+      if (_controller!.rxSearch.value!.isNotEmpty) {
+        _controller!.afterData(
+            _controller!.refreshSeachList2(_controller!.rxSearch.value));
       } else {
-        _controller.sortCompareList(_controller.listFull);
-        _controller.afterData(_controller.listFull);
+        _controller!.sortCompareList(_controller!.listFull);
+        _controller!.afterData(_controller!.listFull);
       }
     }
 
@@ -272,7 +274,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
       if (_subscription != null) {
         _unsubscribeStream();
 
-        _controller.afterDisconnected();
+        _controller!.afterDisconnected();
       }
 
       _subscribeStream();
@@ -283,7 +285,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: SearchAppBar(
-            controller: _controller,
+            controller: _controller!,
             title: widget.searchAppBartitle,
             centerTitle: widget.searchAppBarcenterTitle,
             elevation: widget.searchAppBarelevation,
@@ -326,27 +328,27 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
         endDrawerEnableOpenDragGesture: widget.endDrawerEnableOpenDragGesture);
   }
 
-  Widget buildBody() {
+  Widget? buildBody() {
     if (downConnectyWithoutData) {
       // Apenas anuncia quando nao tem a primeira data e esta sem conexao
       return _widgetConnecty;
     }
 
     return Obx(() {
-      if (widget.rxBoolAuth?.auth?.value == false) {
-        return widget.rxBoolAuth.authFalseWidget();
+      if (widget.rxBoolAuth?.auth.value == false) {
+        return widget.rxBoolAuth!.authFalseWidget();
       }
-      if (_controller.snapshot.connectionState == ConnectionState.waiting) {
-        return _widgetWaiting;
+      if (_controller!.snapshot!.connectionState == ConnectionState.waiting) {
+        return _widgetWaiting!;
       }
 
-      if (_controller.snapshot.hasError) {
-        return buildWidgetError(_controller.snapshot.error);
+      if (_controller!.snapshot!.hasError) {
+        return buildWidgetError(_controller!.snapshot!.error);
       }
 
       //final isListFull = widget.searcher.rxSearch.value.isEmpty;
       return widget.obxListBuilder(
-          context, _controller.snapshot.data, _controller.isModSearch);
+          context, _controller!.snapshot!.data, _controller!.isModSearch);
     });
   }
 
@@ -354,7 +356,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
   void dispose() {
     _unsubscribeStream();
     _unsubscribeConnecty();
-    _controller.onClose();
+    _controller!.onClose();
     if (_worker?.disposed == true) {
       _worker?.dispose();
     }
@@ -363,48 +365,48 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
   }
 
   void _subscribeStream() {
-    _subscription = widget.listStream.listen((data) {
+    _subscription = widget.listStream.listen((List<T>? data) {
       if (data == null) {
-        if (_controller.listFull.isNotEmpty) {
-          _controller.afterData(_controller.listFull);
+        if (_controller!.listFull.isNotEmpty) {
+          _controller!.afterData(_controller!.listFull);
         } else
-          _controller.afterError(Exception('It cannot return null. 😢'));
+          _controller!.afterError(Exception('It cannot return null. 😢'));
         return;
       } else {
-        if (!_controller.bancoInitValue) {
+        if (!_controller!.bancoInitValue) {
           // Mostrar lupa do Search
-          _controller.bancoInitValue = true;
-          if (_controller.bancoInit.canUpdate) {
-            _controller.bancoInit.close();
+          _controller!.bancoInitValue = true;
+          if (_controller!.bancoInit.canUpdate) {
+            _controller!.bancoInit.close();
           }
         }
       }
       downConnectyWithoutData = false;
       _unsubscribeConnecty();
 
-      _controller.listFull = data;
-      _controller.sortCompareList(_controller.listFull);
+      _controller!.listFull = data;
+      _controller!.sortCompareList(_controller!.listFull);
 
-      if (_controller.rxSearch.value.isNotEmpty) {
-        _controller.afterData(
-            _controller.refreshSeachList2(_controller.rxSearch.value));
+      if (_controller!.rxSearch.value!.isNotEmpty) {
+        _controller!.afterData(
+            _controller!.refreshSeachList2(_controller!.rxSearch.value));
       } else {
-        _controller.afterData(_controller.listFull);
+        _controller!.afterData(_controller!.listFull);
       }
     }, onError: (Object error) {
-      _controller.afterError(error);
+      _controller!.afterError(error);
     }, onDone: () {
-      _controller.afterDone();
+      _controller!.afterDone();
     });
-    _controller.afterConnected();
+    _controller!.afterConnected();
   }
 
   void _subscribreSearhQuery() {
-    _worker = debounce(_controller.rxSearch, (String query) {
-      if (query.isNotEmpty) {
-        _controller.afterData(_controller.refreshSeachList2(query));
+    _worker = debounce(_controller!.rxSearch, (String? query) {
+      if (query!.isNotEmpty) {
+        _controller!.afterData(_controller!.refreshSeachList2(query));
       } else {
-        _controller.afterData(_controller.listFull);
+        _controller!.afterData(_controller!.listFull);
       }
     }, time: const Duration(milliseconds: 350));
   }
@@ -412,8 +414,8 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
   void _subscribeConnecty() {
     _connectyController = ConnectController();
     _subscriptionConnecty =
-        _connectyController.connectStream.listen((bool isConnected) {
-      if (!isConnected && (!_haveInitialData)) {
+        _connectyController.rxConnect.stream.listen((isConnected) {
+      if (!isConnected! && (!_haveInitialData)) {
         //lançar _widgetConnecty
         setState(() {
           downConnectyWithoutData = true;
@@ -421,7 +423,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
       } else if (isConnected && (!_haveInitialData)) {
         setState(() {
           downConnectyWithoutData = false;
-          _controller.afterConnected();
+          _controller!.afterConnected();
         });
       }
     });
@@ -429,7 +431,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
 
   void _unsubscribeConnecty() {
     if (_subscriptionConnecty != null) {
-      _subscriptionConnecty.cancel();
+      _subscriptionConnecty!.cancel();
       _subscriptionConnecty = null;
       _connectyController.onClose();
     }
@@ -437,12 +439,12 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
 
   void _unsubscribeStream() {
     if (_subscription != null) {
-      _subscription.cancel();
+      _subscription!.cancel();
       _subscription = null;
     }
   }
 
-  Widget buildWidgetError(Object error) {
+  Widget buildWidgetError(Object? error) {
     if (widget.widgetErrorBuilder == null) {
       return Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -464,7 +466,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
             )
           ]);
     } else {
-      return widget.widgetErrorBuilder(error);
+      return widget.widgetErrorBuilder!(error);
     }
 
     //return _widgetError;

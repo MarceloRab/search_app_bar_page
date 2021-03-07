@@ -3,10 +3,10 @@ import 'package:get/state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/connecty_controller.dart';
 
 class ConnectyWidget extends StatefulWidget {
-  final Color color;
+  final Color? color;
 
   const ConnectyWidget({
-    Key key,
+    Key? key,
     this.color,
   }) : super(key: key);
 
@@ -15,7 +15,7 @@ class ConnectyWidget extends StatefulWidget {
 }
 
 class _ConnectyWidgetState extends State<ConnectyWidget> {
-  ConnectController _connectyController;
+  late ConnectController _connectyController;
 
   @override
   void initState() {

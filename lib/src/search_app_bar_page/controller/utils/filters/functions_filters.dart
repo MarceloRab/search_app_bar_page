@@ -1,7 +1,7 @@
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
 
-typedef Filter<T> = bool Function(T test, String query);
+typedef Filter<T> = bool Function(T test, String? query);
 
 //typedef StringFilter<T> = String Function(T test);
 
@@ -11,32 +11,32 @@ typedef Filter<T> = bool Function(T test, String query);
 //BuildContext context, RxList<T> list, bool isModSearch);
 
 typedef WidgetsListBuilder<T> = Widget Function(
-    BuildContext context, List<T> list, bool isModSearch);
+    BuildContext context, List<T>? list, bool? isModSearch);
 
-typedef WidgetsErrorBuilder<T> = Widget Function(Object error);
+typedef WidgetsErrorBuilder<T> = Widget Function(Object? error);
 
 typedef WidgetsPaginationItemBuilder<T> = Widget Function(
     BuildContext context, int index, T objectIndex);
 
 typedef FutureFetchPageItems<T> = Future<List<T>> Function(
-    int page, String query);
+    int page, String? query);
 
 class Filters {
-  static Filter<String> startsWith = (test, query) {
-    final realTest = _prepareString(test);
-    final realQuery = _prepareString(query);
+  static Filter<String?> startsWith = (test, query) {
+    final realTest = _prepareString(test!);
+    final realQuery = _prepareString(query!);
     return realTest.startsWith(realQuery);
   };
 
-  static Filter<String> equals = (test, query) {
-    final realTest = _prepareString(test);
-    final realQuery = _prepareString(query);
+  static Filter<String?> equals = (test, query) {
+    final realTest = _prepareString(test!);
+    final realQuery = _prepareString(query!);
     return realTest == realQuery;
   };
 
-  static Filter<String> contains = (test, query) {
-    final realTest = _prepareString(test);
-    final realQuery = _prepareString(query);
+  static Filter<String?> contains = (test, query) {
+    final realTest = _prepareString(test!);
+    final realQuery = _prepareString(query!);
     return realTest.contains(realQuery);
   };
 

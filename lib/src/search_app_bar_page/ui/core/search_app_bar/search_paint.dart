@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class AppBarPainter extends CustomPainter {
-  final Offset center;
-  final double radius, containerHeight;
-  final BuildContext context;
+  final Offset? center;
+  final double? radius, containerHeight;
+  final BuildContext? context;
 
-  final Color color;
-  double statusBarHeight, screenWidth;
+  final Color? color;
+  double? statusBarHeight, screenWidth;
 
   AppBarPainter(
       {this.context,
@@ -14,17 +14,17 @@ class AppBarPainter extends CustomPainter {
       this.center,
       this.radius,
       this.color}) {
-    statusBarHeight = MediaQuery.of(context).padding.top;
-    screenWidth = MediaQuery.of(context).size.width;
+    statusBarHeight = MediaQuery.of(context!).padding.top;
+    screenWidth = MediaQuery.of(context!).size.width;
   }
 
   @override
   void paint(Canvas canvas, Size size) {
     final Paint circlePainter = Paint();
-    circlePainter.color = color;
+    circlePainter.color = color!;
     canvas.clipRect(
-        Rect.fromLTWH(0, 0, screenWidth, containerHeight + statusBarHeight));
-    canvas.drawCircle(center, radius, circlePainter);
+        Rect.fromLTWH(0, 0, screenWidth!, containerHeight! + statusBarHeight!));
+    canvas.drawCircle(center!, radius!, circlePainter);
   }
 
   @override

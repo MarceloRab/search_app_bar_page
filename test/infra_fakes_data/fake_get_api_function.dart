@@ -15,7 +15,7 @@ Future<List<Person>> futureListPerson(int page, String query, int size) async {
     print('page pedida = ' + page.toString());
     print('--------');*/
 
-  dataListPerson3.sort((a, b) => a.name.compareTo(b.name));
+  dataListPerson3.sort((a, b) => a.name!.compareTo(b.name!));
 
   await Future<void>.delayed(const Duration(seconds: 3));
 
@@ -65,7 +65,7 @@ Future<List<Person>> futureListPerson(int page, String query, int size) async {
 }
 
 bool Function(Person person, String query) contains = (Person test, query) {
-  final realTest = _prepareString(test.name);
+  final realTest = _prepareString(test.name!);
   final realQuery = _prepareString(query);
   return realTest.contains(realQuery);
 };

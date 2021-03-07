@@ -3,7 +3,7 @@ import 'package:get/state_manager.dart';
 abstract class SeacherBase<T> {
   final RxBool _isModSearch = false.obs;
 
-  bool get isModSearch => _isModSearch.value;
+  bool get isModSearch => _isModSearch.value!;
 
   set isModSearch(bool value) => _isModSearch.value = value;
 
@@ -13,7 +13,7 @@ abstract class SeacherBase<T> {
 
   set bancoInitValue(bool value) => bancoInit.value = value;
 
-  bool get bancoInitValue => bancoInit.value;
+  bool get bancoInitValue => bancoInit.value!;
 
   /* final StreamController<bool> bancoInit = StreamController<bool>();
 
@@ -23,5 +23,5 @@ abstract class SeacherBase<T> {
 */
   void sortCompareList(List<T> list);
 
-  bool sortCompare = true;
+  bool? sortCompare = true;
 }

@@ -1,7 +1,6 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
+
 import 'package:get/state_manager.dart';
-import 'package:meta/meta.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
@@ -10,7 +9,7 @@ class SearcherPageController<T> extends SeacherBase<T> {
   final RxBool _isModSearch = false.obs;
 
   @override
-  bool get isModSearch => _isModSearch.value;
+  bool get isModSearch => _isModSearch.value!;
 
   @override
   set isModSearch(bool value) => _isModSearch.value = value;
@@ -19,13 +18,13 @@ class SearcherPageController<T> extends SeacherBase<T> {
   final RxString rxSearch = ''.obs;
 
   @override
-  bool sortCompare = true;
+  bool? sortCompare = true;
 
   @override
-  set bancoInitValue(bool value) => bancoInit.value = value;
+  set bancoInitValue(bool? value) => bancoInit.value = value;
 
   @override
-  bool get bancoInitValue => bancoInit.value;
+  bool get bancoInitValue => bancoInit.value!;
 
   @override
   final RxBool bancoInit = true.obs;
@@ -35,18 +34,18 @@ class SearcherPageController<T> extends SeacherBase<T> {
 
   Function(Iterable<T>) get onSearchList => listSearch.assignAll;
 
-  FiltersTypes filtersType;
-  Filter<String> _filters;
-  StringFilter<T> stringFilter;
+  FiltersTypes? filtersType;
+  late Filter<String?> _filters;
+  StringFilter<T>? stringFilter;
 
   //Compare<T> compareSort;
 
-  Worker _worker;
+  Worker? _worker;
 
   //StringFilter<T> get _defaultFilter => (T value) => value as String;
 
   SearcherPageController({
-    @required this.listFull,
+    required this.listFull,
     this.stringFilter,
     this.sortCompare,
     this.filtersType = FiltersTypes.contains,
@@ -80,14 +79,14 @@ class SearcherPageController<T> extends SeacherBase<T> {
   }
 
   void onReady() {
-    _worker = ever(rxSearch, (String value) {
+    _worker = ever(rxSearch, (String? value) {
       refreshSeachList(value);
     });
   }
 
-  void refreshSeachList(String value) {
+  void refreshSeachList(String? value) {
     final list = listFull
-        .where((element) => _filters(stringFilter(element), value))
+        .where((element) => _filters(stringFilter!(element), value))
         .toList();
 
     //sortCompareList(list);
@@ -100,8 +99,8 @@ class SearcherPageController<T> extends SeacherBase<T> {
       list.sort(compareSort);
     }*/
 
-    if (sortCompare) {
-      list.sort((a, b) => stringFilter(a).compareTo(stringFilter(b)));
+    if (sortCompare!) {
+      list.sort((a, b) => stringFilter!(a)!.compareTo(stringFilter!(b)!));
     }
   }
 

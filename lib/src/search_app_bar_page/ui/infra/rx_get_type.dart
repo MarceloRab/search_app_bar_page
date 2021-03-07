@@ -8,13 +8,13 @@ class RxBoolAuth {
 
   final AuthFalseWidget authFalseWidget;
 
-  const RxBoolAuth._(this.auth, this.authFalseWidget)
-      : assert(auth != null),
-        assert(authFalseWidget != null);
+  const RxBoolAuth._(this.auth, this.authFalseWidget);
+  //: assert(auth != null),
+  // assert(authFalseWidget != null);
 
   // assert(tag != null && tag.isNotEmpty);
 
   const RxBoolAuth.input(
-      {@required RxBool rxBoolAuthm, @required AuthFalseWidget authFalseWidget})
+      {required RxBool rxBoolAuthm, required AuthFalseWidget authFalseWidget})
       : this._(rxBoolAuthm, authFalseWidget);
 }

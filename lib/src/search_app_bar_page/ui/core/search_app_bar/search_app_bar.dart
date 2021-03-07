@@ -10,14 +10,14 @@ import 'search_widget.dart';
 
 class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
   //final Searcher searcher;
-  final Widget title;
+  final Widget? title;
   final bool centerTitle;
-  final IconThemeData iconTheme;
-  final Color backgroundColor;
-  final Color searchBackgroundColor;
-  final Color searchElementsColor;
-  final Color magnifyinGlassColor;
-  final String hintText;
+  final IconThemeData? iconTheme;
+  final Color? backgroundColor;
+  final Color? searchBackgroundColor;
+  final Color? searchElementsColor;
+  final Color? magnifyinGlassColor;
+  final String? hintText;
   final bool flattenOnSearch;
   final TextCapitalization capitalization;
   final List<Widget> actions;
@@ -26,14 +26,14 @@ class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
   final double elevation;
 
   final bool hideDefaultConnectyIconOffAppBar;
-  final Widget iconConnectyOffAppBar;
-  final Color iconConnectyOffAppBarColor;
-  final TextInputType keyboardType;
+  final Widget? iconConnectyOffAppBar;
+  final Color? iconConnectyOffAppBarColor;
+  final TextInputType? keyboardType;
 
   SearchAppBar({
     //@required this.searcher,
-    Key key,
-    @required this.controller,
+    Key? key,
+    required this.controller,
     this.elevation = 4.0,
     this.title,
     this.centerTitle = false,
@@ -45,7 +45,7 @@ class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.flattenOnSearch = false,
     this.capitalization = TextCapitalization.none,
     this.actions = const <Widget>[],
-    int searchButtonPosition,
+    int? searchButtonPosition,
     this.hideDefaultConnectyIconOffAppBar = false,
     this.iconConnectyOffAppBarColor = Colors.redAccent,
     this.iconConnectyOffAppBar,
@@ -77,12 +77,12 @@ class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _SearchAppBarState extends State<SearchAppBar>
     with SingleTickerProviderStateMixin {
-  double _rippleStartX, _rippleStartY;
-  AnimationController _controller;
-  Animation<double> _animation;
-  double _elevation;
-  Widget _iconConnectyOffAppBar;
-  bool _hideDefaultConnectyIconOffAppBar;
+  double? _rippleStartX, _rippleStartY;
+  late AnimationController _controller;
+  late Animation<double> _animation;
+  double? _elevation;
+  Widget? _iconConnectyOffAppBar;
+  late bool _hideDefaultConnectyIconOffAppBar;
 
   //final ProductsController controller = Modular.get<ProductsController>();
 
@@ -176,16 +176,16 @@ class _SearchAppBarState extends State<SearchAppBar>
   }
 
   Widget _buildAppBar(BuildContext context) {
-    final searchButton = _buildSearchButton(context);
-    final increasedActions = <Widget>[];
+    final Widget searchButton = _buildSearchButton(context);
+    final List<Widget> increasedActions = <Widget>[];
     increasedActions.addAll(widget.actions);
     increasedActions.insert(widget._searchButtonPosition, searchButton);
-    final removeSeacher = <Widget>[];
+    final List<Widget> removeSeacher = <Widget>[];
     removeSeacher.addAll(widget.actions);
 
     if (_iconConnectyOffAppBar != null) {
-      increasedActions.insert(0, _iconConnectyOffAppBar);
-      removeSeacher.insert(0, _iconConnectyOffAppBar);
+      increasedActions.insert(0, _iconConnectyOffAppBar!);
+      removeSeacher.insert(0, _iconConnectyOffAppBar!);
     }
 
     return Obx(() {

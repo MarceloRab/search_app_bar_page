@@ -3,18 +3,18 @@ import 'package:get/state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
 
 class SearchWidget extends StatefulWidget implements PreferredSizeWidget {
-  final Color color;
+  final Color? color;
   final VoidCallback onCancelSearch;
 
-  final TextCapitalization textCapitalization;
-  final String hintText;
+  final TextCapitalization? textCapitalization;
+  final String? hintText;
 
   final SeacherBase controller;
-  final TextInputType keyboardType;
+  final TextInputType? keyboardType;
 
   const SearchWidget({
-    @required this.controller,
-    @required this.onCancelSearch,
+    required this.controller,
+    required this.onCancelSearch,
     this.color,
     this.textCapitalization,
     this.hintText,
@@ -52,7 +52,7 @@ class _SearchWidgetState extends State<SearchWidget> {
   Widget _buildClearButton() {
     return Obx(() {
       if (!widget.controller.isModSearch ||
-          widget.controller.rxSearch.value.isEmpty)
+          widget.controller.rxSearch.value!.isEmpty)
         return const SizedBox.shrink();
 
       return IconButton(
@@ -100,10 +100,10 @@ class _SearchWidgetState extends State<SearchWidget> {
   TextEditingController _configController() {
     //final TextEditingController textController = TextEditingController();
     textController.value =
-        TextEditingValue(text: widget.controller.rxSearch.value);
+        TextEditingValue(text: widget.controller.rxSearch.value!);
     //TextEditingValue(text: controller.rxSearch.value ?? '');
     textController.selection = TextSelection.fromPosition(
-      TextPosition(offset: textController.text?.length ?? 0),
+      TextPosition(offset: textController.text.length),
     );
     return textController;
   }

@@ -633,6 +633,8 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
       sortCompare: widget.compare ?? true,
       filtersType: widget.filtersType,
     );
+
+    _controller.bancoInitValue = true;
     super.initState();
   }
 
@@ -780,7 +782,7 @@ class Person {
 }
 
 void changeAuth() {
-  Future.delayed(const Duration(seconds: 8), () {
+  Future.delayed(const Duration(seconds: 5), () {
     ///------------------------------------------
     /// Test to check the reactivity of the screen.
     ///------------------------------------------

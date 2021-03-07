@@ -12,7 +12,7 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
   final RxBool _isModSearch = false.obs;
 
   @override
-  bool get isModSearch => _isModSearch.value;
+  bool get isModSearch => _isModSearch.value!;
 
   @override
   set isModSearch(bool value) => _isModSearch.value = value;
@@ -20,11 +20,11 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
   @override
   final rxSearch = ''.obs;
   @override
-  bool sortCompare = true;
+  bool? sortCompare = true;
 
-  FiltersTypes filtersType;
-  Filter<String> _filters;
-  StringFilter<T> stringFilter;
+  FiltersTypes? filtersType;
+  late Filter<String?> _filters;
+  StringFilter<T>? stringFilter;
 
   //Compare<T> compareSort;
   bool haveInitialData = false;
@@ -36,9 +36,9 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
 
   //AsyncSnapshot<List<T>>.withData(ConnectionState.none, null).obs;
 
-  AsyncSnapshot<List<T>> get snapshot => _rxSnapshot.value;
+  AsyncSnapshot<List<T>>? get snapshot => _rxSnapshot.value;
 
-  set snapshot(AsyncSnapshot<List<T>> value) => _rxSnapshot.value = value;
+  set snapshot(AsyncSnapshot<List<T>>? value) => _rxSnapshot.value = value;
 
   //StringFilter<T> get _defaultFilter => (T value) => value as String;
 
@@ -87,9 +87,9 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
     }
   }
 
-  List<T> refreshSeachList2(String value) {
+  List<T> refreshSeachList2(String? value) {
     final list = listFull
-        .where((element) => _filters(stringFilter(element), value))
+        .where((element) => _filters(stringFilter!(element), value))
         .toList();
     sortCompareList(list);
 
@@ -102,8 +102,8 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
       list.sort(compareSort);
     }*/
 
-    if (sortCompare) {
-      list.sort((a, b) => stringFilter(a).compareTo(stringFilter(b)));
+    if (sortCompare!) {
+      list.sort((a, b) => stringFilter!(a)!.compareTo(stringFilter!(b)!));
     }
   }
 
@@ -124,15 +124,17 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
       snapshot = AsyncSnapshot<List<T>>.withData(ConnectionState.active, data);
 
   @override
-  void afterDisconnected() => snapshot = snapshot.inState(ConnectionState.none);
+  void afterDisconnected() =>
+      snapshot = snapshot!.inState(ConnectionState.none);
 
   @override
-  void afterDone() => snapshot = snapshot.inState(ConnectionState.done);
+  void afterDone() => snapshot = snapshot!.inState(ConnectionState.done);
 
   @override
   void afterError(Object error) => snapshot =
       AsyncSnapshot<List<T>>.withError(ConnectionState.active, error);
 
   @override
-  void afterConnected() => snapshot = snapshot.inState(ConnectionState.waiting);
+  void afterConnected() =>
+      snapshot = snapshot!.inState(ConnectionState.waiting);
 }

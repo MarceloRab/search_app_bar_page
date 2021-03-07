@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:get/state_manager.dart';
-import 'package:meta/meta.dart';
 import 'package:search_app_bar_page/search_app_bar_page.dart';
 
 import 'seacher_base_controll.dart';
@@ -14,7 +13,7 @@ class SimpleAppBarController<T> implements SeacherBase<T> {
   Function(Iterable<T>) get onSearchList => listSearch.assignAll;
 
   FiltersTypes filtersType;
-  Filter<String> _filters;
+  late Filter<String?> _filters;
 
   set filter(FiltersTypes value) {
     if (filtersType == FiltersTypes.startsWith) {
@@ -26,20 +25,20 @@ class SimpleAppBarController<T> implements SeacherBase<T> {
     }
   }
 
-  StringFilter<T> stringFilter;
+  StringFilter<T>? stringFilter;
 
   final RxBool _isModSearch = false.obs;
 
   @override
-  bool get isModSearch => _isModSearch.value;
+  bool get isModSearch => _isModSearch.value!;
 
   @override
   set isModSearch(bool value) => _isModSearch.value = value;
 
   @override
-  bool sortCompare = true;
+  bool? sortCompare = true;
 
-  Worker _worker;
+  Worker? _worker;
 
   /* @override
   set bancoInitValue(bool value) => bancoInit.value = value;
@@ -54,10 +53,10 @@ class SimpleAppBarController<T> implements SeacherBase<T> {
   final RxString rxSearch = ''.obs;
 
   @override
-  bool get bancoInitValue => bancoInit.value;
+  bool get bancoInitValue => bancoInit.value!;
 
   SimpleAppBarController({
-    @required this.listFull,
+    required this.listFull,
     this.stringFilter,
     this.sortCompare,
     this.filtersType = FiltersTypes.contains,
@@ -82,14 +81,14 @@ class SimpleAppBarController<T> implements SeacherBase<T> {
   }
 
   void _onReady() {
-    _worker = ever(rxSearch, (String value) {
+    _worker = ever(rxSearch, (String? value) {
       refreshSeachList(value);
     });
   }
 
-  void refreshSeachList(String value) {
+  void refreshSeachList(String? value) {
     final list = listFull
-        .where((element) => _filters(stringFilter(element), value))
+        .where((element) => _filters(stringFilter!(element), value))
         .toList();
 
     //sortCompareList(list);
@@ -98,8 +97,8 @@ class SimpleAppBarController<T> implements SeacherBase<T> {
 
   @override
   void sortCompareList(List<T> list) {
-    if (sortCompare) {
-      list.sort((a, b) => stringFilter(a).compareTo(stringFilter(b)));
+    if (sortCompare!) {
+      list.sort((a, b) => stringFilter!(a)!.compareTo(stringFilter!(b)!));
     }
   }
 
@@ -111,5 +110,5 @@ class SimpleAppBarController<T> implements SeacherBase<T> {
   }
 
   @override
-  set bancoInitValue(bool value) => bancoInit.value = value;
+  set bancoInitValue(bool? value) => bancoInit.value = value;
 }
