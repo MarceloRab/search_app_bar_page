@@ -50,7 +50,7 @@ class GetStreamPage<T> extends StatefulWidget {
   final Widget? pageBottomSheet;
   final Color? pageBackgroundColor;
 
-  //final bool resizeToAvoidBottomPadding;
+  final String? restorationId;
   final bool? resizeToAvoidBottomInset;
   final bool primary;
   final DragStartBehavior drawerDragStartBehavior;
@@ -100,7 +100,7 @@ class GetStreamPage<T> extends StatefulWidget {
       this.pageBottomNavigationBar,
       this.pageBottomSheet,
       this.pageBackgroundColor,
-      //this.resizeToAvoidBottomPadding,
+      this.restorationId,
       this.resizeToAvoidBottomInset,
       this.primary = true,
       this.drawerDragStartBehavior = DragStartBehavior.start,
@@ -315,7 +315,7 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
         bottomNavigationBar: widget.pageBottomNavigationBar,
         bottomSheet: widget.pageBottomSheet,
         backgroundColor: widget.pageBackgroundColor,
-        // resizeToAvoidBottomPadding: widget.resizeToAvoidBottomPadding,
+        restorationId: widget.restorationId,
         resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
         primary: widget.primary,
         drawerDragStartBehavior: widget.drawerDragStartBehavior,

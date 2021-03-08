@@ -1,4 +1,4 @@
-import 'package:diacritic/diacritic.dart';
+//import 'package:diacritic/diacritic.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -493,6 +493,8 @@ class _SearchAppBarPaginationTestState
   }
 
   /// How to configure the server side.
+/*
+
   Future<List<Person>> _futureListPerson(int page, String query) async {
     final size = 15;
     List<Person> list = [];
@@ -500,11 +502,11 @@ class _SearchAppBarPaginationTestState
     final fistElement = (page - 1) * size;
     final lastElement = page * size;
 
-    /*print('fistElement = ' + fistElement.toString());
+    */ /*print('fistElement = ' + fistElement.toString());
     print('lastElement = ' + lastElement.toString());
     print('--------');
     print('page pedida = ' + page.toString());
-    print('--------');*/
+    print('--------');*/ /*
 
     dataListPerson3.sort((a, b) => a.name.compareTo(b.name));
 
@@ -551,8 +553,12 @@ class _SearchAppBarPaginationTestState
     return realTest.contains(realQuery);
   };
 
+
+
   static String _prepareString(String string) =>
       removeDiacritics(string).toLowerCase();
+
+*/
 }
 
 final dataListPerson3 = <Person>[
