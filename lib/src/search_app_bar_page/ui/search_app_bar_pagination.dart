@@ -8,12 +8,14 @@ import 'package:get/get.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/connecty_controller.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/ui/seacher_widget_page_base.dart';
 
 import '../../../search_app_bar_page.dart';
 import '../controller/searcher_page_pagination_controller.dart';
 import 'core/search_app_bar/search_app_bar.dart';
 
-class SearchAppBarPagination<T> extends StatefulWidget {
+class SearchAppBarPagination<T> extends StatefulWidget
+    implements SeacherScaffoldBase {
   /// Parameters do SearchAppBar
 
   final Widget? searchAppBartitle;
@@ -73,25 +75,43 @@ class SearchAppBarPagination<T> extends StatefulWidget {
   /// [searchePageFloatingActionButtonAnimator]  ...
   /// ...
   /// are passed on to the Scaffold.
-  final Widget? searchePageFloaActionButton;
+  @override
+  final Widget? searchePageFloatingActionButton;
+  @override
   final FloatingActionButtonLocation? searchePageFloatingActionButtonLocation;
+  @override
   final FloatingActionButtonAnimator? searchePageFloatingActionButtonAnimator;
+  @override
   final List<Widget>? searchePagePersistentFooterButtons;
+  @override
   final Widget? searchePageDrawer;
+  @override
   final Widget? searchePageEndDrawer;
+  @override
   final Widget? searchePageBottomNavigationBar;
+  @override
   final Widget? searchePageBottomSheet;
+  @override
   final Color? searchPageBackgroundColor;
-
+  @override
   final String? restorationId;
+  @override
   final bool? resizeToAvoidBottomInset;
+  @override
   final bool primary;
+  @override
   final DragStartBehavior drawerDragStartBehavior;
+  @override
   final bool extendBody;
+  @override
   final bool extendBodyBehindAppBar;
+  @override
   final Color? drawerScrimColor;
+  @override
   final double? drawerEdgeDragWidth;
+  @override
   final bool drawerEnableOpenDragGesture;
+  @override
   final bool endDrawerEnableOpenDragGesture;
 
   /// [initialData] List to be filtered by Search.
@@ -169,7 +189,7 @@ class SearchAppBarPagination<T> extends StatefulWidget {
     this.widgetOffConnectyWaiting,
     this.widgetErrorBuilder,
     this.widgetNothingFound,
-    this.searchePageFloaActionButton,
+    this.searchePageFloatingActionButton,
     this.searchePageFloatingActionButtonLocation,
     this.searchePageFloatingActionButtonAnimator,
     this.searchePagePersistentFooterButtons,
@@ -211,7 +231,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
 
   StreamSubscription? _subscriptionConnecty;
 
-  late bool _haveInitialData;
+  bool _haveInitialData = false;
   bool downConnectyWithoutData = false;
 
   Widget? _widgetConnecty;
@@ -452,7 +472,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
             keyboardType: widget.searchAppBarKeyboardType,
             magnifyinGlassColor: widget.magnifyinGlassColor),
         body: buildBody(),
-        floatingActionButton: widget.searchePageFloaActionButton,
+        floatingActionButton: widget.searchePageFloatingActionButton,
         floatingActionButtonLocation:
             widget.searchePageFloatingActionButtonLocation,
         floatingActionButtonAnimator:

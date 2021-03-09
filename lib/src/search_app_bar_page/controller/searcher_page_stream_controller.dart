@@ -36,7 +36,7 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
 
   //AsyncSnapshot<List<T>>.withData(ConnectionState.none, null).obs;
 
-  AsyncSnapshot<List<T>>? get snapshot => _rxSnapshot.value;
+  AsyncSnapshot<List<T>> get snapshot => _rxSnapshot.value!;
 
   set snapshot(AsyncSnapshot<List<T>>? value) => _rxSnapshot.value = value;
 
@@ -124,17 +124,15 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
       snapshot = AsyncSnapshot<List<T>>.withData(ConnectionState.active, data);
 
   @override
-  void afterDisconnected() =>
-      snapshot = snapshot!.inState(ConnectionState.none);
+  void afterDisconnected() => snapshot = snapshot.inState(ConnectionState.none);
 
   @override
-  void afterDone() => snapshot = snapshot!.inState(ConnectionState.done);
+  void afterDone() => snapshot = snapshot.inState(ConnectionState.done);
 
   @override
   void afterError(Object error) => snapshot =
       AsyncSnapshot<List<T>>.withError(ConnectionState.active, error);
 
   @override
-  void afterConnected() =>
-      snapshot = snapshot!.inState(ConnectionState.waiting);
+  void afterConnected() => snapshot = snapshot.inState(ConnectionState.waiting);
 }

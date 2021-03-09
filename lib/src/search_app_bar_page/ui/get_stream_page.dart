@@ -40,7 +40,9 @@ class GetStreamPage<T> extends StatefulWidget {
   /// [floatingActionButtonLocation] ,
   /// [floatingActionButtonAnimator]  ...
   /// are passed on to the Scaffold.
+
   final Widget? floatingActionButton;
+
   final FloatingActionButtonLocation? floatingActionButtonLocation;
   final FloatingActionButtonAnimator? floatingActionButtonAnimator;
   final List<Widget>? persistentFooterButtons;
@@ -173,7 +175,7 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.initialData != widget.initialData) {
-      if (_controller.snapshot!.connectionState == ConnectionState.none) {
+      if (_controller.snapshot.connectionState == ConnectionState.none) {
         _controller.initial(widget.initialData!);
       } else {
         _controller.afterData(widget.initialData!);
@@ -288,16 +290,16 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
         return _widgetConnecty!;
       }
 
-      if (_controller.snapshot!.connectionState == ConnectionState.waiting) {
+      if (_controller.snapshot.connectionState == ConnectionState.waiting) {
         return _widgetWaiting!;
       }
 
-      if (_controller.snapshot!.hasError) {
-        return buildWidgetError(_controller.snapshot!.error);
+      if (_controller.snapshot.hasError) {
+        return buildWidgetError(_controller.snapshot.error);
       }
 
       // ignore: null_check_on_nullable_type_parameter
-      return widget.obxWidgetBuilder(context, _controller.snapshot!.data!);
+      return widget.obxWidgetBuilder(context, _controller.snapshot.data!);
     });
   }
 

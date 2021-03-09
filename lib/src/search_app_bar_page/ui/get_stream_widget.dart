@@ -46,18 +46,18 @@ class GetStreamWidget<T> extends StatefulWidget {
 class _GetStreamWidgetState<T> extends State<GetStreamWidget<T?>> {
   StreamSubscription<T?>? _subscription;
 
-  GetStreamController<T>? _controller;
+  late GetStreamController<T> _controller;
 
   Widget? _widgetWaiting;
 
   @override
   void initState() {
     // _controller = GetStreamController();
-    _controller = Get.put<GetStreamController<T>>(GetStreamController());
+    _controller = Get.put<GetStreamController<T>>(GetStreamController())!;
     super.initState();
 
     if (widget.initialData != null) {
-      _controller!.initial(widget.initialData!);
+      _controller.initial(widget.initialData!);
     }
 
     _subscribeStream();
@@ -66,7 +66,7 @@ class _GetStreamWidgetState<T> extends State<GetStreamWidget<T?>> {
 
   @override
   void dispose() {
-    _controller!.onClose();
+    _controller.onClose();
     _unsubscribeStream();
     super.dispose();
   }
@@ -76,10 +76,10 @@ class _GetStreamWidgetState<T> extends State<GetStreamWidget<T?>> {
     super.didUpdateWidget(oldWidget);
 
     if (oldWidget.initialData != widget.initialData) {
-      if (_controller!.snapshot!.connectionState == ConnectionState.none) {
-        _controller!.initial(widget.initialData!);
+      if (_controller.snapshot.connectionState == ConnectionState.none) {
+        _controller.initial(widget.initialData!);
       } else {
-        _controller!.afterData(widget.initialData!);
+        _controller.afterData(widget.initialData!);
       }
     }
 
@@ -87,7 +87,7 @@ class _GetStreamWidgetState<T> extends State<GetStreamWidget<T?>> {
       if (_subscription != null) {
         _unsubscribeStream();
 
-        _controller!.afterDisconnected();
+        _controller.afterDisconnected();
       }
 
       _subscribeStream();
@@ -97,14 +97,14 @@ class _GetStreamWidgetState<T> extends State<GetStreamWidget<T?>> {
   void _subscribeStream() {
     _subscription = widget.stream.listen((data) {
       if (data == null) {
-        _controller!.afterError(Exception('It cannot return null. 😢'));
+        _controller.afterError(Exception('It cannot return null. 😢'));
       } else {
-        _controller!.afterData(data);
+        _controller.afterData(data);
       }
     }, onError: (Object error) {
-      _controller!.afterError(error);
+      _controller.afterError(error);
     }, onDone: () {
-      _controller!.afterDone();
+      _controller.afterDone();
     });
 
     //_controller.afterConnected();
@@ -120,15 +120,15 @@ class _GetStreamWidgetState<T> extends State<GetStreamWidget<T?>> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (_controller!.snapshot!.connectionState == ConnectionState.waiting) {
+      if (_controller.snapshot.connectionState == ConnectionState.waiting) {
         return _widgetWaiting!;
       }
 
-      if (_controller!.snapshot!.hasError) {
-        return buildWidgetError(_controller!.snapshot!.error);
+      if (_controller.snapshot.hasError) {
+        return buildWidgetError(_controller.snapshot.error);
       }
 
-      return widget.obxWidgetBuilder!(context, _controller!.snapshot!.data);
+      return widget.obxWidgetBuilder!(context, _controller.snapshot.data);
     });
   }
 

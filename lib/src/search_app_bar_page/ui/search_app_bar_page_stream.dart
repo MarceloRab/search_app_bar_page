@@ -2,17 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:get/state_manager.dart';
 import 'package:get/get.dart';
+import 'package:get/state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/connecty_controller.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/ui/seacher_widget_page_base.dart';
 
 import '../../../search_app_bar_page.dart';
 import '../controller/searcher_page_stream_controller.dart';
-import 'core/search_app_bar/search_app_bar.dart';
 
-class SearchAppBarPageStream<T> extends StatefulWidget {
+class SearchAppBarPageStream<T> extends StatefulWidget
+    implements SeacherScaffoldBase {
   /// Paramentros do SearchAppBar
 
   final Widget? searchAppBartitle;
@@ -29,7 +30,7 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
   final bool searchAppBarflattenOnSearch;
   final TextCapitalization searchAppBarcapitalization;
   final List<Widget> searchAppBaractions;
-  final double searchAppBarelevation;
+  final double searchAppBarElevation;
   final TextInputType? searchAppBarKeyboardType;
 
   /// [magnifyinGlassColor] Changes the color of the magnifying glass.
@@ -69,25 +70,43 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
   /// [searchePageFloatingActionButtonAnimator]  ...
   /// ...
   /// are passed on to the Scaffold.
+  @override
   final Widget? searchePageFloatingActionButton;
+  @override
   final FloatingActionButtonLocation? searchePageFloatingActionButtonLocation;
+  @override
   final FloatingActionButtonAnimator? searchePageFloatingActionButtonAnimator;
+  @override
   final List<Widget>? searchePagePersistentFooterButtons;
+  @override
   final Widget? searchePageDrawer;
+  @override
   final Widget? searchePageEndDrawer;
+  @override
   final Widget? searchePageBottomNavigationBar;
+  @override
   final Widget? searchePageBottomSheet;
+  @override
   final Color? searchPageBackgroundColor;
-
+  @override
   final String? restorationId;
+  @override
   final bool? resizeToAvoidBottomInset;
+  @override
   final bool primary;
+  @override
   final DragStartBehavior drawerDragStartBehavior;
+  @override
   final bool extendBody;
+  @override
   final bool extendBodyBehindAppBar;
+  @override
   final Color? drawerScrimColor;
+  @override
   final double? drawerEdgeDragWidth;
+  @override
   final bool drawerEnableOpenDragGesture;
+  @override
   final bool endDrawerEnableOpenDragGesture;
 
   /// Parametros para o SearcherGetController
@@ -152,7 +171,7 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
     this.searchAppBarflattenOnSearch = false,
     this.searchAppBarcapitalization = TextCapitalization.none,
     this.searchAppBaractions = const <Widget>[],
-    this.searchAppBarelevation = 4.0,
+    this.searchAppBarElevation = 4.0,
     this.searchAppBarKeyboardType,
     this.magnifyinGlassColor,
     this.hideDefaultConnectyIconOffAppBar = false,
@@ -192,7 +211,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
 
   // T as List
 
-  late bool _haveInitialData;
+  bool _haveInitialData = false;
 
   late ConnectController _connectyController;
   bool downConnectyWithoutData = false;
@@ -202,7 +221,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
 
   Worker? _worker;
 
-  SearcherPageStreamController<T>? _controller;
+  late SearcherPageStreamController<T> _controller;
 
   @override
   void initState() {
@@ -212,7 +231,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
         stringFilter: widget.stringFilter,
         sortCompare: widget.sortCompare,
         filtersType: widget.filtersType)
-      ..onInitFilter());
+      ..onInitFilter())!;
 
     _haveInitialData = widget.initialData != null;
 
@@ -221,9 +240,9 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
     if (!_haveInitialData) {
       _subscribeConnecty();
     } else {
-      _controller!.listFull.addAll(widget.initialData!);
-      _controller!.sortCompareList(_controller!.listFull);
-      _controller!.initial(_controller!.listFull);
+      _controller.listFull.addAll(widget.initialData!);
+      _controller.sortCompareList(_controller.listFull);
+      _controller.initial(_controller.listFull);
     }
 
     buildWidgetsDefault();
@@ -233,11 +252,11 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
   void didUpdateWidget(SearchAppBarPageStream<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _controller!.stringFilter = widget.stringFilter;
+    _controller.stringFilter = widget.stringFilter;
     //_controller.compareSort = widget.compareSort;
-    _controller!.sortCompare = widget.sortCompare;
-    _controller!.filtersType = widget.filtersType;
-    _controller!.onInitFilter();
+    _controller.sortCompare = widget.sortCompare;
+    _controller.filtersType = widget.filtersType;
+    _controller.onInitFilter();
 
     if (oldWidget.initialData != widget.initialData) {
       //_initialData = widget.getInitialData;
@@ -248,25 +267,25 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
         downConnectyWithoutData = false;
         _unsubscribeConnecty();
 
-        if (widget.initialData!.length > _controller!.listFull.length) {
-          _controller!.listFull.clear();
-          _controller!.listFull.addAll(widget.initialData!);
-          _controller!.sortCompareList(_controller!.listFull);
-          _controller!.initial(_controller!.listFull);
+        if (widget.initialData!.length > _controller.listFull.length) {
+          _controller.listFull.clear();
+          _controller.listFull.addAll(widget.initialData!);
+          _controller.sortCompareList(_controller.listFull);
+          _controller.initial(_controller.listFull);
         }
-      } else if (_controller!.listFull.isEmpty &&
+      } else if (_controller.listFull.isEmpty &&
           _subscriptionConnecty != null) {
         _subscribeConnecty();
       }
     }
 
-    if (_controller!.listFull.isNotEmpty) {
-      if (_controller!.rxSearch.value!.isNotEmpty) {
-        _controller!.afterData(
-            _controller!.refreshSeachList2(_controller!.rxSearch.value));
+    if (_controller.listFull.isNotEmpty) {
+      if (_controller.rxSearch.value!.isNotEmpty) {
+        _controller.afterData(
+            _controller.refreshSeachList2(_controller.rxSearch.value));
       } else {
-        _controller!.sortCompareList(_controller!.listFull);
-        _controller!.afterData(_controller!.listFull);
+        _controller.sortCompareList(_controller.listFull);
+        _controller.afterData(_controller.listFull);
       }
     }
 
@@ -274,7 +293,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
       if (_subscription != null) {
         _unsubscribeStream();
 
-        _controller!.afterDisconnected();
+        _controller.afterDisconnected();
       }
 
       _subscribeStream();
@@ -285,10 +304,10 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: SearchAppBar(
-            controller: _controller!,
+            controller: _controller,
             title: widget.searchAppBartitle,
             centerTitle: widget.searchAppBarcenterTitle,
-            elevation: widget.searchAppBarelevation,
+            elevation: widget.searchAppBarElevation,
             iconTheme: widget.searchAppBariconTheme,
             backgroundColor: widget.searchAppBarbackgroundColor,
             searchBackgroundColor: widget.searchAppBarModeSearchBackgroundColor,
@@ -328,27 +347,27 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
         endDrawerEnableOpenDragGesture: widget.endDrawerEnableOpenDragGesture);
   }
 
-  Widget? buildBody() {
+  Widget buildBody() {
     if (downConnectyWithoutData) {
       // Apenas anuncia quando nao tem a primeira data e esta sem conexao
-      return _widgetConnecty;
+      return _widgetConnecty!;
     }
 
     return Obx(() {
       if (widget.rxBoolAuth?.auth.value == false) {
         return widget.rxBoolAuth!.authFalseWidget();
       }
-      if (_controller!.snapshot!.connectionState == ConnectionState.waiting) {
+      if (_controller.snapshot.connectionState == ConnectionState.waiting) {
         return _widgetWaiting!;
       }
 
-      if (_controller!.snapshot!.hasError) {
-        return buildWidgetError(_controller!.snapshot!.error);
+      if (_controller.snapshot.hasError) {
+        return buildWidgetError(_controller.snapshot.error);
       }
 
       //final isListFull = widget.searcher.rxSearch.value.isEmpty;
       return widget.obxListBuilder(
-          context, _controller!.snapshot!.data, _controller!.isModSearch);
+          context, _controller.snapshot.data, _controller.isModSearch);
     });
   }
 
@@ -356,7 +375,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
   void dispose() {
     _unsubscribeStream();
     _unsubscribeConnecty();
-    _controller!.onClose();
+    _controller.onClose();
     if (_worker?.disposed == true) {
       _worker?.dispose();
     }
@@ -367,46 +386,46 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
   void _subscribeStream() {
     _subscription = widget.listStream.listen((List<T>? data) {
       if (data == null) {
-        if (_controller!.listFull.isNotEmpty) {
-          _controller!.afterData(_controller!.listFull);
+        if (_controller.listFull.isNotEmpty) {
+          _controller.afterData(_controller.listFull);
         } else
-          _controller!.afterError(Exception('It cannot return null. 😢'));
+          _controller.afterError(Exception('It cannot return null. 😢'));
         return;
       } else {
-        if (!_controller!.bancoInitValue) {
+        if (!_controller.bancoInitValue) {
           // Mostrar lupa do Search
-          _controller!.bancoInitValue = true;
-          if (_controller!.bancoInit.canUpdate) {
-            _controller!.bancoInit.close();
+          _controller.bancoInitValue = true;
+          if (_controller.bancoInit.canUpdate) {
+            _controller.bancoInit.close();
           }
         }
       }
       downConnectyWithoutData = false;
       _unsubscribeConnecty();
 
-      _controller!.listFull = data;
-      _controller!.sortCompareList(_controller!.listFull);
+      _controller.listFull = data;
+      _controller.sortCompareList(_controller.listFull);
 
-      if (_controller!.rxSearch.value!.isNotEmpty) {
-        _controller!.afterData(
-            _controller!.refreshSeachList2(_controller!.rxSearch.value));
+      if (_controller.rxSearch.value!.isNotEmpty) {
+        _controller.afterData(
+            _controller.refreshSeachList2(_controller.rxSearch.value));
       } else {
-        _controller!.afterData(_controller!.listFull);
+        _controller.afterData(_controller.listFull);
       }
     }, onError: (Object error) {
-      _controller!.afterError(error);
+      _controller.afterError(error);
     }, onDone: () {
-      _controller!.afterDone();
+      _controller.afterDone();
     });
-    _controller!.afterConnected();
+    _controller.afterConnected();
   }
 
   void _subscribreSearhQuery() {
-    _worker = debounce(_controller!.rxSearch, (String? query) {
+    _worker = debounce(_controller.rxSearch, (String? query) {
       if (query!.isNotEmpty) {
-        _controller!.afterData(_controller!.refreshSeachList2(query));
+        _controller.afterData(_controller.refreshSeachList2(query));
       } else {
-        _controller!.afterData(_controller!.listFull);
+        _controller.afterData(_controller.listFull);
       }
     }, time: const Duration(milliseconds: 350));
   }
@@ -423,7 +442,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
       } else if (isConnected && (!_haveInitialData)) {
         setState(() {
           downConnectyWithoutData = false;
-          _controller!.afterConnected();
+          _controller.afterConnected();
         });
       }
     });

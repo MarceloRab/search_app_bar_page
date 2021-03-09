@@ -1,3 +1,7 @@
+## [2.0.0-nullsafety.4]
+
+* Small improvement in nullsafety.
+
 ## [2.0.0-nullsafety.3]
 
 * Small improvement in Flutter 2.0.

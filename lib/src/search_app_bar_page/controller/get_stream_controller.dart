@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 class GetStreamController<T> implements StreamSearcherBase<T> {
   final Rx<AsyncSnapshot<T>> _rxSnapshot = AsyncSnapshot<T>.waiting().obs;
 
-  AsyncSnapshot<T>? get snapshot => _rxSnapshot.value;
+  AsyncSnapshot<T> get snapshot => _rxSnapshot.value!;
 
   set snapshot(AsyncSnapshot<T>? value) => _rxSnapshot.value = value;
 
@@ -17,19 +17,17 @@ class GetStreamController<T> implements StreamSearcherBase<T> {
       snapshot = AsyncSnapshot<T>.withData(ConnectionState.active, data);
 
   @override
-  void afterDisconnected() =>
-      snapshot = snapshot!.inState(ConnectionState.none);
+  void afterDisconnected() => snapshot = snapshot.inState(ConnectionState.none);
 
   @override
-  void afterDone() => snapshot = snapshot!.inState(ConnectionState.done);
+  void afterDone() => snapshot = snapshot.inState(ConnectionState.done);
 
   @override
   void afterError(Object error) =>
       snapshot = AsyncSnapshot<T>.withError(ConnectionState.active, error);
 
   @override
-  void afterConnected() =>
-      snapshot = snapshot!.inState(ConnectionState.waiting);
+  void afterConnected() => snapshot = snapshot.inState(ConnectionState.waiting);
 
   void onClose() {
     _rxSnapshot.close();
