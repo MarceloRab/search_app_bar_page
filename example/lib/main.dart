@@ -30,6 +30,7 @@ abstract class Routes {
   static const PAGE_4 = '/page-4';
   static const PAGE_5 = '/page-5';
   static const PAGE_6 = '/page-6';
+  static const PAGE_7 = '/page-7';
 }
 
 class AppPages {
@@ -38,6 +39,7 @@ class AppPages {
   static final routes = [
     GetPage(name: Routes.HOME, page: () => HomePage()),
     GetPage(name: Routes.PAGE_1, page: () => SearchAppBarStream()),
+    GetPage(name: Routes.PAGE_7, page: () => SearchAppBarRefresh()),
     GetPage(name: Routes.PAGE_2, page: () => SearchPage()),
     GetPage(name: Routes.PAGE_3, page: () => SearchAppBarPaginationTest()),
     GetPage(
@@ -90,6 +92,14 @@ class HomePage extends StatelessWidget {
                 },
                 child: Text(
                   'Go to the SearchStreamPage',
+                  style: TextStyle(fontSize: 20),
+                )),
+            MaterialButton(
+                onPressed: () {
+                  Get.toNamed(Routes.PAGE_7);
+                },
+                child: Text(
+                  'Go to the SearchRefreshPage',
                   style: TextStyle(fontSize: 20),
                 )),
             MaterialButton(
@@ -363,6 +373,128 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
     //throw Exception('Erro voluntario');
     yield dataListPerson3;
   })();
+}
+
+class SearchAppBarRefresh extends StatefulWidget {
+  const SearchAppBarRefresh({Key key}) : super(key: key);
+
+  @override
+  _SearchAppBarRefreshState createState() => _SearchAppBarRefreshState();
+}
+
+class _SearchAppBarRefreshState extends State<SearchAppBarRefresh> {
+  Dio _dio;
+
+  @override
+  void initState() {
+    _dio = Dio(
+        //BaseOptions(baseUrl: 'https://5f988a5242706e001695875d.mockapi.io'));
+        BaseOptions(baseUrl: 'https://5f988a5242706e001695875d.mockapi.io'));
+
+    _dio.interceptors
+        .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
+      debugPrint(options.uri.toString());
+      return options;
+    }, onResponse: (response) async {
+      // debugPrint(prettyJson(response.data, indent: 2));
+      return response;
+    }, onError: (DioError e) async {
+      return e;
+    }));
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SearchAppBarPageRefresh<Person>(
+      //initialData: _initialData,x
+      magnifyinGlassColor: Colors.white,
+      searchAppBarcenterTitle: true,
+      searchAppBarhintText: 'Search for a name',
+      searchAppBartitle: Text(
+        'Search Refresh Page',
+        style: TextStyle(fontSize: 20),
+      ),
+
+      ///  Do not insert parentheses here.
+      functionRefresh: _futureList,
+      stringFilter: (Person person) => person.name,
+      //stringFilter: (Person person) => person.age.toString(),
+      //sortCompare: false,
+      filtersType: FiltersTypes.contains,
+      obxListBuilder: (context, list, isModSearch) {
+        // ☑️ This function is inside an Obx.
+        // Place other reactive verables into it.
+        if (list.isEmpty) {
+          return Center(
+              child: Text(
+            'NOTHING FOUND',
+            style: TextStyle(fontSize: 14),
+          ));
+        }
+        return Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: list.length,
+                itemBuilder: (_, index) {
+                  return Card(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 4),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4)),
+                      // color: Theme.of(context).primaryColorDark,
+                      child: Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Name: ${list[index].name}',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                'Age: ${list[index].age.toStringAsFixed(2)}',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                            )
+                          ],
+                        ),
+                      ));
+                },
+              ),
+            ),
+            MaterialButton(
+                onPressed: () {
+                  Get.toNamed(Routes.PAGE_2);
+                },
+                child: Text(
+                  'Ir para SearchPage',
+                  style: TextStyle(fontSize: 20),
+                )),
+            MaterialButton(
+                onPressed: () {
+                  setState(() {});
+                },
+                child: Text(
+                  'SetState',
+                  style: TextStyle(fontSize: 20),
+                )),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<List<Person>> _futureList() async {
+    final response = await _dio.get('/users');
+
+    return (response.data as List)
+        .map((element) => Person.fromMap(element))
+        .toList();
+  }
 }
 
 final dataListPerson = <Person>[
@@ -752,6 +884,7 @@ class Person {
   final String id;
   final String avatar;
   final String username;
+  final String image;
 
   Person({
     this.name,
@@ -759,6 +892,7 @@ class Person {
     this.id,
     this.avatar,
     this.username,
+    this.image,
   });
 
   @override
@@ -773,6 +907,7 @@ class Person {
       id: map['id'] as String,
       avatar: map['avatar'] as String,
       username: map['username'] as String,
+      image: map['image'] as String,
     );
   }
 
@@ -783,6 +918,7 @@ class Person {
       'id': this.id,
       'avatar': this.avatar,
       'username': this.username,
+      'image': this.image,
     };
   }
 }
