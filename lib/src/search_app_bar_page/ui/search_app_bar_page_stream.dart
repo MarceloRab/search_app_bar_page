@@ -205,7 +205,6 @@ class SearchAppBarPageStream<T> extends StatefulWidget
 
 /// State for [StreamBuilderBase].
 class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
-  // ignore: cancel_subscriptions
   StreamSubscription? _subscription;
   StreamSubscription? _subscriptionConnecty;
 
@@ -458,7 +457,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
 
   void _unsubscribeStream() {
     if (_subscription != null) {
-      _subscription!.cancel();
+      _subscription?.cancel();
       _subscription = null;
     }
   }

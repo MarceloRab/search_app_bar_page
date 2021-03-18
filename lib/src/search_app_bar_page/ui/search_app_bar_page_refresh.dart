@@ -221,11 +221,8 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
       _SearchAppBarPageRefreshState<T>();
 }
 
-/// State for [StreamBuilderBase].
 class _SearchAppBarPageRefreshState<T>
     extends State<SearchAppBarPageRefresh<T>> {
-  // ignore: cancel_subscriptions
-  //StreamSubscription? _subscription;
   StreamSubscription? _subscriptionConnecty;
 
   // T as List

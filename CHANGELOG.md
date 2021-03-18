@@ -1,3 +1,7 @@
+## [2.0.0-nullsafety.6]
+
+* Small improvement.
+
 ## [2.0.0-nullsafety.5]
 
 * Added ```[SearchAppBarRefresh]```. Now you can request data from your API and manually renew your 

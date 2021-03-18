@@ -298,7 +298,6 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
         return buildWidgetError(_controller.snapshot.error);
       }
 
-      // ignore: null_check_on_nullable_type_parameter
       return widget.obxWidgetBuilder(context, _controller.snapshot.data!);
     });
   }

@@ -1061,7 +1061,6 @@ class TestGetStreamPage extends StatelessWidget {
                               ),
                               Expanded(
                                 child: Text(
-                                  // ignore: lines_longer_than_80_chars
                                   'Age: ${list[index].age.toStringAsFixed(2)}',
                                   style: TextStyle(fontSize: 12),
                                 ),
