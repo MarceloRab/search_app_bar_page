@@ -378,6 +378,8 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
     if (_worker?.disposed == true) {
       _worker?.dispose();
     }
+    _subscription?.cancel();
+    _subscriptionConnecty?.cancel();
 
     super.dispose();
   }
@@ -457,7 +459,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
 
   void _unsubscribeStream() {
     if (_subscription != null) {
-      _subscription?.cancel();
+      _subscription!.cancel();
       _subscription = null;
     }
   }

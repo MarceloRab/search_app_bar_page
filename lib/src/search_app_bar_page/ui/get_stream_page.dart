@@ -167,6 +167,8 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
     _controller.onClose();
     _unsubscribeConnecty();
     _unsubscribeStream();
+    _subscription?.cancel();
+    _subscriptionConnecty?.cancel();
     super.dispose();
   }
 
@@ -213,6 +215,7 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
 
     //_controller.afterConnected();
   }
+
 
   void _unsubscribeStream() {
     if (_subscription != null) {
