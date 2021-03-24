@@ -406,6 +406,8 @@ class _SearchAppBarPageRefreshState<T>
       _worker?.dispose();
     }
 
+    _subscriptionConnecty?.cancel();
+
     super.dispose();
   }
 

@@ -68,6 +68,9 @@ class _GetStreamWidgetState<T> extends State<GetStreamWidget<T?>> {
   void dispose() {
     _controller.onClose();
     _unsubscribeStream();
+
+    _subscription?.cancel();
+
     super.dispose();
   }
 

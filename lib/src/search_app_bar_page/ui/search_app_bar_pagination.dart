@@ -648,6 +648,8 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
       _worker?.dispose();
     }
 
+    _subscriptionConnecty?.cancel();
+
     super.dispose();
   }
 

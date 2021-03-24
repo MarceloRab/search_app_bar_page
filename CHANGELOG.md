@@ -1,3 +1,12 @@
+## [2.0.0-nullsafety.8]
+
+* The StreamSubscription were all getting canceled. However, why add repeated lines of 
+  _subscription?.cancel() stops generating warning.
+
+## [2.0.0-nullsafety.7]
+
+* Minimal improvement.
+
 ## [2.0.0-nullsafety.6]
 
 * Small improvement.
