@@ -26,6 +26,10 @@ class GetStreamController<T> implements StreamSearcherBase<T> {
   void afterError(Object error) =>
       snapshot = AsyncSnapshot<T>.withError(ConnectionState.active, error);
 
+  /* @override
+  void nothing() =>
+      snapshot = AsyncSnapshot<T>.nothing(ConnectionState.active, error);*/
+
   @override
   void afterConnected() => snapshot = snapshot.inState(ConnectionState.waiting);
 
@@ -46,4 +50,6 @@ mixin StreamSearcherBase<T> {
   void afterDone();
 
   void afterDisconnected();
+
+//void nothing();
 }

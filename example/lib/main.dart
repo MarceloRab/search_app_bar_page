@@ -946,6 +946,8 @@ class TestGetStreamPage extends StatelessWidget {
         Get.find<Test2Controller>().rxList.clear();
         return Future.value(true);
       },
+
+      /// Have a Scaffold
       child: GetStreamPage<List<Person>>(
         title: Text(
           'Stream Page',
@@ -1043,7 +1045,46 @@ class TestStreamWidget extends StatelessWidget {
           Get.find<Test2Controller>().rxList.clear();
           return Future.value(true);
         },
-        child: GetStreamWidget<List<Person>>(
+
+        /// Transform Rx in Widget with extensions
+        child: Get.find<Test2Controller>().rxList.getStreamWidget(
+          obxWidgetBuilder: (context, objesctStream) {
+            final list = objesctStream;
+            if (list == null || list.isEmpty) {
+              return Center(
+                  child: Text(
+                'NOTHING FOUND',
+                style: TextStyle(fontSize: 14),
+              ));
+            }
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: list.length,
+                    itemBuilder: (_, index) {
+                      return Card(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 4),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(14.0),
+                            child: Text(
+                              'Name: ${list[index].name}',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ));
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
+        )
+
+        /// without Scaffold
+/*            GetStreamWidget<List<Person>>(
           stream: streamListPerson,
           obxWidgetBuilder: (context, objesctStream) {
             ///------------------------------------------
@@ -1094,7 +1135,8 @@ class TestStreamWidget extends StatelessWidget {
               ],
             );
           },
-        ),
+        )*/
+        ,
       ),
     );
   }

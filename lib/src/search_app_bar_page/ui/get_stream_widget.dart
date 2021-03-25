@@ -22,7 +22,7 @@ class GetStreamWidget<T> extends StatefulWidget {
   /// [obxWidgetBuilder] This function starts every time we receive
   ///snapshot.data through the stream. To set up your page, you receive
   /// the context, the streamObject which is snapshot.data.
-  final GetWidgetBuilder<T>? obxWidgetBuilder;
+  final GetWidgetBuilder<T> obxWidgetBuilder;
 
   /// Start showing [widgetWaiting] until it shows the first data
   final Widget? widgetWaiting;
@@ -32,8 +32,8 @@ class GetStreamWidget<T> extends StatefulWidget {
   const GetStreamWidget(
       {Key? key,
       required this.stream,
+      required this.obxWidgetBuilder,
       this.widgetErrorBuilder,
-      this.obxWidgetBuilder,
       this.widgetWaiting,
       this.initialData,
       this.rxBoolAuth})
@@ -131,7 +131,7 @@ class _GetStreamWidgetState<T> extends State<GetStreamWidget<T?>> {
         return buildWidgetError(_controller.snapshot.error);
       }
 
-      return widget.obxWidgetBuilder!(context, _controller.snapshot.data);
+      return widget.obxWidgetBuilder(context, _controller.snapshot.data);
     });
   }
 

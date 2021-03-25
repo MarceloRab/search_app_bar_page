@@ -1,6 +1,13 @@
+## [2.0.0-nullsafety.9]
+
+* Now you can assemble a Widget from RxString, RxInt, RxDouble, RxNumber and RxList. With the
+  ```[getStreamWidget]``` extension. It turns your Rx variable into a ```[GetStreamWidget]```. If
+  there is nothing in the stream, it starts the wait. When you add something, it launches
+  obxBuilder. If there is an error, it starts the ErrorWidget. Ready to use.
+
 ## [2.0.0-nullsafety.8]
 
-* The StreamSubscription were all getting canceled. However, why add repeated lines of 
+* The StreamSubscription were all getting canceled. However, why add repeated lines of
   _subscription?.cancel() stops generating warning.
 
 ## [2.0.0-nullsafety.7]
@@ -13,7 +20,7 @@
 
 ## [2.0.0-nullsafety.5]
 
-* Added ```[SearchAppBarRefresh]```. Now you can request data from your API and manually renew your 
+* Added ```[SearchAppBarRefresh]```. Now you can request data from your API and manually renew your
   requirements.
 
 ## [2.0.0-nullsafety.4]
