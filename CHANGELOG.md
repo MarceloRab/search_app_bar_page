@@ -1,3 +1,7 @@
+## [2.0.0-nullsafety.10]
+
+* Minimal improvement extensions.
+
 ## [2.0.0-nullsafety.9]
 
 * Now you can assemble a Widget from RxString, RxInt, RxDouble, RxNumber and RxList. With the

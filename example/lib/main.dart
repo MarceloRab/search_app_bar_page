@@ -929,7 +929,7 @@ void changeAuth() {
     /// Test to check the reactivity of the screen.
     ///------------------------------------------
     /// 1) 👇🏼
-    Get.find<Test2Controller>().rxList.addAll(dataListPerson);
+    Get.find<Test2Controller>().rxList.addAll(dataListPerson2);
     if (!Get.find<Test2Controller>().isAuth) {
       Get.find<Test2Controller>().changeAuth = true;
     }
@@ -1141,7 +1141,7 @@ class TestStreamWidget extends StatelessWidget {
     );
   }
 
-  Stream<List<Person>> streamListPerson = (() async* {
+ /* Stream<List<Person>> streamListPerson = (() async* {
     await Future<void>.delayed(Duration(seconds: 3));
     //yield null;
     yield dataListPerson;
@@ -1150,7 +1150,7 @@ class TestStreamWidget extends StatelessWidget {
     await Future<void>.delayed(Duration(seconds: 5));
     //throw Exception('Erro voluntario');
     yield dataListPerson3;
-  })();
+  })();*/
 }
 
 class Test2Controller extends GetxController {

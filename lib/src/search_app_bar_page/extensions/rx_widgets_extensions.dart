@@ -4,15 +4,16 @@ import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/fun
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/get_stream_widget.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/infra/rx_get_type.dart';
 
+/// no Get aceita-se Rx com null so ASYNCSNAPSHOT NAO
 extension ListRxWidget<T> on RxList<T> {
   Widget getStreamWidget(
-      {required GetWidgetBuilder<List<T>> obxWidgetBuilder,
+      {required GetWidgetBuilder<List<T>?> obxWidgetBuilder,
       WidgetsErrorBuilder? widgetErrorBuilder,
       Widget? widgetWaiting,
       List<T>? initialData,
       RxBoolAuth? rxBoolAuth}) {
-    return GetStreamWidget<List<T>>(
-      stream: stream as Stream<List<T>>,
+    return GetStreamWidget<List<T>?>(
+      stream: stream,
       obxWidgetBuilder: obxWidgetBuilder,
       initialData: initialData,
       widgetWaiting: widgetWaiting,
@@ -24,13 +25,13 @@ extension ListRxWidget<T> on RxList<T> {
 
 extension RxWidget<T> on Rx<T> {
   Widget getStreamWidget(
-      {required GetWidgetBuilder<T> obxWidgetBuilder,
+      {required GetWidgetBuilder<T?> obxWidgetBuilder,
       WidgetsErrorBuilder? widgetErrorBuilder,
       Widget? widgetWaiting,
       T? initialData,
       RxBoolAuth? rxBoolAuth}) {
-    return GetStreamWidget<T>(
-      stream: stream as Stream<T>,
+    return GetStreamWidget<T?>(
+      stream: stream,
       obxWidgetBuilder: obxWidgetBuilder,
       initialData: initialData,
       widgetWaiting: widgetWaiting,
@@ -42,13 +43,13 @@ extension RxWidget<T> on Rx<T> {
 
 extension RxIntWidget on RxInt {
   Widget getStreamWidget(
-      {required GetWidgetBuilder<int> obxWidgetBuilder,
+      {required GetWidgetBuilder<int?> obxWidgetBuilder,
       WidgetsErrorBuilder? widgetErrorBuilder,
       Widget? widgetWaiting,
       int? initialData,
       RxBoolAuth? rxBoolAuth}) {
-    return GetStreamWidget<int>(
-      stream: stream as Stream<int>,
+    return GetStreamWidget<int?>(
+      stream: stream,
       obxWidgetBuilder: obxWidgetBuilder,
       initialData: initialData,
       widgetWaiting: widgetWaiting,
@@ -60,13 +61,13 @@ extension RxIntWidget on RxInt {
 
 extension RxNumberWidget on RxNum {
   Widget getStreamWidget(
-      {required GetWidgetBuilder<num> obxWidgetBuilder,
+      {required GetWidgetBuilder<num?> obxWidgetBuilder,
       WidgetsErrorBuilder? widgetErrorBuilder,
       Widget? widgetWaiting,
       num? initialData,
       RxBoolAuth? rxBoolAuth}) {
-    return GetStreamWidget<num>(
-      stream: stream as Stream<num>,
+    return GetStreamWidget<num?>(
+      stream: stream,
       obxWidgetBuilder: obxWidgetBuilder,
       initialData: initialData,
       widgetWaiting: widgetWaiting,
@@ -78,13 +79,13 @@ extension RxNumberWidget on RxNum {
 
 extension RxDoubleWidget on RxDouble {
   Widget getStreamWidget(
-      {required GetWidgetBuilder<double> obxWidgetBuilder,
+      {required GetWidgetBuilder<double?> obxWidgetBuilder,
       WidgetsErrorBuilder? widgetErrorBuilder,
       Widget? widgetWaiting,
       double? initialData,
       RxBoolAuth? rxBoolAuth}) {
-    return GetStreamWidget<double>(
-      stream: stream as Stream<double>,
+    return GetStreamWidget<double?>(
+      stream: stream,
       obxWidgetBuilder: obxWidgetBuilder,
       initialData: initialData,
       widgetWaiting: widgetWaiting,
@@ -96,13 +97,13 @@ extension RxDoubleWidget on RxDouble {
 
 extension RxBoolWidget on RxBool {
   Widget getStreamWidget(
-      {required GetWidgetBuilder<bool> obxWidgetBuilder,
+      {required GetWidgetBuilder<bool?> obxWidgetBuilder,
       WidgetsErrorBuilder? widgetErrorBuilder,
       Widget? widgetWaiting,
       bool? initialData,
       RxBoolAuth? rxBoolAuth}) {
-    return GetStreamWidget<bool>(
-      stream: stream as Stream<bool>,
+    return GetStreamWidget<bool?>(
+      stream: stream,
       obxWidgetBuilder: obxWidgetBuilder,
       initialData: initialData,
       widgetWaiting: widgetWaiting,
@@ -114,13 +115,13 @@ extension RxBoolWidget on RxBool {
 
 extension RxStringWidget on RxString {
   Widget getStreamWidget(
-      {required GetWidgetBuilder<String> obxWidgetBuilder,
+      {required GetWidgetBuilder<String?> obxWidgetBuilder,
       WidgetsErrorBuilder? widgetErrorBuilder,
       Widget? widgetWaiting,
       String? initialData,
       RxBoolAuth? rxBoolAuth}) {
-    return GetStreamWidget<String>(
-      stream: stream as Stream<String>,
+    return GetStreamWidget<String?>(
+      stream: stream,
       obxWidgetBuilder: obxWidgetBuilder,
       initialData: initialData,
       widgetWaiting: widgetWaiting,

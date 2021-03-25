@@ -1119,7 +1119,79 @@ class Person {
   }
 }
 ```
-
 #### ✷ GetStreamWidget without Scaffold parameters.
+
+
+#### ✷ Rx extension in reactive Widgets
+
+Now you can assemble a Widget from RxString, RxInt, RxDouble, RxNumber and RxList. With the
+```[getStreamWidget]``` extension. It turns your Rx variable into a ```[GetStreamWidget]```. If
+there is nothing in the stream, it starts the wait. When you add something, it launches
+obxBuilder. If there is an error, it starts the ErrorWidget. Ready to use.
+
+```dart
+class TestStreamWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('GetStreamWidget'),
+          centerTitle: true,
+        ),
+        body: WillPopScope(
+            onWillPop: () {
+              Get
+                  .find<Test2Controller>()
+                  .changeAuth = false;
+              Get
+                  .find<Test2Controller>()
+                  .rxList
+                  .clear();
+              return Future.value(true);
+            }),
+
+        /// Transform Rx in Widget with extensions
+        child: Get
+            .find<Test2Controller>()
+            .rxList
+            .getStreamWidget(
+          obxWidgetBuilder: (context, objesctStream) {
+            final list = objesctStream;
+            if (list == null || list.isEmpty) {
+              return Center(
+                  child: Text(
+                    'NOTHING FOUND',
+                    style: TextStyle(fontSize: 14),
+                  ));
+            }
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: list.length,
+                    itemBuilder: (_, index) {
+                      return Card(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 4),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(14.0),
+                            child: Text(
+                              'Name: ${list[index].name}',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ));
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
+        ));
+  }
+}
+
+```
 
 #### Vide [Example full](https://pub.dev/packages/search_app_bar_page/example) for more details.
