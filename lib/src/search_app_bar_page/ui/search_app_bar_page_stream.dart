@@ -226,11 +226,17 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
   void initState() {
     super.initState();
 
-    _controller = Get.put(SearcherPageStreamController<T>(
+    /*_controller = Get.put(SearcherPageStreamController<T>(
         stringFilter: widget.stringFilter,
         sortCompare: widget.sortCompare,
         filtersType: widget.filtersType)
-      ..onInitFilter())!;
+      ..onInitFilter())!;*/
+
+    _controller = SearcherPageStreamController<T>(
+        stringFilter: widget.stringFilter,
+        sortCompare: widget.sortCompare,
+        filtersType: widget.filtersType)
+      ..onInitFilter();
 
     _haveInitialData = widget.initialData != null;
 
@@ -366,7 +372,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
 
       //final isListFull = widget.searcher.rxSearch.value.isEmpty;
       return widget.obxListBuilder(
-          context, _controller.snapshot.data, _controller.isModSearch);
+          context, _controller.snapshot.data!, _controller.isModSearch);
     });
   }
 

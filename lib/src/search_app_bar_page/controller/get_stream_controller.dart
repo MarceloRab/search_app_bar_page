@@ -6,7 +6,7 @@ class GetStreamController<T> implements StreamSearcherBase<T> {
 
   AsyncSnapshot<T> get snapshot => _rxSnapshot.value!;
 
-  set snapshot(AsyncSnapshot<T>? value) => _rxSnapshot.value = value;
+  set snapshot(AsyncSnapshot<T> value) => _rxSnapshot.value = value;
 
   @override
   void initial(T data) =>

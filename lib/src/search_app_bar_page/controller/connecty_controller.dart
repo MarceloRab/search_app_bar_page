@@ -7,7 +7,8 @@ import 'package:get/state_manager.dart';
 class ConnectController {
   late Connectivity connectivity;
 
-  final RxBool rxConnect = true.obs;
+  //final rxConnect = true.obs;
+  final rxConnect = RxBool(true);
 
   bool get isConnected => rxConnect.value!;
 
@@ -15,7 +16,7 @@ class ConnectController {
 
   // Stream<bool> get connectStream => _connectController.stream;
 
-  StreamSubscription? _subscriptionConnect;
+  late StreamSubscription _subscriptionConnect;
 
   ConnectController() {
     connectivity = Connectivity();
@@ -60,6 +61,6 @@ class ConnectController {
 
   FutureOr<void> onClose() async {
     rxConnect.close();
-    _subscriptionConnect?.cancel();
+    _subscriptionConnect.cancel();
   }
 }

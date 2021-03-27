@@ -11,7 +11,7 @@ typedef Filter<T> = bool Function(T test, String? query);
 //BuildContext context, RxList<T> list, bool isModSearch);
 
 typedef WidgetsListBuilder<T> = Widget Function(
-    BuildContext context, List<T>? list, bool? isModSearch);
+    BuildContext context, List<T> list, bool isModSearch);
 
 typedef WidgetsErrorBuilder<T> = Widget Function(Object? error);
 

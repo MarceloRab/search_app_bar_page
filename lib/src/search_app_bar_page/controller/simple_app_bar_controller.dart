@@ -47,13 +47,16 @@ class SimpleAppBarController<T> implements SeacherBase<T> {
   bool get bancoInitValue => bancoInit.value;*/
 
   @override
-  final RxBool bancoInit = false.obs;
-
-  @override
   final RxString rxSearch = ''.obs;
 
   @override
+  final RxBool bancoInit = false.obs;
+
+  @override
   bool get bancoInitValue => bancoInit.value!;
+
+  @override
+  set bancoInitValue(bool value) => bancoInit.value = value;
 
   SimpleAppBarController({
     required this.listFull,
@@ -67,7 +70,9 @@ class SimpleAppBarController<T> implements SeacherBase<T> {
         stringFilter = (T value) => value as String;
       } else {
         throw Exception(
-            'You need to type your page or it must be typed as String');
+            'You need to construct your object s return String in the '
+            'stringFilter function. If there is no return String, your '
+            'list object must be a String.');
       }
     }
 
@@ -107,8 +112,6 @@ class SimpleAppBarController<T> implements SeacherBase<T> {
     _isModSearch.close();
     rxSearch.close();
     listSearch.close();
+    bancoInit.close();
   }
-
-  @override
-  set bancoInitValue(bool? value) => bancoInit.value = value;
 }

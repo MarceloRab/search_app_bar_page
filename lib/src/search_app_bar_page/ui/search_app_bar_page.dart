@@ -162,14 +162,23 @@ class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
   @override
   void initState() {
     super.initState();
-    _controller = Get.put(SearcherPageController<T>(
+    /*_controller = Get.put(SearcherPageController<T>(
         listFull: widget.listFull,
         stringFilter: widget.stringFilter,
         //compareSort: widget.compareSort,
         sortCompare: widget.sortCompare,
         filtersType: widget.filtersType)
       ..initFilters()
-      ..onReady())!;
+      ..onReady())!;*/
+
+    _controller = SearcherPageController<T>(
+        listFull: widget.listFull,
+        stringFilter: widget.stringFilter,
+        //compareSort: widget.compareSort,
+        sortCompare: widget.sortCompare,
+        filtersType: widget.filtersType)
+      ..initFilters()
+      ..onReady();
   }
 
   @override
@@ -223,8 +232,8 @@ class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
           if (widget.rxBoolAuth?.auth.value == false) {
             return widget.rxBoolAuth!.authFalseWidget();
           }
-          return widget.obxListBuilder(
-              context, _controller.listSearch, _controller.isModSearch);
+          return widget.obxListBuilder(context, _controller.listSearch.toList(),
+              _controller.isModSearch);
         }),
         floatingActionButton: widget.searchePageFloatingActionButton,
         floatingActionButtonLocation:

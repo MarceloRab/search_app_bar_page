@@ -248,11 +248,17 @@ class _SearchAppBarPageRefreshState<T>
   void initState() {
     super.initState();
 
-    _controller = Get.put(SearcherPageRefreshController<T>(
+    /*_controller = Get.put(SearcherPageRefreshController<T>(
         stringFilter: widget.stringFilter,
         sortCompare: widget.sortCompare,
         filtersType: widget.filtersType)
-      ..onInitFilter())!;
+      ..onInitFilter())!;*/
+
+    _controller = SearcherPageRefreshController<T>(
+        stringFilter: widget.stringFilter,
+        sortCompare: widget.sortCompare,
+        filtersType: widget.filtersType)
+      ..onInitFilter();
 
     _haveInitialData = widget.initialData != null;
 
@@ -393,7 +399,7 @@ class _SearchAppBarPageRefreshState<T>
 
       //final isListFull = widget.searcher.rxSearch.value.isEmpty;
       return widget.obxListBuilder(
-          context, _controller.snapshot.data, _controller.isModSearch);
+          context, _controller.snapshot.data!, _controller.isModSearch);
     });
   }
 

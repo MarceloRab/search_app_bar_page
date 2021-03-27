@@ -27,13 +27,13 @@ class SearcherPagePaginationController<T>
   bool? sortCompare = true;
 
   @override
-  final rxSearch = ''.obs;
+  final RxString rxSearch = ''.obs;
 
   @override
   final RxBool bancoInit = false.obs;
 
   @override
-  set bancoInitValue(bool? value) => bancoInit.value = value;
+  set bancoInitValue(bool value) => bancoInit.value = value;
 
   @override
   bool get bancoInitValue => bancoInit.value!;
@@ -43,12 +43,12 @@ class SearcherPagePaginationController<T>
   final Rx<AsyncSnapshotScrollPage<T>> _snapshotScroolPage =
       AsyncSnapshotScrollPage<T>.nothing().obs;
 
-  AsyncSnapshotScrollPage<T>? get snapshotScroolPage =>
-      _snapshotScroolPage.value;
+  AsyncSnapshotScrollPage<T> get snapshotScroolPage =>
+      _snapshotScroolPage.value!;
 
-  List<T>? get data => snapshotScroolPage!.snapshot.data;
+  List<T> get data => snapshotScroolPage.snapshot.data!;
 
-  set snapshotScroolPage(AsyncSnapshotScrollPage<T>? value) =>
+  set snapshotScroolPage(AsyncSnapshotScrollPage<T> value) =>
       _snapshotScroolPage.value = value;
 
   FiltersTypes? filtersType;
@@ -81,7 +81,9 @@ class SearcherPagePaginationController<T>
         stringFilter = (T value) => value as String;
       } else {
         throw Exception(
-            'You need to type your page or it must be typed as String');
+            'You need to construct your object s return String in the '
+            'stringFilter function. If there is no return String, your '
+            'list object must be a String.');
       }
     }
   }
@@ -90,12 +92,12 @@ class SearcherPagePaginationController<T>
 
   //final bool cache;
 
-  ListSearchBuild<T>? buildPreviousList(String query) {
-    ListSearchBuild<T>? listAnterior = ListSearchBuild(listSearch: <T>[]);
+  ListSearchBuild<T> buildPreviousList(String query) {
+    ListSearchBuild<T> listAnterior = ListSearchBuild(listSearch: <T>[]);
     String queryStringAnterior =
         query.replaceRange(query.length - 1, query.length, '');
     if (mapsSearch.containsKey(queryStringAnterior)) {
-      return mapsSearch[queryStringAnterior];
+      return mapsSearch[queryStringAnterior]!;
     }
     // while (!mapsSearch.containsKey(queryStringAnterior) ||
     while (queryStringAnterior.isNotEmpty) {
@@ -103,7 +105,7 @@ class SearcherPagePaginationController<T>
           queryStringAnterior.length - 1, queryStringAnterior.length, '');
 
       if (mapsSearch.containsKey(queryStringAnterior)) {
-        listAnterior = mapsSearch[queryStringAnterior];
+        listAnterior = mapsSearch[queryStringAnterior]!;
 
         break;
       }
@@ -113,22 +115,16 @@ class SearcherPagePaginationController<T>
     return listAnterior;
   }
 
-  ListSearchBuild<T>? haveSearchQueryPage(String query,
-      {bool restart = false}) {
+  ListSearchBuild<T> haveSearchQueryPage(String query, {bool restart = false}) {
     //queryProgride(query);
     pageSearch = 1;
     var listSearch = <T>[];
 
     // subdivisao da listSearch
     if (query.length > 1) {
-      ListSearchBuild<T>? buildListAnterior;
+      final ListSearchBuild<T> buildListAnterior = buildPreviousList(query);
 
-      //final queryStringAnterior =
-      // query.replaceRange(query.length - 1, query.length, '');
-
-      buildListAnterior = buildPreviousList(query);
-
-      listSearch = buildListAnterior!.listSearch
+      listSearch = buildListAnterior.listSearch
           .where((element) => _filters(stringFilter!(element), query))
           .toList();
 
@@ -141,7 +137,7 @@ class SearcherPagePaginationController<T>
             pageSearch = 1;
           }
 
-          return mapsSearch[query];
+          return mapsSearch[query]!;
         }
 
         if (buildListAnterior.listSearch.isNotEmpty) {
@@ -160,7 +156,7 @@ class SearcherPagePaginationController<T>
           }
 
           if (buildListAnterior.isListSearchFull) {
-            return mapsSearch[query];
+            return mapsSearch[query]!;
           }
         } else {
           if (buildListAnterior.isListSearchFull) {
@@ -170,7 +166,7 @@ class SearcherPagePaginationController<T>
                 isListSearchFull: true);
             mapsSearch[query]!.listSearch =
                 sortCompareListSearch(mapsSearch[query]!.listSearch)!;
-            return mapsSearch[query];
+            return mapsSearch[query]!;
           }
           listSearch.clear();
           listSearch = listFull
@@ -191,7 +187,7 @@ class SearcherPagePaginationController<T>
                 sortCompareListSearch(mapsSearch[query]!.listSearch)!;
 
             if (finishPage) {
-              return mapsSearch[query];
+              return mapsSearch[query]!;
             }
           }
         }
@@ -218,7 +214,7 @@ class SearcherPagePaginationController<T>
                 isListSearchFull: true);
             mapsSearch[query]!.listSearch =
                 sortCompareListSearch(mapsSearch[query]!.listSearch)!;
-            return mapsSearch[query];
+            return mapsSearch[query]!;
           }
           listSearch.clear();
           listSearch = listFull
@@ -239,7 +235,7 @@ class SearcherPagePaginationController<T>
               sortCompareListSearch(mapsSearch[query]!.listSearch)!;
 
           if (finishPage) {
-            return mapsSearch[query];
+            return mapsSearch[query]!;
           }
         }
       }
@@ -264,7 +260,7 @@ class SearcherPagePaginationController<T>
           pageSearch = 1;
         }
         if (mapsSearch[query]!.isListSearchFull) {
-          return mapsSearch[query];
+          return mapsSearch[query]!;
         }
       } else {
         listSearch = listFull
@@ -289,7 +285,7 @@ class SearcherPagePaginationController<T>
       }
     }
 
-    return mapsSearch[query];
+    return mapsSearch[query]!;
   }
 
   set initialChangeList(List<T> list) {
@@ -331,14 +327,14 @@ class SearcherPagePaginationController<T>
   }
 
   void refazFutureListFull() {
-    if (snapshotScroolPage!.loadinglistFullScroll) {
+    if (snapshotScroolPage.loadinglistFullScroll) {
       page--;
     }
   }
 
   void refazFutureSearchQuery(String? searchQuery) {
     //_oneMorePage = false;
-    if (pageSearch > 1 && snapshotScroolPage!.loadingSearchScroll) {
+    if (pageSearch > 1 && snapshotScroolPage.loadingSearchScroll) {
       if ((mapsSearch[searchQuery!]!.listSearch.length ~/ numItemsPage!) == 0) {
         page--;
       }
@@ -523,33 +519,33 @@ class SearcherPagePaginationController<T>
 
   FutureOr onClose() {
     _snapshotScroolPage.close();
-    // _worker?.dispose();
     _isModSearch.close();
     rxSearch.close();
+    bancoInit.close();
   }
 
   @override
   void inState() =>
-      snapshotScroolPage = snapshotScroolPage!.inState(ConnectionState.none);
+      snapshotScroolPage = snapshotScroolPage.inState(ConnectionState.none);
 
   @override
   void waiting() => snapshotScroolPage = AsyncSnapshotScrollPage<T>.waiting();
 
   @override
   void withData(List<T>? data) =>
-      snapshotScroolPage = snapshotScroolPage!.withData(data);
+      snapshotScroolPage = snapshotScroolPage.withData(data);
 
   @override
   void withError(Object error) =>
-      snapshotScroolPage = snapshotScroolPage!.withError(error);
+      snapshotScroolPage = snapshotScroolPage.withError(error);
 
   @override
   void togleLoadingSearchScroll(bool value) =>
-      snapshotScroolPage = snapshotScroolPage!.togleLoadingSearchScroll(value);
+      snapshotScroolPage = snapshotScroolPage.togleLoadingSearchScroll(value);
 
   @override
   void togleLoadinglistFullScroll() =>
-      snapshotScroolPage = snapshotScroolPage!.togleLoadinglistFullScroll();
+      snapshotScroolPage = snapshotScroolPage.togleLoadinglistFullScroll();
 }
 
 @immutable

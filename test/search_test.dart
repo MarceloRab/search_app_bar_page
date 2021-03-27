@@ -33,14 +33,14 @@ void main() {
   controllerPagination.listFull = dataListPerson3;
 
   test('Search Page com query empty. Deve retornar 20 elementos', () {
-    final listBuilder = controllerPagination.haveSearchQueryPage('')!;
+    final listBuilder = controllerPagination.haveSearchQueryPage('');
 
     expect(listBuilder.listSearch.length, 43);
     //expect(listBuilder.isListSearchFull, false);
   });
 
   test('Retornar lista filtrada por m', () {
-    final listBuilder = controllerPagination.haveSearchQueryPage('m')!;
+    final listBuilder = controllerPagination.haveSearchQueryPage('m');
 
     expect(
         listBuilder.listSearch,
@@ -52,7 +52,7 @@ void main() {
   });
 
   test('Retornar lista filtrada por ma', () {
-    final listBuilder = controllerPagination.haveSearchQueryPage('ma')!;
+    final listBuilder = controllerPagination.haveSearchQueryPage('ma');
 
     expect(
         listBuilder.listSearch,
@@ -73,7 +73,7 @@ void main() {
             controllerPagination.stringFilter(element), 'ma'))
             .toList()));
             */
-    final listBuilder = controllerPagination.haveSearchQueryPage('marcelo')!;
+    final listBuilder = controllerPagination.haveSearchQueryPage('marcelo');
     //print('${listBuilder.listSearch.length.toString()}');
 
     expect(

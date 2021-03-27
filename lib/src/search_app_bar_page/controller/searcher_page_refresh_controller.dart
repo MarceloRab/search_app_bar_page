@@ -38,7 +38,7 @@ class SearcherPageRefreshController<T> extends SeacherBase<T>
 
   AsyncSnapshot<List<T>> get snapshot => _rxSnapshot.value!;
 
-  set snapshot(AsyncSnapshot<List<T>>? value) => _rxSnapshot.value = value;
+  set snapshot(AsyncSnapshot<List<T>> value) => _rxSnapshot.value = value;
 
   //StringFilter<T> get _defaultFilter => (T value) => value as String;
 
@@ -112,7 +112,7 @@ class SearcherPageRefreshController<T> extends SeacherBase<T>
     _isModSearch.close();
     rxSearch.close();
     _rxSnapshot.close();
-    //listSearch.close();
+    bancoInit.close();
   }
 
   @override

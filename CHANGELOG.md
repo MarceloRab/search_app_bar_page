@@ -1,3 +1,31 @@
+## [2.0.0-nullsafety.17]
+
+* Onoe More Minimal improvement nullsafety. 🙈
+
+## [2.0.0-nullsafety.16]
+
+* Minimal improvement nullsafety.
+
+## [2.0.0-nullsafety.15]
+
+* Minimal improvement SearchAppBarPagination nullsafety.
+
+## [2.0.0-nullsafety.14]
+
+* Minimal improvement nullsafety.
+
+## [2.0.0-nullsafety.13]
+
+* Fix in SearchAppBarPage.
+
+## [2.0.0-nullsafety.12]
+
+* Minimal improvement flutter web. Need to maintain Search status on larger screens.
+
+## [2.0.0-nullsafety.11]
+
+* Minimal improvement nullsafety.
+
 ## [2.0.0-nullsafety.10]
 
 * Minimal improvement extensions.
