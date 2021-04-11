@@ -1,6 +1,14 @@
+## [2.0.1]
+
+* Updated packages.
+
+## [2.0.0]
+
+* Now all packages are in nullsafety!
+
 ## [2.0.0-nullsafety.17]
 
-* Onoe More Minimal improvement nullsafety. 🙈
+* One More Minimal improvement nullsafety. 🙈
 
 ## [2.0.0-nullsafety.16]
 
@@ -35,7 +43,7 @@
 * Now you can assemble a Widget from RxString, RxInt, RxDouble, RxNumber and RxList. With the
   ```[getStreamWidget]``` extension. It turns your Rx variable into a ```[GetStreamWidget]```. If
   there is nothing in the stream, it starts the wait. When you add something, it launches
-  obxBuilder. If there is an error, it starts the ErrorWidget. Ready to use. 
+  obxBuilder. If there is an error, it starts the ErrorWidget. Ready to use.
 
 ## [2.0.0-nullsafety.8]
 

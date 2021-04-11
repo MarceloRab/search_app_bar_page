@@ -397,13 +397,13 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
             _scrollController.position.maxScrollExtent - 3 &&
         _scrollController.position.userScrollDirection ==
             ScrollDirection.reverse) {
-      if (_controller.rxSearch.value!.isNotEmpty) {
+      if (_controller.rxSearch.value.isNotEmpty) {
         //if (_activeListSearchCallbackIdentity != null) {
         if (!_controller
-            .mapsSearch[_controller.rxSearch.value!]!.isListSearchFull) {
+            .mapsSearch[_controller.rxSearch.value]!.isListSearchFull) {
           if (!_controller.snapshotScroolPage.loadingSearchScroll) {
             final listBuilder =
-                _controller.haveSearchQueryPage(_controller.rxSearch.value!);
+                _controller.haveSearchQueryPage(_controller.rxSearch.value);
 
             if (listBuilder.isListSearchFull) {
               _controller.withData(listBuilder.listSearch);
@@ -543,8 +543,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
   }
 
   void _subscribreSearhQuery() {
-    _worker = debounce<String>(_controller.rxSearch as RxInterface<String>,
-        (String query) {
+    _worker = debounce<String>(_controller.rxSearch, (String query) {
       if (query.isNotEmpty) {
         if (_controller.snapshotScroolPage.loadingSearchScroll) {
           _controller.togleLoadingSearchScroll(false);
@@ -616,12 +615,12 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
             _controller.listFull.addAll(widget.initialData!);
             _controller.sortCompareList(_controller.listFull);
 
-            if (_controller.rxSearch.value!.isEmpty) {
+            if (_controller.rxSearch.value.isEmpty) {
               _controller.withData(_controller.listFull);
             } else {
               _controller.oneMoreSearchPage = false;
 
-              initBuildSearchList(_controller.rxSearch.value!,
+              initBuildSearchList(_controller.rxSearch.value,
                   //refaz a listSearch pois temos uma nova listFull
                   restart: true);
             }

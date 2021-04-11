@@ -9,7 +9,7 @@ class SearcherPageController<T> extends SeacherBase<T> {
   final RxBool _isModSearch = false.obs;
 
   @override
-  bool get isModSearch => _isModSearch.value!;
+  bool get isModSearch => _isModSearch.value;
 
   @override
   set isModSearch(bool value) => _isModSearch.value = value;
@@ -24,7 +24,7 @@ class SearcherPageController<T> extends SeacherBase<T> {
   set bancoInitValue(bool value) => bancoInit.value = value;
 
   @override
-  bool get bancoInitValue => bancoInit.value!;
+  bool get bancoInitValue => bancoInit.value;
 
   @override
   final RxBool bancoInit = true.obs;

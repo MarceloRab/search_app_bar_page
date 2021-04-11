@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 class GetStreamController<T> implements StreamSearcherBase<T> {
   final Rx<AsyncSnapshot<T>> _rxSnapshot = AsyncSnapshot<T>.waiting().obs;
 
-  AsyncSnapshot<T> get snapshot => _rxSnapshot.value!;
+  AsyncSnapshot<T> get snapshot => _rxSnapshot.value;
 
   set snapshot(AsyncSnapshot<T> value) => _rxSnapshot.value = value;
 

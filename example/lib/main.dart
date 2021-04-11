@@ -49,14 +49,17 @@ class AppPages {
               stringFilter: (Person person) => person.name,
             )),
     GetPage(
-        name: Routes.PAGE_5,
-        page: () {
-          Get.put(Test2Controller());
-          changeAuth();
-          return TestGetStreamPage();
-        }),
+      name: Routes.PAGE_5,
+      // ignore: top_level_function_literal_block
+      page: () {
+        Get.put(Test2Controller());
+        changeAuth();
+        return TestGetStreamPage();
+      },
+    ),
     GetPage(
         name: Routes.PAGE_6,
+        // ignore: top_level_function_literal_block
         page: () {
           Get.put(Test2Controller());
           changeAuth();
@@ -1031,7 +1034,7 @@ class TestGetStreamPage extends StatelessWidget {
 }
 
 // ignore: must_be_immutable
-class TestStreamWidget extends StatelessWidget {
+class TestStreamWidget extends GetView<Test2Controller> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1041,16 +1044,16 @@ class TestStreamWidget extends StatelessWidget {
       ),
       body: WillPopScope(
         onWillPop: () {
-          Get.find<Test2Controller>().changeAuth = false;
-          Get.find<Test2Controller>().rxList.clear();
+          controller.changeAuth = false;
+          controller.rxList.clear();
           return Future.value(true);
         },
 
         /// Transform Rx in Widget with extensions
-        child: Get.find<Test2Controller>().rxList.getStreamWidget(
-          obxWidgetBuilder: (context, objesctStream) {
-            final list = objesctStream;
-            if (list == null || list.isEmpty) {
+        child: controller.rxList.getStreamWidget(
+          obxWidgetBuilder: (ctx, list) {
+            //final list = objesctStream;
+            if (list.isEmpty) {
               return Center(
                   child: Text(
                 'NOTHING FOUND',

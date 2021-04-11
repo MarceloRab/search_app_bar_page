@@ -307,7 +307,7 @@ class _SearchAppBarPageRefreshState<T>
     }
 
     if (_controller.listFuture.isNotEmpty) {
-      if (_controller.rxSearch.value!.isNotEmpty) {
+      if (_controller.rxSearch.value.isNotEmpty) {
         _controller.afterData(
             _controller.refreshSeachList2(_controller.rxSearch.value));
       } else {
@@ -441,7 +441,7 @@ class _SearchAppBarPageRefreshState<T>
       _controller.listFuture = data;
       _controller.sortCompareList(_controller.listFuture);
 
-      if (_controller.rxSearch.value!.isNotEmpty) {
+      if (_controller.rxSearch.value.isNotEmpty) {
         _controller.afterData(
             _controller.refreshSeachList2(_controller.rxSearch.value));
       } else {

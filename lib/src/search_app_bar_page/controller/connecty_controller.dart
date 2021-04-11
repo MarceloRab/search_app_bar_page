@@ -10,7 +10,7 @@ class ConnectController {
   //final rxConnect = true.obs;
   final rxConnect = RxBool(true);
 
-  bool get isConnected => rxConnect.value!;
+  bool get isConnected => rxConnect.value;
 
   set isConnected(bool value) => rxConnect.value = value;
 

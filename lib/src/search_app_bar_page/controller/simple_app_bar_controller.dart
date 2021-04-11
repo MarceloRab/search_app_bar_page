@@ -30,7 +30,7 @@ class SimpleAppBarController<T> implements SeacherBase<T> {
   final RxBool _isModSearch = false.obs;
 
   @override
-  bool get isModSearch => _isModSearch.value!;
+  bool get isModSearch => _isModSearch.value;
 
   @override
   set isModSearch(bool value) => _isModSearch.value = value;
@@ -53,7 +53,7 @@ class SimpleAppBarController<T> implements SeacherBase<T> {
   final RxBool bancoInit = false.obs;
 
   @override
-  bool get bancoInitValue => bancoInit.value!;
+  bool get bancoInitValue => bancoInit.value;
 
   @override
   set bancoInitValue(bool value) => bancoInit.value = value;

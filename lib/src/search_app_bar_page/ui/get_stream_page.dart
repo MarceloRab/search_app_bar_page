@@ -150,7 +150,7 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
   @override
   void initState() {
     //_controller = GetStreamController();
-    _controller = Get.put<GetStreamController<T>>(GetStreamController())!;
+    _controller = Get.put<GetStreamController<T>>(GetStreamController());
     super.initState();
 
     if (widget.initialData != null) {

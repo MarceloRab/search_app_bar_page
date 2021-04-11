@@ -12,7 +12,7 @@ class SearcherPageRefreshController<T> extends SeacherBase<T>
   final RxBool _isModSearch = false.obs;
 
   @override
-  bool get isModSearch => _isModSearch.value!;
+  bool get isModSearch => _isModSearch.value;
 
   @override
   set isModSearch(bool value) => _isModSearch.value = value;
@@ -36,7 +36,7 @@ class SearcherPageRefreshController<T> extends SeacherBase<T>
 
   //AsyncSnapshot<List<T>>.withData(ConnectionState.none, null).obs;
 
-  AsyncSnapshot<List<T>> get snapshot => _rxSnapshot.value!;
+  AsyncSnapshot<List<T>> get snapshot => _rxSnapshot.value;
 
   set snapshot(AsyncSnapshot<List<T>> value) => _rxSnapshot.value = value;
 

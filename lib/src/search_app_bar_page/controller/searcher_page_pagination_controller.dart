@@ -16,9 +16,9 @@ class SearcherPagePaginationController<T>
   final RxBool _isModSearch = false.obs;
 
   @override
-  bool get isModSearch => _isModSearch.value!;
+  bool get isModSearch => _isModSearch.value;
 
-  bool get isSearchModePage => rxSearch.value!.isNotEmpty;
+  bool get isSearchModePage => rxSearch.value.isNotEmpty;
 
   @override
   set isModSearch(bool value) => _isModSearch.value = value;
@@ -36,7 +36,7 @@ class SearcherPagePaginationController<T>
   set bancoInitValue(bool value) => bancoInit.value = value;
 
   @override
-  bool get bancoInitValue => bancoInit.value!;
+  bool get bancoInitValue => bancoInit.value;
 
   bool finishPage = false;
 
@@ -44,7 +44,7 @@ class SearcherPagePaginationController<T>
       AsyncSnapshotScrollPage<T>.nothing().obs;
 
   AsyncSnapshotScrollPage<T> get snapshotScroolPage =>
-      _snapshotScroolPage.value!;
+      _snapshotScroolPage.value;
 
   List<T> get data => snapshotScroolPage.snapshot.data!;
 

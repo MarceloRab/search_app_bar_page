@@ -285,7 +285,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
     }
 
     if (_controller.listFull.isNotEmpty) {
-      if (_controller.rxSearch.value!.isNotEmpty) {
+      if (_controller.rxSearch.value.isNotEmpty) {
         _controller.afterData(
             _controller.refreshSeachList2(_controller.rxSearch.value));
       } else {
@@ -413,7 +413,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
       _controller.listFull = data;
       _controller.sortCompareList(_controller.listFull);
 
-      if (_controller.rxSearch.value!.isNotEmpty) {
+      if (_controller.rxSearch.value.isNotEmpty) {
         _controller.afterData(
             _controller.refreshSeachList2(_controller.rxSearch.value));
       } else {

@@ -130,3 +130,21 @@ extension RxStringWidget on RxString {
     );
   }
 }
+
+extension RxMapWidget on RxMap {
+  Widget getStreamWidget(
+      {required GetWidgetBuilder<Map?> obxWidgetBuilder,
+      WidgetsErrorBuilder? widgetErrorBuilder,
+      Widget? widgetWaiting,
+      Map? initialData,
+      RxBoolAuth? rxBoolAuth}) {
+    return GetStreamWidget<Map?>(
+      stream: stream,
+      obxWidgetBuilder: obxWidgetBuilder,
+      initialData: initialData,
+      widgetWaiting: widgetWaiting,
+      widgetErrorBuilder: widgetErrorBuilder,
+      rxBoolAuth: rxBoolAuth,
+    );
+  }
+}

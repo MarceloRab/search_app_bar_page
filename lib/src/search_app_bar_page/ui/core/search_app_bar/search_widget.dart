@@ -52,7 +52,7 @@ class _SearchWidgetState extends State<SearchWidget> {
   Widget _buildClearButton() {
     return Obx(() {
       if (!widget.controller.isModSearch ||
-          widget.controller.rxSearch.value!.isEmpty)
+          widget.controller.rxSearch.value.isEmpty)
         return const SizedBox.shrink();
 
       return IconButton(
@@ -100,7 +100,7 @@ class _SearchWidgetState extends State<SearchWidget> {
   TextEditingController _configController() {
     //final TextEditingController textController = TextEditingController();
     textController.value =
-        TextEditingValue(text: widget.controller.rxSearch.value!);
+        TextEditingValue(text: widget.controller.rxSearch.value);
     //TextEditingValue(text: controller.rxSearch.value ?? '');
     textController.selection = TextSelection.fromPosition(
       TextPosition(offset: textController.text.length),
