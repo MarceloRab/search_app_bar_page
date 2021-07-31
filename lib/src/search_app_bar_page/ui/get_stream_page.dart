@@ -227,7 +227,7 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
     _connectyController = ConnectController();
     _subscriptionConnecty =
         _connectyController.rxConnect.stream.listen((isConnected) {
-      if (!isConnected!) {
+      if (!isConnected) {
         //lançar _widgetConnecty
         setState(() {
           downConnectyWithoutData = true;

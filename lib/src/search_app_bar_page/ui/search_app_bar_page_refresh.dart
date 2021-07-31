@@ -470,7 +470,7 @@ class _SearchAppBarPageRefreshState<T>
     _connectyController = ConnectController();
     _subscriptionConnecty =
         _connectyController.rxConnect.stream.listen((isConnected) {
-      if (!isConnected! && (!_haveInitialData)) {
+      if (!isConnected && (!_haveInitialData)) {
         //lançar _widgetConnecty
         setState(() {
           downConnectyWithoutData = true;
