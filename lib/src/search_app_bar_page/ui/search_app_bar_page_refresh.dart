@@ -153,7 +153,7 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
   final double refreshDisplacement;
 
   /// The progress indicator's foreground color. The current theme's
-  /// [ThemeData.accentColor] by default.
+  /// [ThemeData.floatingActionButtonTheme] by default.
   final Color? refreshColor;
 
   /// The progress indicator's background color. The current theme's

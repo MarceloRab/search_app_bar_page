@@ -193,7 +193,9 @@ class _SearchAppBarState extends State<SearchAppBar>
         // if (widget.controller.listSearch != null)
         return AppBar(
           backgroundColor:
-              widget.backgroundColor ?? Theme.of(context).appBarTheme.color,
+              //widget.backgroundColor ?? Theme.of(context).appBarTheme.color,
+              widget.backgroundColor ??
+                  Theme.of(context).appBarTheme.foregroundColor,
           iconTheme:
               widget.iconTheme ?? Theme.of(context).appBarTheme.iconTheme,
           title: widget.title,
@@ -204,7 +206,9 @@ class _SearchAppBarState extends State<SearchAppBar>
       else {
         return AppBar(
           backgroundColor:
-              widget.backgroundColor ?? Theme.of(context).appBarTheme.color,
+              //widget.backgroundColor ?? Theme.of(context).appBarTheme.color,
+              widget.backgroundColor ??
+                  Theme.of(context).appBarTheme.foregroundColor,
           iconTheme:
               widget.iconTheme ?? Theme.of(context).appBarTheme.iconTheme,
           title: widget.title,

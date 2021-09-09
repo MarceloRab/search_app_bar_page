@@ -1,3 +1,7 @@
+## [2.0.4]
+
+* Minimal improvement
+
 ## [2.0.3]
 
 * Updated dependences.

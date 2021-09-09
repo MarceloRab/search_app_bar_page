@@ -227,7 +227,7 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
     _connectyController = ConnectController();
     _subscriptionConnecty =
         _connectyController.rxConnect.stream.listen((isConnected) {
-      if (!isConnected) {
+      if (isConnected) {
         //lançar _widgetConnecty
         setState(() {
           downConnectyWithoutData = true;
@@ -273,7 +273,9 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
 
     return AppBar(
       backgroundColor:
-          widget.appBarbackgroundColor ?? Theme.of(context).appBarTheme.color,
+          //widget.appBarbackgroundColor ?? Theme.of(context).appBarTheme.color,
+          widget.appBarbackgroundColor ??
+              Theme.of(context).appBarTheme.foregroundColor,
       iconTheme: widget.iconTheme ?? Theme.of(context).appBarTheme.iconTheme,
       title: widget.title,
       elevation: widget.elevation,

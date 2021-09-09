@@ -661,8 +661,8 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
 
   void _subscribeConnecty() {
     _subscriptionConnecty =
-        _connectyController.rxConnect.stream.listen((bool? isConnected) {
-      if (!isConnected! && (!_haveInitialData)) {
+        _connectyController.rxConnect.stream.listen((isConnected) {
+      if (isConnected && (!_haveInitialData)) {
         setState(() {
           downConnectyWithoutData = true;
         });

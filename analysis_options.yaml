@@ -9,6 +9,8 @@ linter:
     overridden_fields: false
     cancel_subscriptions: false
     null_check_on_nullable_type_parameter: false
+    require_trailing_commas: false
+    avoid_multiple_declarations_per_line: false
 
     # Util classes are awesome!
     avoid_classes_with_only_static_members: false
