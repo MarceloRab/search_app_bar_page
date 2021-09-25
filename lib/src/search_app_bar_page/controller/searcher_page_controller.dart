@@ -37,6 +37,8 @@ class SearcherPageController<T> extends SeacherBase<T> {
   FiltersTypes? filtersType;
   late Filter<String?> _filters;
   StringFilter<T>? stringFilter;
+  SortList<T>? sortFunction;
+  Filter<T>? filter;
 
   //Compare<T> compareSort;
 
@@ -48,6 +50,8 @@ class SearcherPageController<T> extends SeacherBase<T> {
     required this.listFull,
     this.stringFilter,
     this.sortCompare,
+    this.filter,
+    this.sortFunction,
     this.filtersType = FiltersTypes.contains,
   }) {
     if (stringFilter == null) {
@@ -55,11 +59,25 @@ class SearcherPageController<T> extends SeacherBase<T> {
         //stringFilter = _defaultFilter;
         stringFilter = (T value) => value as String;
       } else {
-        throw Exception(
+        if (filter == null) {
+          throw Exception(
+              'If you dont want to filter by a String, it is necessary '
+              'to add the filtering function.');
+        }
+        /*else if (sortFunction == null) {
+          throw Exception(
+              'You choose to sort your list. Need to add the order function.');
+        }*/
+        /*throw Exception(
             'You need to construct your object s return String in the '
             'stringFilter function. If there is no return String, your '
-            'list object must be a String.');
+            'list object must be a String.');*/
       }
+    }
+
+    if (stringFilter != null && filter != null) {
+      throw Exception(
+          'You need to choose between one of the filtering mechanisms.');
     }
 
     //bancoInit.close();
@@ -71,12 +89,14 @@ class SearcherPageController<T> extends SeacherBase<T> {
   }
 
   void initFilters() {
-    if (filtersType.toString() == FiltersTypes.startsWith.toString()) {
-      _filters = Filters.startsWith;
-    } else if (filtersType.toString() == FiltersTypes.equals.toString()) {
-      _filters = Filters.equals;
-    } else {
-      _filters = Filters.contains;
+    if (stringFilter != null || T == String) {
+      if (filtersType.toString() == FiltersTypes.startsWith.toString()) {
+        _filters = Filters.startsWith;
+      } else if (filtersType.toString() == FiltersTypes.equals.toString()) {
+        _filters = Filters.equals;
+      } else {
+        _filters = Filters.contains;
+      }
     }
   }
 
@@ -87,9 +107,21 @@ class SearcherPageController<T> extends SeacherBase<T> {
   }
 
   void refreshSeachList(String? value) {
-    final list = listFull
+    var list = <T>[];
+
+    if (stringFilter != null || T == String) {
+      list = listFull
+          .where((element) => _filters(stringFilter!(element), value))
+          .toList();
+    } else {
+      if (value!.isEmpty)
+        list = listFull;
+      else
+        list = listFull.where((element) => filter!(element, value)).toList();
+    }
+    /*final list = listFull
         .where((element) => _filters(stringFilter!(element), value))
-        .toList();
+        .toList();*/
 
     //sortCompareList(list);
     onSearchList(list);
@@ -97,12 +129,12 @@ class SearcherPageController<T> extends SeacherBase<T> {
 
   @override
   void sortCompareList(List<T> list) {
-    /*if (compareSort != null) {
-      list.sort(compareSort);
-    }*/
-
-    if (sortCompare!) {
-      list.sort((a, b) => stringFilter!(a)!.compareTo(stringFilter!(b)!));
+    if (sortFunction != null) {
+      list.sort(sortFunction);
+    } else if (sortCompare!) {
+      if (stringFilter != null || T == String) {
+        list.sort((a, b) => stringFilter!(a)!.compareTo(stringFilter!(b)!));
+      }
     }
   }
 

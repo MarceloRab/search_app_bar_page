@@ -55,9 +55,9 @@ class SearchAppBarPageStream<T> extends StatefulWidget
 
   /// Parametros para o Scaffold
 
-  ///  [widgetOffConnectyWaiting] Apenas mostra algo quando esta sem conexao
-  ///  e ainda nao tem o primeiro valor da stream. Se a conexao voltar
-  ///  passa a mostrar o [widgetWaiting] até apresentar o primeiro dado
+  /// [widgetOffConnectyWaiting] Only show something when disconnected
+  /// and still doesn't have the first value of the stream. See connection back
+  /// starts showing the [widgetWaiting] until displaying the first data
   final Widget? widgetWaiting;
   final Widget? widgetOffConnectyWaiting;
 
@@ -116,7 +116,7 @@ class SearchAppBarPageStream<T> extends StatefulWidget
   /// [widgetWaiting]
   final List<T>? initialData;
 
-  /// [listStream] Just pass the Stream and we are already in charge
+  /// [listStream] Just add the Stream and we are already in charge
   /// of working with the data. There is a StremBuilder in background.
   final Stream<List<T>> listStream;
 
@@ -135,13 +135,22 @@ class SearchAppBarPageStream<T> extends StatefulWidget
   /// The list will be filtered by the person.name contains (default) a query.
   final StringFilter<T>? stringFilter;
 
-  ///If you want your list to be sorted, pass the function on.
+  /// [filter] Add function to do filtering manually.
+  /// If you leave this parameter not null the parameter [stringFilter]
+  /// must be null
+  final Filter<T>? filter;
+
+  /// [sortFunction] Manually add your sort function.
+  final SortList<T>? sortFunction;
+
+  ///If you want your list to be sorted, add the function on.
   /// Example: (Person a, Person b) => a.name.compareTo(b.name),
   /// This list will be ordered by the object name parameter.
   //final Compare<T> compareSort;
 
   ///[sortCompare] Your list will be ordered by the same function
   ///[stringFilter]. True by default.
+  /// sort default compare by stringFilter return.
   final bool sortCompare;
 
   ///  [rxBoolAuth] Insert your RxBool here that changes with the auth
@@ -156,6 +165,8 @@ class SearchAppBarPageStream<T> extends StatefulWidget
     this.widgetWaiting,
     this.widgetErrorBuilder,
     this.stringFilter,
+    this.filter,
+    this.sortFunction,
     //this.compareSort,
     this.sortCompare = true,
     this.rxBoolAuth,
@@ -234,6 +245,8 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
 
     _controller = SearcherPageStreamController<T>(
         stringFilter: widget.stringFilter,
+        filter: widget.filter,
+        sortFunction: widget.sortFunction,
         sortCompare: widget.sortCompare,
         filtersType: widget.filtersType)
       ..onInitFilter();
@@ -441,7 +454,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
     _connectyController = ConnectController();
     _subscriptionConnecty =
         _connectyController.rxConnect.stream.listen((isConnected) {
-      if (isConnected && (!_haveInitialData)) {
+      if (!isConnected && (!_haveInitialData)) {
         //lançar _widgetConnecty
         setState(() {
           downConnectyWithoutData = true;

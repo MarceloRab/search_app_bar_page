@@ -25,6 +25,8 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
   FiltersTypes? filtersType;
   late Filter<String?> _filters;
   StringFilter<T>? stringFilter;
+  SortList<T>? sortFunction;
+  Filter<T>? filter;
 
   //Compare<T> compareSort;
   bool haveInitialData = false;
@@ -46,9 +48,36 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
     //@required this.listStream,
     this.stringFilter,
     this.sortCompare,
+    this.filter,
+    this.sortFunction,
     this.filtersType = FiltersTypes.contains,
   }) {
     if (stringFilter == null) {
+      if (T == String) {
+        //stringFilter = _defaultFilter;
+        stringFilter = (T value) => value as String;
+      } else {
+        if (filter == null) {
+          throw Exception(
+              'If you dont want to filter by a String, it is necessary '
+              'to add the filtering function.');
+        }
+        /*else if (sortFunction == null) {
+          throw Exception(
+              'You choose to sort your list. Need to add the order function.');
+        }*/
+        /*throw Exception(
+            'You need to construct your object s return String in the '
+            'stringFilter function. If there is no return String, your '
+            'list object must be a String.');*/
+      }
+    }
+
+    if (stringFilter != null && filter != null) {
+      throw Exception(
+          'You need to choose between one of the filtering mechanisms.');
+    }
+    /*if (stringFilter == null) {
       if (T == String) {
         //stringFilter = _defaultFilter;
         stringFilter = (T value) => value as String;
@@ -58,7 +87,7 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
             'stringFilter function. If there is no return String, your '
             'list object must be a String.');
       }
-    }
+    }*/
   }
 
   var listFull = <T>[];
@@ -78,34 +107,65 @@ class SearcherPageStreamController<T> extends SeacherBase<T>
   }*/
 
   void onInitFilter() {
-    if (filtersType.toString() == FiltersTypes.startsWith.toString()) {
-      _filters = Filters.startsWith;
-    } else if (filtersType.toString() == FiltersTypes.equals.toString()) {
-      _filters = Filters.equals;
-    } else {
-      _filters = Filters.contains;
+    if (stringFilter != null || T == String) {
+      if (filtersType.toString() == FiltersTypes.startsWith.toString()) {
+        _filters = Filters.startsWith;
+      } else if (filtersType.toString() == FiltersTypes.equals.toString()) {
+        _filters = Filters.equals;
+      } else {
+        _filters = Filters.contains;
+      }
     }
   }
 
   List<T> refreshSeachList2(String? value) {
+    var list = <T>[];
+
+    if (stringFilter != null || T == String) {
+      list = listFull
+          .where((element) => _filters(stringFilter!(element), value))
+          .toList();
+    } else {
+      if (value!.isEmpty)
+        list = listFull;
+      else
+        list = listFull.where((element) => filter!(element, value)).toList();
+    }
+    sortCompareList(list);
+
+    return list;
+  }
+
+  /*List<T> refreshSeachList2(String? value) {
     final list = listFull
         .where((element) => _filters(stringFilter!(element), value))
         .toList();
     sortCompareList(list);
 
     return list;
-  }
+  }*/
 
   @override
   void sortCompareList(List<T> list) {
-    /*if (compareSort != null) {
+    if (sortFunction != null) {
+      list.sort(sortFunction);
+    } else if (sortCompare!) {
+      if (stringFilter != null || T == String) {
+        list.sort((a, b) => stringFilter!(a)!.compareTo(stringFilter!(b)!));
+      }
+    }
+  }
+
+  /* @override
+  void sortCompareList(List<T> list) {
+    */ /*if (compareSort != null) {
       list.sort(compareSort);
-    }*/
+    }*/ /*
 
     if (sortCompare!) {
       list.sort((a, b) => stringFilter!(a)!.compareTo(stringFilter!(b)!));
     }
-  }
+  }*/
 
   FutureOr onClose() {
     _isModSearch.close();

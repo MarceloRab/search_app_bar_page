@@ -7,7 +7,7 @@ import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/fun
 import 'infra/rx_get_type.dart';
 
 class GetStreamWidget<T> extends StatefulWidget {
-  ///[stream] Just pass your stream and you will receive streamObject which is
+  ///[stream] Just add your stream and you will receive streamObject which is
   ///snapshot.data to build your page.
   final Stream<T> stream;
 

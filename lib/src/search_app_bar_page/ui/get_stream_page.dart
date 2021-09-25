@@ -15,7 +15,7 @@ class GetStreamPage<T> extends StatefulWidget {
   /// status to have reactivity.
   final RxBoolAuth? rxBoolAuth;
 
-  ///[stream] Just pass your stream and you will receive streamObject which is
+  ///[stream] Just add your stream and you will receive streamObject which is
   ///snapshot.data to build your page.
   final Stream<T> stream;
 

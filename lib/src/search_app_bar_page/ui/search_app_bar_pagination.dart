@@ -53,9 +53,9 @@ class SearchAppBarPagination<T> extends StatefulWidget
 
   /// Parametros para o Scaffold
 
-  ///  [widgetOffConnectyWaiting] Apenas mostra algo quando esta sem conexao
-  ///  e ainda nao tem o primeiro valor da stream. Se a conexao voltar
-  ///  passa a mostrar o [widgetWaiting] até apresentar o primeiro dado
+  /// [widgetOffConnectyWaiting] Only show something when disconnected
+  /// and still doesn't have the first value of the stream. See connection back
+  /// starts showing the [widgetWaiting] until displaying the first data
   final Widget? widgetWaiting;
   final Widget? widgetOffConnectyWaiting;
 
@@ -255,7 +255,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
 
     if (widget.initialData != null && widget.numItemsPage == null) {
       throw Exception(
-          'It is necessary to pass the number of items per page so that '
+          'It is necessary to add the number of items per page so that '
           'can calculate the home page');
     }
     super.initState();
@@ -593,7 +593,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
     if (oldWidget.initialData != widget.initialData) {
       if (widget.initialData != null && widget.numItemsPage == null) {
         throw Exception(
-            'It is necessary to pass the number of items per page so that '
+            'It is necessary to add the number of items per page so that '
             'can calculate the home page.');
       } else {
         _haveInitialData = widget.initialData != null;
@@ -662,7 +662,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
   void _subscribeConnecty() {
     _subscriptionConnecty =
         _connectyController.rxConnect.stream.listen((isConnected) {
-      if (isConnected && (!_haveInitialData)) {
+      if (!isConnected && (!_haveInitialData)) {
         setState(() {
           downConnectyWithoutData = true;
         });

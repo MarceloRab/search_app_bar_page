@@ -89,8 +89,17 @@ class SearchAppBarPage<T> extends StatefulWidget
   /// The list will be filtered by the person.name contains (default) a query.
   final StringFilter<T>? stringFilter;
 
+  /// [filter] Add function to do filtering manually.
+  /// If you leave this parameter not null the parameter [stringFilter]
+  /// must be null
+  final Filter<T>? filter;
+
+  /// [sortFunction] Manually add your sort function.
+  final SortList<T>? sortFunction;
+
   ///[sortCompare] Your list will be ordered by the same function
   ///[stringFilter]. True by default.
+  /// sort default compare by stringFilter return.
   final bool sortCompare;
 
   ///  [rxBoolAuth] Insert your RxBool here that changes with the auth
@@ -105,6 +114,8 @@ class SearchAppBarPage<T> extends StatefulWidget
       required this.obxListBuilder,
       this.sortCompare = true,
       this.filtersType,
+      this.filter,
+      this.sortFunction,
       this.stringFilter,
       this.rxBoolAuth,
 
@@ -175,6 +186,8 @@ class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
         listFull: widget.listFull,
         stringFilter: widget.stringFilter,
         //compareSort: widget.compareSort,
+        filter: widget.filter,
+        sortFunction: widget.sortFunction,
         sortCompare: widget.sortCompare,
         filtersType: widget.filtersType)
       ..initFilters()

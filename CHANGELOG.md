@@ -1,3 +1,19 @@
+## [2.0.6]
+
+* Correction in readme log.
+
+
+## [2.0.5]
+
+* By request. Added option to add filtering function manually. 
+Removes the need to return a String. May generate exception if the user 
+types a letter and the dev wants to filter by the number. In this case, 
+you need to handle the exception within the manual filtering function. 
+New parameters for = > SearchAppBarPageStream and = > SearchAppBarPage are ```[filter]```.
+* Now the dev can add its own sorting function  ```[sortFunction]```. 
+By default sorting is done from the return of ```[stringFilter]```.
+* See example
+
 ## [2.0.4]
 
 * Minimal improvement
@@ -147,7 +163,7 @@
 
 ## [1.1.0]
 
-- There is no more need to pass the function to make a sort compare on the list. Just pass compare =
+- There is no more need to add the function to make a sort compare on the list. Just add compare =
   false to not organize your list.
 
 ## [1.0.3]

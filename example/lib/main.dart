@@ -205,8 +205,26 @@ class _SearchPageState extends State<SearchPage> {
       ),
       //listFull: dataList, // Lista String
       listFull: dataListPerson2,
+
+      /// sort default compare by stringFilter return.
+      //sortFunction: (Person a, Person b) => a.age.compareTo(b.age),
+      //filtersType: FiltersTypes.equals,
       stringFilter: (Person person) => person.name,
-      //sortCompare: false,
+
+      /// If you want to make your own filtering function.
+      /// 👇🏼
+      /*
+      filter: (Person person, String query) {
+        try {
+          return person.age.compareTo(int.tryParse(query)) == 0;
+        } catch (e) {
+          debugPrint(e.toString());
+
+          /// show warning
+          return true;
+        }
+      },*/
+
       ///--------------------------------------------
       /// ✅ Add the auth reactive parameters.
       ///  The body will be rebuilt when the auth is false.
@@ -298,7 +316,8 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
       listStream: _streamListPerson,
       stringFilter: (Person person) => person.name,
       //stringFilter: (Person person) => person.age.toString(),
-      //sortCompare: false,
+      /// sort default compare by stringFilter return.
+      sortFunction: (Person a, Person b) => a.age.compareTo(b.age),
       filtersType: FiltersTypes.contains,
       obxListBuilder: (context, list, isModSearch) {
         // ☑️ This function is inside an Obx.

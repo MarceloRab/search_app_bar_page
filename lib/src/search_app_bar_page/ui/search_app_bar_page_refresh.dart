@@ -55,9 +55,9 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
 
   /// Parametros para o Scaffold
 
-  ///  [widgetOffConnectyWaiting] Apenas mostra algo quando esta sem conexao
-  ///  e ainda nao tem o primeiro valor da stream. Se a conexao voltar
-  ///  passa a mostrar o [widgetWaiting] até apresentar o primeiro dado
+  /// [widgetOffConnectyWaiting] Only show something when disconnected
+  /// and still doesn't have the first value of the stream. See connection back
+  /// starts showing the [widgetWaiting] until displaying the first data
   final Widget? widgetWaiting;
   final Widget? widgetOffConnectyWaiting;
 
@@ -116,7 +116,7 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
   /// [widgetWaiting]
   final List<T>? initialData;
 
-  /// [functionRefresh] Just pass the future function and we are already
+  /// [functionRefresh] Just add the future function and we are already
   /// in charge of working with the data. There is a FutureBuilder
   /// in background.
   final FuncionRefresh<T> functionRefresh;
@@ -136,7 +136,7 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
   /// The list will be filtered by the person.name contains (default) a query.
   final StringFilter<T>? stringFilter;
 
-  ///If you want your list to be sorted, pass the function on.
+  ///If you want your list to be sorted, add the function on.
   /// Example: (Person a, Person b) => a.name.compareTo(b.name),
   /// This list will be ordered by the object name parameter.
   //final Compare<T> compareSort;
