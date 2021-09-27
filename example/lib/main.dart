@@ -203,7 +203,8 @@ class _SearchPageState extends State<SearchPage> {
         'Search Page',
         style: TextStyle(fontSize: 20),
       ),
-      //listFull: dataList, // Lista String
+
+      /// Add list. Use setState if your list changes.
       listFull: dataListPerson2,
 
       /// sort default compare by stringFilter return.
@@ -213,16 +214,14 @@ class _SearchPageState extends State<SearchPage> {
 
       /// If you want to make your own filtering function.
       /// 👇🏼
-      /*
-      filter: (Person person, String query) {
-        try {
-          return person.age.compareTo(int.tryParse(query)) == 0;
-        } catch (e) {
-          debugPrint(e.toString());
-
-          /// show warning
-          return true;
+      /*filter: (Person person, String query) {
+        final intQuery = int.tryParse(query);
+        if (intQuery != null) {
+          return person.age.compareTo(intQuery) == 0;
         }
+
+        /// show warning
+        return true;
       },*/
 
       ///--------------------------------------------
@@ -313,6 +312,8 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
         'Search Stream Page',
         style: TextStyle(fontSize: 20),
       ),
+
+      /// Add stream. Use setState if your stream change.
       listStream: _streamListPerson,
       stringFilter: (Person person) => person.name,
       //stringFilter: (Person person) => person.age.toString(),

@@ -1,18 +1,25 @@
+## [2.1.0]
+
+* By request. Added option to add filtering function manually.
+  Removes the need to return a String. May generate exception if the user
+  types a letter and the dev wants to filter by the number. In this case,
+  you need to handle the exception within the manual filtering function.
+  New parameter for = > SearchAppBarPageStream and = > SearchAppBarPage is ```[filter]```.
+* Now the dev can add its own sorting function  ```[sortFunction]```.
+  By default sorting is done from the return of ```[stringFilter]```.
+* See example
+
+## [2.0.7]
+
+* Minimal improvement in the example
+
 ## [2.0.6]
 
 * Correction in readme log.
 
-
 ## [2.0.5]
 
-* By request. Added option to add filtering function manually. 
-Removes the need to return a String. May generate exception if the user 
-types a letter and the dev wants to filter by the number. In this case, 
-you need to handle the exception within the manual filtering function. 
-New parameters for = > SearchAppBarPageStream and = > SearchAppBarPage are ```[filter]```.
-* Now the dev can add its own sorting function  ```[sortFunction]```. 
-By default sorting is done from the return of ```[stringFilter]```.
-* See example
+* Fixing error for connection check.
 
 ## [2.0.4]
 
