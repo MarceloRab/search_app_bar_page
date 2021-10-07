@@ -1,3 +1,7 @@
+## [2.1.1]
+
+* Fix to change sortFunction to reset SearchAppBarPage after setState.
+
 ## [2.1.0]
 
 * By request. Added option to add filtering function manually.

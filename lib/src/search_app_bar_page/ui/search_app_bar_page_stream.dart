@@ -274,6 +274,8 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
     //_controller.compareSort = widget.compareSort;
     _controller.sortCompare = widget.sortCompare;
     _controller.filtersType = widget.filtersType;
+    _controller.sortFunction = widget.sortFunction;
+    _controller.filter = widget.filter;
     _controller.onInitFilter();
 
     if (oldWidget.initialData != widget.initialData) {
@@ -285,12 +287,13 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
         downConnectyWithoutData = false;
         _unsubscribeConnecty();
 
-        if (widget.initialData!.length > _controller.listFull.length) {
-          _controller.listFull.clear();
-          _controller.listFull.addAll(widget.initialData!);
-          _controller.sortCompareList(_controller.listFull);
-          _controller.initial(_controller.listFull);
-        }
+        //if (widget.initialData!.length > _controller.listFull.length) {
+        _controller.listFull.clear();
+        _controller.listFull.addAll(widget.initialData!);
+
+        _controller.initial(_controller.listFull);
+
+        //}
       } else if (_controller.listFull.isEmpty &&
           _subscriptionConnecty != null) {
         _subscribeConnecty();
@@ -300,9 +303,13 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
     if (_controller.listFull.isNotEmpty) {
       if (_controller.rxSearch.value.isNotEmpty) {
         _controller.afterData(
+
+            /// já tem sort dentro
             _controller.refreshSeachList2(_controller.rxSearch.value));
       } else {
-        _controller.sortCompareList(_controller.listFull);
+        if (oldWidget.sortFunction != widget.sortFunction) {
+          _controller.sortCompareList(_controller.listFull);
+        }
         _controller.afterData(_controller.listFull);
       }
     }
