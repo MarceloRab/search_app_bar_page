@@ -307,9 +307,9 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
             /// já tem sort dentro
             _controller.refreshSeachList2(_controller.rxSearch.value));
       } else {
-        if (oldWidget.sortFunction != widget.sortFunction) {
-          _controller.sortCompareList(_controller.listFull);
-        }
+        //if (oldWidget.sortFunction != widget.sortFunction) {
+        _controller.sortCompareList(_controller.listFull);
+
         _controller.afterData(_controller.listFull);
       }
     }

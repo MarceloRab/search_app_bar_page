@@ -1,3 +1,7 @@
+## [2.1.2]
+
+* Minimal improvement
+
 ## [2.1.1]
 
 * Fix to change sortFunction to reset SearchAppBarPage after setState.
