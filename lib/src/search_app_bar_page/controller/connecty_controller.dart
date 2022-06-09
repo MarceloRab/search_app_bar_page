@@ -1,10 +1,13 @@
 import 'dart:async';
 //import 'dart:io';
 
-import 'package:connectivity/connectivity.dart';
+//import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/state_manager.dart';
 
 class ConnectController {
+  //ConnectivityResult _connectionStatus = ConnectivityResult.none;
+
   late Connectivity connectivity;
 
   //final rxConnect = true.obs;

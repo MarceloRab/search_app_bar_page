@@ -236,9 +236,9 @@ class SharingController extends GetxController {
   ///This will make the list reactive.
   final isLoadingRxList = true.obs;
 
-  set isLoading(bool? value) => isLoadingRxList.value = value;
+  set isLoading(bool? value) => isLoadingRxList.value = value!;
 
-  bool get isLoading => isLoadingRxList.value!;
+  bool get isLoading => isLoadingRxList.value;
 
   Future<List> getRxList(TypeList typeList) async {
     isLoading = true;

@@ -219,7 +219,6 @@ class _SearchPageState extends State<SearchPage> {
         if (intQuery != null) {
           return person.age.compareTo(intQuery) == 0;
         }
-
         /// show warning
         return true;
       },*/
@@ -244,13 +243,11 @@ class _SearchPageState extends State<SearchPage> {
         ///----------------------------------------------------
         /// Changes to the rxList will also rebuild the widget.
         ///----------------------------------------------------
-
         print(' TEST -- ${controll_1.rxList.length.toString()} ');
 
         ///-------------------------------------------------------------
         /// Changes to the filtered list will also reconstruct the body.
         ///-------------------------------------------------------------
-
         if (list.isEmpty) {
           return Center(
               child: Text(
@@ -414,7 +411,7 @@ class _SearchAppBarRefreshState extends State<SearchAppBarRefresh> {
         //BaseOptions(baseUrl: 'https://5f988a5242706e001695875d.mockapi.io'));
         BaseOptions(baseUrl: 'https://5f988a5242706e001695875d.mockapi.io'));
 
-    _dio.interceptors
+    /*_dio.interceptors
         .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
       debugPrint(options.uri.toString());
       return options;
@@ -423,7 +420,7 @@ class _SearchAppBarRefreshState extends State<SearchAppBarRefresh> {
       return response;
     }, onError: (DioError e) async {
       return e;
-    }));
+    }));*/
     super.initState();
   }
 
@@ -649,34 +646,25 @@ class _SearchAppBarPaginationTestState
 
   /// How to configure the server side.
 /*
-
   Future<List<Person>> _futureListPerson(int page, String query) async {
     final size = 15;
     List<Person> list = [];
-
     final fistElement = (page - 1) * size;
     final lastElement = page * size;
-
     */ /*print('fistElement = ' + fistElement.toString());
     print('lastElement = ' + lastElement.toString());
     print('--------');
     print('page pedida = ' + page.toString());
     print('--------');*/ /*
-
     dataListPerson3.sort((a, b) => a.name.compareTo(b.name));
-
     await Future<void>.delayed(Duration(seconds: 3));
-
     //return null;
-
     if (query.isEmpty) {
       int totalPages = (dataListPerson3.length / size).ceil();
       totalPages = totalPages == 0 ? 1 : totalPages;
-
       if (page > totalPages) {
         return list;
       }
-
       list = dataListPerson3.sublist(
           fistElement,
           lastElement > dataListPerson3.length
@@ -685,34 +673,25 @@ class _SearchAppBarPaginationTestState
     } else {
       final listQuery =
           dataListPerson3.where((element) => contains(element, query)).toList();
-
       int totalQueryPages = (listQuery.length / size).ceil();
       totalQueryPages = totalQueryPages == 0 ? 1 : totalQueryPages;
-
       if (page > totalQueryPages) {
         return list;
       }
-
       list = listQuery.sublist(fistElement,
           lastElement > listQuery.length ? listQuery.length : lastElement);
     }
-
     //throw Exception('Voluntary Error');
     return list;
   }
-
   static bool Function(Person person, String query) contains =
       (Person test, query) {
     final realTest = _prepareString(test.name);
     final realQuery = _prepareString(query);
     return realTest.contains(realQuery);
   };
-
-
-
   static String _prepareString(String string) =>
       removeDiacritics(string).toLowerCase();
-
 */
 }
 

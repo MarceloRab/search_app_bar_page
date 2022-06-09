@@ -73,3 +73,11 @@ build/
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+
+/coverage/*
+/doc/*
+/metrics/*
+/tool/*
+/website/*
+/codecov.yaml
+/dart_dependency_validator.yaml

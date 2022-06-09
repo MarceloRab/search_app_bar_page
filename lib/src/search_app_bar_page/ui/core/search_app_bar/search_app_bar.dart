@@ -60,7 +60,7 @@ class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
         // hideDefaultConnectyIconOffAppBar &&
         // iconConnectyOffAppBar == null),
         // assert(controller is DisposableInterface);
-        assert(controller is SeacherBase),
+        //assert(controller is SeacherBase),
         super(key: key);
 
   // assert(controller.isModSearch != null),
