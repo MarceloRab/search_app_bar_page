@@ -3,12 +3,10 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:search_app_bar_page/src/search_app_bar_page/controller/connecty_controller.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/get_stream_controller.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/functions.dart';
 
 import 'infra/rx_get_type.dart';
-import 'widgets/connecty_widget.dart';
 
 class GetStreamPage<T> extends StatefulWidget {
   ///  [rxBoolAuth] Insert your RxBool here that changes with the auth
@@ -29,12 +27,6 @@ class GetStreamPage<T> extends StatefulWidget {
   ///snapshot.data through the stream. To set up your page, you receive
   /// the context, the streamObject which is snapshot.data.
   final GetWidgetBuilder<T> obxWidgetBuilder;
-
-  /// [widgetOffConnectyWaiting] Only shows something when it is disconnected
-  /// and still doesn't have the first value in the stream. If the connection
-  /// comes back starts showing [widgetWaiting] until it shows the first data
-  final Widget? widgetWaiting;
-  final Widget? widgetOffConnectyWaiting;
 
   /// [floatingActionButton] , [pageDrawer] ,
   /// [floatingActionButtonLocation] ,
@@ -83,7 +75,6 @@ class GetStreamPage<T> extends StatefulWidget {
   ///[hideDefaultConnectyIconOffAppBar] = true; If you want to have a
   ///custom icon, do [hideDefaultConnectyIconOffAppBar] = true; and set the
   ///[iconConnectyOffAppBar]`.
-  final bool hideDefaultConnectyIconOffAppBar;
 
   const GetStreamPage(
       {Key? key,
@@ -92,7 +83,6 @@ class GetStreamPage<T> extends StatefulWidget {
       this.initialData,
       this.rxBoolAuth,
       this.widgetErrorBuilder,
-      this.widgetWaiting,
       this.floatingActionButton,
       this.floatingActionButtonLocation,
       this.floatingActionButtonAnimator,
@@ -118,9 +108,7 @@ class GetStreamPage<T> extends StatefulWidget {
       this.elevation = 4.0,
       this.actions = const <Widget>[],
       this.iconTheme,
-      this.widgetOffConnectyWaiting,
       this.iconConnectyOffAppBar,
-      this.hideDefaultConnectyIconOffAppBar = false,
       this.iconConnectyOffAppBarColor})
       //: assert(S is List<DisposableInterface>),
       : super(key: key);
@@ -141,7 +129,6 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
   Widget? _widgetConnecty;
 
   StreamSubscription? _subscriptionConnecty;
-  late ConnectController _connectyController;
 
   bool haveData = false;
 
@@ -157,15 +144,11 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
       _controller.initial(widget.initialData!);
     }
     _subscribeStream();
-    _subscribeConnecty();
-    buildwidgetConnecty();
-    _buildWidgetsDefault();
   }
 
   @override
   void dispose() {
     _controller.onClose();
-    _unsubscribeConnecty();
     _unsubscribeStream();
     _subscription?.cancel();
     _subscriptionConnecty?.cancel();
@@ -204,7 +187,6 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
         //objesctStream ??= data;
         haveData = true;
         downConnectyWithoutData = false;
-        _unsubscribeConnecty();
         _controller.afterData(data);
       }
     }, onError: (Object error) {
@@ -220,46 +202,6 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
     if (_subscription != null) {
       _subscription!.cancel();
       _subscription = null;
-    }
-  }
-
-  void _subscribeConnecty() {
-    _connectyController = ConnectController();
-    _subscriptionConnecty =
-        _connectyController.rxConnect.stream.listen((isConnected) {
-      if (isConnected) {
-        //lançar _widgetConnecty
-        setState(() {
-          downConnectyWithoutData = true;
-        });
-        //} else if (isConnected && objesctStream == null) {
-      } else if (isConnected && !haveData) {
-        setState(() {
-          downConnectyWithoutData = false;
-          _controller.afterConnected();
-        });
-      }
-    });
-  }
-
-  void _unsubscribeConnecty() {
-    if (_subscriptionConnecty != null) {
-      _subscriptionConnecty!.cancel();
-      _subscriptionConnecty = null;
-      _connectyController.onClose();
-    }
-  }
-
-  void buildwidgetConnecty() {
-    if (widget.iconConnectyOffAppBar == null &&
-        !widget.hideDefaultConnectyIconOffAppBar) {
-      _iconConnectyOffAppBar = ConnectyWidget(
-        color: widget.iconConnectyOffAppBarColor,
-      );
-    } else if (widget.hideDefaultConnectyIconOffAppBar) {
-      if (widget.iconConnectyOffAppBar != null) {
-        _iconConnectyOffAppBar = widget.iconConnectyOffAppBar;
-      }
     }
   }
 
@@ -355,50 +297,6 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
           ]);
     } else {
       return widget.widgetErrorBuilder!(error);
-    }
-  }
-
-  void _buildWidgetsDefault() {
-    if (widget.widgetOffConnectyWaiting == null) {
-      _widgetConnecty = Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            SizedBox(
-              width: 60,
-              height: 60,
-              child: CircularProgressIndicator(),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              'Check connection...',
-              style: TextStyle(fontSize: 18),
-            )
-          ],
-        ),
-      );
-    } else {
-      _widgetConnecty = widget.widgetOffConnectyWaiting;
-    }
-    if (widget.widgetWaiting == null) {
-      _widgetWaiting = Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            SizedBox(
-              width: 60,
-              height: 60,
-              child: CircularProgressIndicator(),
-            ),
-          ],
-        ),
-      );
-    } else {
-      _widgetWaiting = widget.widgetWaiting;
     }
   }
 }

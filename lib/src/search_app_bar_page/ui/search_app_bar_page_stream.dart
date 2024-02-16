@@ -4,15 +4,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
-import 'package:search_app_bar_page/src/search_app_bar_page/controller/connecty_controller.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/seacher_widget_page_base.dart';
 
 import '../../../search_app_bar_page.dart';
 import '../controller/searcher_page_stream_controller.dart';
 
-class SearchAppBarPageStream<T> extends StatefulWidget
-    implements SeacherScaffoldBase {
+class SearchAppBarPageStream<T> extends StatefulWidget implements SeacherScaffoldBase {
   /// Paramentros do SearchAppBar
 
   final Widget? searchAppBartitle;
@@ -22,8 +20,6 @@ class SearchAppBarPageStream<T> extends StatefulWidget
   final Color? searchAppBarModeSearchBackgroundColor;
   final Color? searchAppBarElementsColor;
 
-  /// [searchAppBarIconConnectyOffAppBarColor] You can change the color of
-  /// [iconConnectyOffAppBar]. By default = Colors.redAccent.
   final Color? searchAppBarIconConnectyOffAppBarColor;
   final String? searchAppBarhintText;
   final bool searchAppBarflattenOnSearch;
@@ -36,29 +32,8 @@ class SearchAppBarPageStream<T> extends StatefulWidget
   /// Keeps IconTheme color by default.
   final Color? magnifyinGlassColor;
 
-  ///[iconConnectyOffAppBar] Appears when the connection status is off.
-  ///There is already a default icon. If you don't want to present a choice
-  ///[hideDefaultConnectyIconOffAppBar] = true; If you want to have a
-  ///custom icon, do [hideDefaultConnectyIconOffAppBar] = true; and set the
-  ///[iconConnectyOffAppBar]`.
-  final bool hideDefaultConnectyIconOffAppBar;
-
-  /// [iconConnectyOffAppBar] Displayed on the AppBar when the internet
-  /// connection is switched off.
-  /// It is always the closest to the center.
-  final Widget? iconConnectyOffAppBar;
-
-  ///  [iconConnectyOffAppBar] Aparece quando o status da conexao é off.
-  ///  já existe um icone default. Caso nao queira apresentar escolha
-  ///  [hideDefaultConnectyIconOffAppBar] = false;
-
-  /// Parametros para o Scaffold
-
-  /// [widgetOffConnectyWaiting] Only show something when disconnected
-  /// and still doesn't have the first value of the stream. See connection back
-  /// starts showing the [widgetWaiting] until displaying the first data
+  /// Start showing [widgetWaiting] until it shows the first data
   final Widget? widgetWaiting;
-  final Widget? widgetOffConnectyWaiting;
 
   /// [widgetErrorBuilder] Widget built by the Object error returned by the
   /// [listStream] error.
@@ -161,7 +136,6 @@ class SearchAppBarPageStream<T> extends StatefulWidget
     required this.listStream,
     required this.obxListBuilder,
     this.initialData,
-    this.widgetWaiting,
     this.widgetErrorBuilder,
     this.stringFilter,
     this.filter,
@@ -184,9 +158,6 @@ class SearchAppBarPageStream<T> extends StatefulWidget
     this.searchAppBarElevation = 4.0,
     this.searchAppBarKeyboardType,
     this.magnifyinGlassColor,
-    this.hideDefaultConnectyIconOffAppBar = false,
-    this.iconConnectyOffAppBar,
-    this.widgetOffConnectyWaiting,
     this.searchePageFloatingActionButton,
     this.searchePageFloatingActionButtonLocation,
     this.searchePageFloatingActionButtonAnimator,
@@ -206,26 +177,20 @@ class SearchAppBarPageStream<T> extends StatefulWidget
     this.drawerEdgeDragWidth,
     this.drawerEnableOpenDragGesture = true,
     this.endDrawerEnableOpenDragGesture = true,
+    this.widgetWaiting,
   }) : super(key: key);
 
   @override
-  State<SearchAppBarPageStream<T>> createState() =>
-      _SearchAppBarPageStreamState<T>();
+  State<SearchAppBarPageStream<T>> createState() => _SearchAppBarPageStreamState<T>();
 }
 
 /// State for [StreamBuilderBase].
 class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
   StreamSubscription? _subscription;
-  StreamSubscription? _subscriptionConnecty;
 
   // T as List
 
   bool _haveInitialData = false;
-
-  late ConnectController _connectyController;
-  bool downConnectyWithoutData = false;
-
-  Widget? _widgetConnecty;
   Widget? _widgetWaiting;
 
   Worker? _worker;
@@ -253,16 +218,13 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
     _haveInitialData = widget.initialData != null;
 
     _subscribeStream();
+    _buildWidgetsDefault();
     _subscribreSearhQuery();
-    if (!_haveInitialData) {
-      _subscribeConnecty();
-    } else {
+    if (_haveInitialData) {
       _controller.listFull.addAll(widget.initialData!);
       _controller.sortCompareList(_controller.listFull);
       _controller.initial(_controller.listFull);
     }
-
-    buildWidgetsDefault();
   }
 
   @override
@@ -283,8 +245,6 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
 
       if (_haveInitialData) {
         //_controller.wrabListSearch(widget.initialData);
-        downConnectyWithoutData = false;
-        _unsubscribeConnecty();
 
         //if (widget.initialData!.length > _controller.listFull.length) {
         _controller.listFull.clear();
@@ -293,9 +253,6 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
         _controller.initial(_controller.listFull);
 
         //}
-      } else if (_controller.listFull.isEmpty &&
-          _subscriptionConnecty != null) {
-        _subscribeConnecty();
       }
     }
 
@@ -335,24 +292,17 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
             iconTheme: widget.searchAppBariconTheme,
             backgroundColor: widget.searchAppBarbackgroundColor,
             searchBackgroundColor: widget.searchAppBarModeSearchBackgroundColor,
-            iconConnectyOffAppBarColor:
-                widget.searchAppBarIconConnectyOffAppBarColor,
             searchElementsColor: widget.searchAppBarElementsColor,
             hintText: widget.searchAppBarhintText,
             flattenOnSearch: widget.searchAppBarflattenOnSearch,
             capitalization: widget.searchAppBarcapitalization,
             actions: widget.searchAppBaractions,
-            hideDefaultConnectyIconOffAppBar:
-                widget.hideDefaultConnectyIconOffAppBar,
-            iconConnectyOffAppBar: widget.iconConnectyOffAppBar,
             keyboardType: widget.searchAppBarKeyboardType,
             magnifyinGlassColor: widget.magnifyinGlassColor),
         body: buildBody(),
         floatingActionButton: widget.searchePageFloatingActionButton,
-        floatingActionButtonLocation:
-            widget.searchePageFloatingActionButtonLocation,
-        floatingActionButtonAnimator:
-            widget.searchePageFloatingActionButtonAnimator,
+        floatingActionButtonLocation: widget.searchePageFloatingActionButtonLocation,
+        floatingActionButtonAnimator: widget.searchePageFloatingActionButtonAnimator,
         persistentFooterButtons: widget.searchePagePersistentFooterButtons,
         drawer: widget.searchePageDrawer,
         endDrawer: widget.searchePageEndDrawer,
@@ -372,11 +322,6 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
   }
 
   Widget buildBody() {
-    if (downConnectyWithoutData) {
-      // Apenas anuncia quando nao tem a primeira data e esta sem conexao
-      return _widgetConnecty!;
-    }
-
     return Obx(() {
       if (widget.rxBoolAuth?.auth.value == false) {
         return widget.rxBoolAuth!.authFalseWidget();
@@ -390,21 +335,18 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
       }
 
       //final isListFull = widget.searcher.rxSearch.value.isEmpty;
-      return widget.obxListBuilder(
-          context, _controller.snapshot.data!, _controller.isModSearch);
+      return widget.obxListBuilder(context, _controller.snapshot.data!, _controller.isModSearch);
     });
   }
 
   @override
   void dispose() {
     _unsubscribeStream();
-    _unsubscribeConnecty();
     _controller.onClose();
     if (_worker?.disposed == true) {
       _worker?.dispose();
     }
     _subscription?.cancel();
-    _subscriptionConnecty?.cancel();
 
     super.dispose();
   }
@@ -426,15 +368,12 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
           }
         }
       }
-      downConnectyWithoutData = false;
-      _unsubscribeConnecty();
 
       _controller.listFull = data;
       _controller.sortCompareList(_controller.listFull);
 
       if (_controller.rxSearch.value.isNotEmpty) {
-        _controller.afterData(
-            _controller.refreshSeachList2(_controller.rxSearch.value));
+        _controller.afterData(_controller.refreshSeachList2(_controller.rxSearch.value));
       } else {
         _controller.afterData(_controller.listFull);
       }
@@ -456,32 +395,6 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
     }, time: const Duration(milliseconds: 350));
   }
 
-  void _subscribeConnecty() {
-    _connectyController = ConnectController();
-    _subscriptionConnecty =
-        _connectyController.rxConnect.stream.listen((isConnected) {
-      if (!isConnected && (!_haveInitialData)) {
-        //lançar _widgetConnecty
-        setState(() {
-          downConnectyWithoutData = true;
-        });
-      } else if (isConnected && (!_haveInitialData)) {
-        setState(() {
-          downConnectyWithoutData = false;
-          _controller.afterConnected();
-        });
-      }
-    });
-  }
-
-  void _unsubscribeConnecty() {
-    if (_subscriptionConnecty != null) {
-      _subscriptionConnecty!.cancel();
-      _subscriptionConnecty = null;
-      _connectyController.onClose();
-    }
-  }
-
   void _unsubscribeStream() {
     if (_subscription != null) {
       _subscription!.cancel();
@@ -491,25 +404,23 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
 
   Widget buildWidgetError(Object? error) {
     if (widget.widgetErrorBuilder == null) {
-      return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Icon(
-              Icons.error_outline,
-              color: Colors.red,
-              size: 60,
+      return Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+        const Icon(
+          Icons.error_outline,
+          color: Colors.red,
+          size: 60,
+        ),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: Text(
+              'We found an error.\n'
+              'Error: $error',
+              textAlign: TextAlign.center,
             ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Text(
-                  'We found an error.\n'
-                  'Error: $error',
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            )
-          ]);
+          ),
+        )
+      ]);
     } else {
       return widget.widgetErrorBuilder!(error);
     }
@@ -517,38 +428,13 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
     //return _widgetError;
   }
 
-  void buildWidgetsDefault() {
-    if (widget.widgetOffConnectyWaiting == null) {
-      _widgetConnecty = Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            SizedBox(
-              width: 60,
-              height: 60,
-              child: CircularProgressIndicator(),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              'Check connection...',
-              style: TextStyle(fontSize: 18),
-            )
-          ],
-        ),
-      );
-    } else {
-      _widgetConnecty = widget.widgetOffConnectyWaiting;
-    }
-
+  void _buildWidgetsDefault() {
     if (widget.widgetWaiting == null) {
-      _widgetWaiting = Center(
+      _widgetWaiting = const Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             SizedBox(
               width: 60,
               height: 60,

@@ -4,7 +4,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
-import 'package:search_app_bar_page/src/search_app_bar_page/controller/connecty_controller.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_page_refresh_controller.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/seacher_widget_page_base.dart';
@@ -35,30 +34,6 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
   /// [magnifyinGlassColor] Changes the color of the magnifying glass.
   /// Keeps IconTheme color by default.
   final Color? magnifyinGlassColor;
-
-  ///[iconConnectyOffAppBar] Appears when the connection status is off.
-  ///There is already a default icon. If you don't want to present a choice
-  ///[hideDefaultConnectyIconOffAppBar] = true; If you want to have a
-  ///custom icon, do [hideDefaultConnectyIconOffAppBar] = true; and set the
-  ///[iconConnectyOffAppBar]`.
-  final bool hideDefaultConnectyIconOffAppBar;
-
-  /// [iconConnectyOffAppBar] Displayed on the AppBar when the internet
-  /// connection is switched off.
-  /// It is always the closest to the center.
-  final Widget? iconConnectyOffAppBar;
-
-  ///  [iconConnectyOffAppBar] Aparece quando o status da conexao é off.
-  ///  já existe um icone default. Caso nao queira apresentar escolha
-  ///  [hideDefaultConnectyIconOffAppBar] = false;
-
-  /// Parametros para o Scaffold
-
-  /// [widgetOffConnectyWaiting] Only show something when disconnected
-  /// and still doesn't have the first value of the stream. See connection back
-  /// starts showing the [widgetWaiting] until displaying the first data
-  final Widget? widgetWaiting;
-  final Widget? widgetOffConnectyWaiting;
 
   /// [widgetErrorBuilder] Widget built by the Object error returned by the
   /// [listStream] error.
@@ -165,7 +140,6 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
     required this.functionRefresh,
     required this.obxListBuilder,
     this.initialData,
-    this.widgetWaiting,
     this.widgetErrorBuilder,
     this.stringFilter,
     //this.compareSort,
@@ -186,9 +160,6 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
     this.searchAppBarElevation = 4.0,
     this.searchAppBarKeyboardType,
     this.magnifyinGlassColor,
-    this.hideDefaultConnectyIconOffAppBar = false,
-    this.iconConnectyOffAppBar,
-    this.widgetOffConnectyWaiting,
     this.searchePageFloatingActionButton,
     this.searchePageFloatingActionButtonLocation,
     this.searchePageFloatingActionButtonAnimator,
@@ -222,13 +193,10 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
 
 class _SearchAppBarPageRefreshState<T>
     extends State<SearchAppBarPageRefresh<T>> {
-  StreamSubscription? _subscriptionConnecty;
-
   // T as List
 
   bool _haveInitialData = false;
 
-  late ConnectController _connectyController;
   bool downConnectyWithoutData = false;
 
   Widget? _widgetConnecty;
@@ -263,15 +231,11 @@ class _SearchAppBarPageRefreshState<T>
 
     _subscribe(isRefresh: false);
     _subscribreSearhQuery();
-    if (!_haveInitialData) {
-      _subscribeConnecty();
-    } else {
+    if (_haveInitialData) {
       _controller.listFuture.addAll(widget.initialData!);
       _controller.sortCompareList(_controller.listFuture);
       _controller.initial(_controller.listFuture);
     }
-
-    buildWidgetsDefault();
   }
 
   @override
@@ -291,7 +255,6 @@ class _SearchAppBarPageRefreshState<T>
       if (_haveInitialData) {
         //_controller.wrabListSearch(widget.initialData);
         downConnectyWithoutData = false;
-        _unsubscribeConnecty();
 
         if (widget.initialData!.length > _controller.listFuture.length) {
           _controller.listFuture.clear();
@@ -299,9 +262,6 @@ class _SearchAppBarPageRefreshState<T>
           _controller.sortCompareList(_controller.listFuture);
           _controller.initial(_controller.listFuture);
         }
-      } else if (_controller.listFuture.isEmpty &&
-          _subscriptionConnecty != null) {
-        _subscribeConnecty();
       }
     }
 
@@ -337,16 +297,11 @@ class _SearchAppBarPageRefreshState<T>
             iconTheme: widget.searchAppBariconTheme,
             backgroundColor: widget.searchAppBarbackgroundColor,
             searchBackgroundColor: widget.searchAppBarModeSearchBackgroundColor,
-            iconConnectyOffAppBarColor:
-                widget.searchAppBarIconConnectyOffAppBarColor,
             searchElementsColor: widget.searchAppBarElementsColor,
             hintText: widget.searchAppBarhintText,
             flattenOnSearch: widget.searchAppBarflattenOnSearch,
             capitalization: widget.searchAppBarcapitalization,
             actions: widget.searchAppBaractions,
-            hideDefaultConnectyIconOffAppBar:
-                widget.hideDefaultConnectyIconOffAppBar,
-            iconConnectyOffAppBar: widget.iconConnectyOffAppBar,
             keyboardType: widget.searchAppBarKeyboardType,
             magnifyinGlassColor: widget.magnifyinGlassColor),
         body: RefreshIndicator(
@@ -405,13 +360,10 @@ class _SearchAppBarPageRefreshState<T>
   @override
   void dispose() {
     _unsubscribe();
-    _unsubscribeConnecty();
     _controller.onClose();
     if (_worker?.disposed == true) {
       _worker?.dispose();
     }
-
-    _subscriptionConnecty?.cancel();
 
     super.dispose();
   }
@@ -435,7 +387,6 @@ class _SearchAppBarPageRefreshState<T>
       }
 
       downConnectyWithoutData = false;
-      _unsubscribeConnecty();
 
       _controller.listFuture = data;
       _controller.sortCompareList(_controller.listFuture);
@@ -463,32 +414,6 @@ class _SearchAppBarPageRefreshState<T>
         _controller.afterData(_controller.listFuture);
       }
     }, time: const Duration(milliseconds: 350));
-  }
-
-  void _subscribeConnecty() {
-    _connectyController = ConnectController();
-    _subscriptionConnecty =
-        _connectyController.rxConnect.stream.listen((isConnected) {
-      if (!isConnected && (!_haveInitialData)) {
-        //lançar _widgetConnecty
-        setState(() {
-          downConnectyWithoutData = true;
-        });
-      } else if (isConnected && (!_haveInitialData)) {
-        setState(() {
-          downConnectyWithoutData = false;
-          _controller.afterConnected();
-        });
-      }
-    });
-  }
-
-  void _unsubscribeConnecty() {
-    if (_subscriptionConnecty != null) {
-      _subscriptionConnecty!.cancel();
-      _subscriptionConnecty = null;
-      _connectyController.onClose();
-    }
   }
 
   void _unsubscribe() {
@@ -521,50 +446,5 @@ class _SearchAppBarPageRefreshState<T>
     }
 
     //return _widgetError;
-  }
-
-  void buildWidgetsDefault() {
-    if (widget.widgetOffConnectyWaiting == null) {
-      _widgetConnecty = Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            SizedBox(
-              width: 60,
-              height: 60,
-              child: CircularProgressIndicator(),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              'Check connection...',
-              style: TextStyle(fontSize: 18),
-            )
-          ],
-        ),
-      );
-    } else {
-      _widgetConnecty = widget.widgetOffConnectyWaiting;
-    }
-
-    if (widget.widgetWaiting == null) {
-      _widgetWaiting = Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            SizedBox(
-              width: 60,
-              height: 60,
-              child: CircularProgressIndicator(),
-            ),
-          ],
-        ),
-      );
-    } else {
-      _widgetWaiting = widget.widgetWaiting;
-    }
   }
 }

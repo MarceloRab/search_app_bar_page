@@ -1,5 +1,5 @@
 //import 'package:diacritic/diacritic.dart';
-import 'package:dio/dio.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:search_app_bar_page/search_app_bar_page.dart';
@@ -39,15 +39,7 @@ class AppPages {
   static final routes = [
     GetPage(name: Routes.HOME, page: () => HomePage()),
     GetPage(name: Routes.PAGE_1, page: () => SearchAppBarStream()),
-    GetPage(name: Routes.PAGE_7, page: () => SearchAppBarRefresh()),
     GetPage(name: Routes.PAGE_2, page: () => SearchPage()),
-    GetPage(name: Routes.PAGE_3, page: () => SearchAppBarPaginationTest()),
-    GetPage(
-        name: Routes.PAGE_4,
-        page: () => SimpleAppBarPage(
-              listFull: dataListPerson2,
-              stringFilter: (Person person) => person.name,
-            )),
     GetPage(
       name: Routes.PAGE_5,
       // ignore: top_level_function_literal_block
@@ -57,14 +49,6 @@ class AppPages {
         return TestGetStreamPage();
       },
     ),
-    GetPage(
-        name: Routes.PAGE_6,
-        // ignore: top_level_function_literal_block
-        page: () {
-          Get.put(Test2Controller());
-          changeAuth();
-          return TestStreamWidget();
-        }),
   ];
 }
 
@@ -160,7 +144,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  TestController controll_1;
+  TestController controll_1 = Get.find<TestController>();
 
   /// ## ✳️ Learning both ways to add reactive variables.
   @override
@@ -169,7 +153,7 @@ class _SearchPageState extends State<SearchPage> {
     ///  Add other reactive parameters inside the body.
     /// ✅  Boot your controller into a StatefulWidget.
     ///-------------------------------------------------------------------
-    controll_1 = Get.find<TestController>();
+
     super.initState();
 
     Future.delayed(const Duration(seconds: 4), () {
@@ -291,7 +275,7 @@ class _SearchPageState extends State<SearchPage> {
 
 // ignore: must_be_immutable
 class SearchAppBarStream extends StatefulWidget {
-  const SearchAppBarStream({Key key}) : super(key: key);
+  const SearchAppBarStream();
 
   @override
   _SearchAppBarStreamState createState() => _SearchAppBarStreamState();
@@ -395,128 +379,6 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
   })();
 }
 
-class SearchAppBarRefresh extends StatefulWidget {
-  const SearchAppBarRefresh({Key key}) : super(key: key);
-
-  @override
-  _SearchAppBarRefreshState createState() => _SearchAppBarRefreshState();
-}
-
-class _SearchAppBarRefreshState extends State<SearchAppBarRefresh> {
-  Dio _dio;
-
-  @override
-  void initState() {
-    _dio = Dio(
-        //BaseOptions(baseUrl: 'https://5f988a5242706e001695875d.mockapi.io'));
-        BaseOptions(baseUrl: 'https://5f988a5242706e001695875d.mockapi.io'));
-
-    /*_dio.interceptors
-        .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
-      debugPrint(options.uri.toString());
-      return options;
-    }, onResponse: (response) async {
-      // debugPrint(prettyJson(response.data, indent: 2));
-      return response;
-    }, onError: (DioError e) async {
-      return e;
-    }));*/
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SearchAppBarPageRefresh<Person>(
-      //initialData: _initialData,x
-      magnifyinGlassColor: Colors.white,
-      searchAppBarcenterTitle: true,
-      searchAppBarhintText: 'Search for a name',
-      searchAppBartitle: Text(
-        'Search Refresh Page',
-        style: TextStyle(fontSize: 20),
-      ),
-
-      ///  Do not insert parentheses here.
-      functionRefresh: _futureList,
-      stringFilter: (Person person) => person.name,
-      //stringFilter: (Person person) => person.age.toString(),
-      //sortCompare: false,
-      filtersType: FiltersTypes.contains,
-      obxListBuilder: (context, list, isModSearch) {
-        // ☑️ This function is inside an Obx.
-        // Place other reactive verables into it.
-        if (list.isEmpty) {
-          return Center(
-              child: Text(
-            'NOTHING FOUND',
-            style: TextStyle(fontSize: 14),
-          ));
-        }
-        return Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: list.length,
-                itemBuilder: (_, index) {
-                  return Card(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 4),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4)),
-                      // color: Theme.of(context).primaryColorDark,
-                      child: Padding(
-                        padding: const EdgeInsets.all(14.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                'Name: ${list[index].name}',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                'Age: ${list[index].age.toStringAsFixed(2)}',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                            )
-                          ],
-                        ),
-                      ));
-                },
-              ),
-            ),
-            MaterialButton(
-                onPressed: () {
-                  Get.toNamed(Routes.PAGE_2);
-                },
-                child: Text(
-                  'Ir para SearchPage',
-                  style: TextStyle(fontSize: 20),
-                )),
-            MaterialButton(
-                onPressed: () {
-                  setState(() {});
-                },
-                child: Text(
-                  'SetState',
-                  style: TextStyle(fontSize: 20),
-                )),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<List<Person>> _futureList() async {
-    final response = await _dio.get('/users');
-
-    return (response.data as List)
-        .map((element) => Person.fromMap(element))
-        .toList();
-  }
-}
-
 final dataListPerson = <Person>[
   Person(name: 'Rafaela Pinho', age: 30),
   Person(name: 'Paulo Emilio Silva', age: 45),
@@ -546,154 +408,6 @@ final dataListPerson2 = <Person>[
 ];
 
 // ignore: must_be_immutable
-class SearchAppBarPaginationTest extends StatefulWidget {
-  const SearchAppBarPaginationTest({Key key}) : super(key: key);
-
-  @override
-  _SearchAppBarPaginationTestState createState() =>
-      _SearchAppBarPaginationTestState();
-}
-
-class _SearchAppBarPaginationTestState
-    extends State<SearchAppBarPaginationTest> {
-  Dio _dio;
-
-  Future<List<Person>> _futureList(int page, String query) async {
-    final response = await _dio.get('/users', queryParameters: {
-      /// It is necessary to insert sortBy to not bring names
-      /// in wrong API orders.
-      'sortBy': 'name',
-      'name': query,
-      'page': page,
-      'limit': 15
-    });
-
-    return (response.data as List)
-        .map((element) => Person.fromMap(element))
-        .toList();
-  }
-
-  @override
-  void initState() {
-    _dio = Dio(
-        BaseOptions(baseUrl: 'https://5f988a5242706e001695875d.mockapi.io'));
-
-    /*_dio.interceptors
-        .add(InterceptorsWrapper(onRequest: (RequestOptions options) async {
-      debugPrint(options.uri.toString());
-      return options;
-    }, onResponse: (Response response) async {
-      // debugPrint(prettyJson(response.data, indent: 2));
-      return response;
-    }, onError: (DioError e) async {
-      return e;
-    }));*/
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SearchAppBarPagination<Person>(
-        //initialData: _listPerson,
-        //numItemsPage: _numItemsPage,
-        magnifyinGlassColor: Colors.white,
-        searchAppBarcenterTitle: true,
-        searchAppBarhintText: 'Pesquise um Nome',
-        searchAppBartitle: Text(
-          'Search Pagination',
-          style: TextStyle(fontSize: 20),
-        ),
-        //futureFetchPageItems: _futureListPerson,
-        futureFetchPageItems: _futureList,
-        stringFilter: (Person person) => person.name,
-        //sortCompare: false,
-        filtersType: FiltersTypes.contains,
-        paginationItemBuilder:
-            (BuildContext context, int index, Person objectIndex) {
-          return Card(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4)),
-              child: Padding(
-                padding: const EdgeInsets.all(14.0),
-                child: ListTile(
-                  contentPadding: EdgeInsets.symmetric(vertical: 10),
-                  title: Container(
-                    height: 200,
-                    width: 200,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withAlpha(50),
-                      image: DecorationImage(
-                        fit: BoxFit.fitWidth,
-                        image: NetworkImage(
-                          '${objectIndex.avatar}',
-                        ),
-                      ),
-                    ),
-                  ),
-                  subtitle: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      '${objectIndex.name}',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              ));
-        });
-  }
-
-  /// How to configure the server side.
-/*
-  Future<List<Person>> _futureListPerson(int page, String query) async {
-    final size = 15;
-    List<Person> list = [];
-    final fistElement = (page - 1) * size;
-    final lastElement = page * size;
-    */ /*print('fistElement = ' + fistElement.toString());
-    print('lastElement = ' + lastElement.toString());
-    print('--------');
-    print('page pedida = ' + page.toString());
-    print('--------');*/ /*
-    dataListPerson3.sort((a, b) => a.name.compareTo(b.name));
-    await Future<void>.delayed(Duration(seconds: 3));
-    //return null;
-    if (query.isEmpty) {
-      int totalPages = (dataListPerson3.length / size).ceil();
-      totalPages = totalPages == 0 ? 1 : totalPages;
-      if (page > totalPages) {
-        return list;
-      }
-      list = dataListPerson3.sublist(
-          fistElement,
-          lastElement > dataListPerson3.length
-              ? dataListPerson3.length
-              : lastElement);
-    } else {
-      final listQuery =
-          dataListPerson3.where((element) => contains(element, query)).toList();
-      int totalQueryPages = (listQuery.length / size).ceil();
-      totalQueryPages = totalQueryPages == 0 ? 1 : totalQueryPages;
-      if (page > totalQueryPages) {
-        return list;
-      }
-      list = listQuery.sublist(fistElement,
-          lastElement > listQuery.length ? listQuery.length : lastElement);
-    }
-    //throw Exception('Voluntary Error');
-    return list;
-  }
-  static bool Function(Person person, String query) contains =
-      (Person test, query) {
-    final realTest = _prepareString(test.name);
-    final realQuery = _prepareString(query);
-    return realTest.contains(realQuery);
-  };
-  static String _prepareString(String string) =>
-      removeDiacritics(string).toLowerCase();
-*/
-}
 
 final dataListPerson3 = <Person>[
   Person(name: 'Rafaela Pinho', age: 30),
@@ -741,26 +455,25 @@ final dataListPerson3 = <Person>[
   Person(name: 'Exausto Nome', age: 81),
 ];
 
+// ignore: must_be_immutable
 class SimpleAppBarPage extends StatefulWidget {
   final StringFilter<Person> stringFilter;
   final FiltersTypes filtersType;
   final List<Person> listFull;
-  final bool compare;
+  bool compare = false;
 
-  const SimpleAppBarPage(
-      {Key key,
-      @required this.stringFilter,
-      @required this.listFull,
-      this.filtersType,
-      this.compare})
-      : super(key: key);
+  SimpleAppBarPage(
+      {required this.stringFilter,
+      required this.listFull,
+      required this.filtersType,
+      required this.compare});
 
   @override
   _SimpleAppPageState createState() => _SimpleAppPageState();
 }
 
 class _SimpleAppPageState extends State<SimpleAppBarPage> {
-  SimpleAppBarController<Person> _controller;
+  late final SimpleAppBarController<Person> _controller;
 
   @override
   void initState() {
@@ -770,7 +483,7 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
     _controller = SimpleAppBarController<Person>(
       listFull: widget.listFull,
       stringFilter: widget.stringFilter,
-      sortCompare: widget.compare ?? true,
+      sortCompare: widget.compare,
       filtersType: widget.filtersType,
     );
 
@@ -883,14 +596,14 @@ class Person {
   final String name;
 
   final int age;
-  final String id;
-  final String avatar;
-  final String username;
-  final String image;
+  final String? id;
+  final String? avatar;
+  final String? username;
+  final String? image;
 
   Person({
-    this.name,
-    this.age,
+    required this.name,
+    required this.age,
     this.id,
     this.avatar,
     this.username,
@@ -905,7 +618,7 @@ class Person {
   factory Person.fromMap(Map<String, dynamic> map) {
     return new Person(
       name: map['name'] as String,
-      age: map['age'] as int ?? 0,
+      age: map['age'] as int,
       id: map['id'] as String,
       avatar: map['avatar'] as String,
       username: map['username'] as String,
@@ -1033,127 +746,6 @@ class TestGetStreamPage extends StatelessWidget {
 }
 
 // ignore: must_be_immutable
-class TestStreamWidget extends GetView<Test2Controller> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('GetStreamWidget'),
-        centerTitle: true,
-      ),
-      body: WillPopScope(
-        onWillPop: () {
-          controller.changeAuth = false;
-          controller.rxList.clear();
-          return Future.value(true);
-        },
-
-        /// Transform Rx in Widget with extensions
-        child: controller.rxList.getStreamWidget(
-          obxWidgetBuilder: (ctx, list) {
-            //final list = objesctStream;
-            if (list.isEmpty) {
-              return Center(
-                  child: Text(
-                'NOTHING FOUND',
-                style: TextStyle(fontSize: 14),
-              ));
-            }
-            return Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: list.length,
-                    itemBuilder: (_, index) {
-                      return Card(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 4),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(14.0),
-                            child: Text(
-                              'Name: ${list[index].name}',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ));
-                    },
-                  ),
-                ),
-              ],
-            );
-          },
-        )
-
-        /// without Scaffold
-/*            GetStreamWidget<List<Person>>(
-          stream: streamListPerson,
-          obxWidgetBuilder: (context, objesctStream) {
-            ///------------------------------------------
-            /// Build your body from the stream data.
-            ///------------------------------------------
-            final list = objesctStream;
-            if (list.isEmpty) {
-              return Center(
-                  child: Text(
-                'NOTHING FOUND',
-                style: TextStyle(fontSize: 14),
-              ));
-            }
-            return Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: list.length,
-                    itemBuilder: (_, index) {
-                      return Card(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 4),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(14.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    'Name: ${list[index].name}',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    'Age: '
-                                    '${list[index].age.toStringAsFixed(2)}',
-                                    style: TextStyle(fontSize: 12),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ));
-                    },
-                  ),
-                ),
-              ],
-            );
-          },
-        )*/
-        ,
-      ),
-    );
-  }
-
-/* Stream<List<Person>> streamListPerson = (() async* {
-    await Future<void>.delayed(Duration(seconds: 3));
-    //yield null;
-    yield dataListPerson;
-    await Future<void>.delayed(Duration(seconds: 4));
-    yield dataListPerson2;
-    await Future<void>.delayed(Duration(seconds: 5));
-    //throw Exception('Erro voluntario');
-    yield dataListPerson3;
-  })();*/
-}
 
 class Test2Controller extends GetxController {
   final rxAuth = false.obs;

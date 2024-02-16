@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
-import 'package:search_app_bar_page/src/search_app_bar_page/ui/widgets/connecty_widget.dart';
 
 import 'search_paint.dart';
 import 'search_widget.dart';
@@ -24,10 +23,6 @@ class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
   final int _searchButtonPosition;
   final SeacherBase controller;
   final double elevation;
-
-  final bool hideDefaultConnectyIconOffAppBar;
-  final Widget? iconConnectyOffAppBar;
-  final Color? iconConnectyOffAppBarColor;
   final TextInputType? keyboardType;
 
   SearchAppBar({
@@ -46,9 +41,6 @@ class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.capitalization = TextCapitalization.none,
     this.actions = const <Widget>[],
     int? searchButtonPosition,
-    this.hideDefaultConnectyIconOffAppBar = false,
-    this.iconConnectyOffAppBarColor = Colors.redAccent,
-    this.iconConnectyOffAppBar,
     this.keyboardType,
     this.magnifyinGlassColor,
   })  : _searchButtonPosition = (searchButtonPosition != null &&
@@ -82,7 +74,6 @@ class _SearchAppBarState extends State<SearchAppBar>
   late Animation<double> _animation;
   double? _elevation;
   Widget? _iconConnectyOffAppBar;
-  late bool _hideDefaultConnectyIconOffAppBar;
 
   //final ProductsController controller = Modular.get<ProductsController>();
 
@@ -94,9 +85,6 @@ class _SearchAppBarState extends State<SearchAppBar>
     _animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
     _controller.addStatusListener(animationStatusListener);
     _elevation = widget.elevation;
-    _hideDefaultConnectyIconOffAppBar = widget.hideDefaultConnectyIconOffAppBar;
-
-    buildwidgetConnecty();
   }
 
   /* @override
@@ -108,24 +96,6 @@ class _SearchAppBarState extends State<SearchAppBar>
       buildwidgetConnecty();
     }
   }*/
-
-  void buildwidgetConnecty() {
-    if (widget.iconConnectyOffAppBar == null &&
-        !_hideDefaultConnectyIconOffAppBar) {
-      _iconConnectyOffAppBar = ConnectyWidget(
-        color: widget.iconConnectyOffAppBarColor,
-      );
-      /*  IconButton(
-        onPressed: () {},
-        icon: const Icon(Icons.signal_wifi_off),
-        color: Colors.redAccent.withAlpha(80),
-      );*/
-    } else if (_hideDefaultConnectyIconOffAppBar) {
-      if (widget.iconConnectyOffAppBar != null) {
-        _iconConnectyOffAppBar = widget.iconConnectyOffAppBar;
-      }
-    }
-  }
 
   void animationStatusListener(AnimationStatus animationStatus) {
     if (animationStatus == AnimationStatus.completed) {

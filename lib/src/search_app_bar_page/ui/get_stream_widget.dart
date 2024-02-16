@@ -163,11 +163,11 @@ class _GetStreamWidgetState<T> extends State<GetStreamWidget<T?>> {
 
   void _buildWidgetsDefault() {
     if (widget.widgetWaiting == null) {
-      _widgetWaiting = Center(
+      _widgetWaiting = const Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             SizedBox(
               width: 60,
               height: 60,

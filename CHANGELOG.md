@@ -1,3 +1,7 @@
+## [2.2.0]
+
+* Removal of connectivity check
+
 ## [2.1.3]
 
 * New Flutter Version
