@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:get/state_manager.dart';
-import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_base_control.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 
-class SearcherPageController<T> extends SeacherBase<T> {
+class SearcherPageController<T> extends SearcherBase<T> {
   final RxBool _isModSearch = false.obs;
 
   @override
@@ -30,6 +30,8 @@ class SearcherPageController<T> extends SeacherBase<T> {
   final RxBool bancoInit = true.obs;
 
   final listSearch = <T>[].obs;
+
+  /// [listFull] More complete initial list to be filtered
   final List<T> listFull;
 
   Function(Iterable<T>) get onSearchList => listSearch.assignAll;
@@ -60,8 +62,7 @@ class SearcherPageController<T> extends SeacherBase<T> {
         stringFilter = (T value) => value as String;
       } else {
         if (filter == null) {
-          throw Exception(
-              'If you dont want to filter by a String, it is necessary '
+          throw Exception('If you dont want to filter by a String, it is necessary '
               'to add the filtering function.');
         }
         /*else if (sortFunction == null) {
@@ -76,8 +77,7 @@ class SearcherPageController<T> extends SeacherBase<T> {
     }
 
     if (stringFilter != null && filter != null) {
-      throw Exception(
-          'You need to choose between one of the filtering mechanisms.');
+      throw Exception('You need to choose between one of the filtering mechanisms.');
     }
 
     //bancoInit.close();
@@ -102,16 +102,18 @@ class SearcherPageController<T> extends SeacherBase<T> {
 
   void onReady() {
     _worker = ever(rxSearch, (String? value) {
-      refreshSeachList(value);
+      refreshSearchList(value);
     });
   }
 
-  void refreshSeachList(String? value) {
+  void refreshSearchList(String? value) {
     var list = <T>[];
 
     if (stringFilter != null || T == String) {
       list = listFull
-          .where((element) => _filters(stringFilter!(element), value))
+          .where(
+            (element) => _filters(stringFilter!(element), value),
+          )
           .toList();
     } else {
       if (value!.isEmpty)

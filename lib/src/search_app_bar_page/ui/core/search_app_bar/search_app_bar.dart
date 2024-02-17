@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
-import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_base_control.dart';
 
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/core/search_app_bar/search_paint.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/core/search_app_bar/search_widget.dart';
@@ -21,7 +21,7 @@ class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
   final TextCapitalization capitalization;
   final List<Widget> actions;
   final int _searchButtonPosition;
-  final SeacherBase controller;
+  final SearcherBase controller;
   final double elevation;
   final TextInputType? keyboardType;
 

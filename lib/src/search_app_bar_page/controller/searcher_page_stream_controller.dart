@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
-import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_base_control.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/infra/search_stream_page_base.dart';
 
-class SearcherPageStreamController<T> extends SeacherBase<T>
+class SearcherPageStreamController<T> extends SearcherBase<T>
     with StreamSearcherBase<T> {
   final RxBool _isModSearch = false.obs;
 

@@ -213,7 +213,7 @@ class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
 
       if (_controller.rxSearch.value.isNotEmpty) {
         //if (oldWidget.sortFunction != widget.sortFunction) {
-        _controller.refreshSeachList(_controller.rxSearch.value);
+        _controller.refreshSearchList(_controller.rxSearch.value);
       } else {
         //if (oldWidget.sortFunction != widget.sortFunction) {
         _controller.onSearchList(widget.listFull);

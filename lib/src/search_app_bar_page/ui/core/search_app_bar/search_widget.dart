@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
-import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_base_control.dart';
 
 class SearchWidget extends StatefulWidget implements PreferredSizeWidget {
   final Color? color;
@@ -9,7 +9,7 @@ class SearchWidget extends StatefulWidget implements PreferredSizeWidget {
   final TextCapitalization? textCapitalization;
   final String? hintText;
 
-  final SeacherBase controller;
+  final SearcherBase controller;
   final TextInputType? keyboardType;
 
   const SearchWidget({
