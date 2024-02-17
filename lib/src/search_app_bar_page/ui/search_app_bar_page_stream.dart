@@ -7,10 +7,11 @@ import 'package:get/state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/seacher_widget_page_base.dart';
 
-import '../../../search_app_bar_page.dart';
-import '../controller/searcher_page_stream_controller.dart';
+import 'package:search_app_bar_page/search_app_bar_page.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_page_stream_controller.dart';
 
-class SearchAppBarPageStream<T> extends StatefulWidget implements SeacherScaffoldBase {
+class SearchAppBarPageStream<T> extends StatefulWidget
+    implements SeacherScaffoldBase {
   /// Paramentros do SearchAppBar
 
   final Widget? searchAppBartitle;
@@ -181,7 +182,8 @@ class SearchAppBarPageStream<T> extends StatefulWidget implements SeacherScaffol
   }) : super(key: key);
 
   @override
-  State<SearchAppBarPageStream<T>> createState() => _SearchAppBarPageStreamState<T>();
+  State<SearchAppBarPageStream<T>> createState() =>
+      _SearchAppBarPageStreamState<T>();
 }
 
 /// State for [StreamBuilderBase].
@@ -301,8 +303,10 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
             magnifyinGlassColor: widget.magnifyinGlassColor),
         body: buildBody(),
         floatingActionButton: widget.searchePageFloatingActionButton,
-        floatingActionButtonLocation: widget.searchePageFloatingActionButtonLocation,
-        floatingActionButtonAnimator: widget.searchePageFloatingActionButtonAnimator,
+        floatingActionButtonLocation:
+            widget.searchePageFloatingActionButtonLocation,
+        floatingActionButtonAnimator:
+            widget.searchePageFloatingActionButtonAnimator,
         persistentFooterButtons: widget.searchePagePersistentFooterButtons,
         drawer: widget.searchePageDrawer,
         endDrawer: widget.searchePageEndDrawer,
@@ -335,7 +339,8 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
       }
 
       //final isListFull = widget.searcher.rxSearch.value.isEmpty;
-      return widget.obxListBuilder(context, _controller.snapshot.data!, _controller.isModSearch);
+      return widget.obxListBuilder(
+          context, _controller.snapshot.data!, _controller.isModSearch);
     });
   }
 
@@ -373,7 +378,8 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
       _controller.sortCompareList(_controller.listFull);
 
       if (_controller.rxSearch.value.isNotEmpty) {
-        _controller.afterData(_controller.refreshSeachList2(_controller.rxSearch.value));
+        _controller.afterData(
+            _controller.refreshSeachList2(_controller.rxSearch.value));
       } else {
         _controller.afterData(_controller.listFull);
       }
@@ -404,23 +410,25 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
 
   Widget buildWidgetError(Object? error) {
     if (widget.widgetErrorBuilder == null) {
-      return Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-        const Icon(
-          Icons.error_outline,
-          color: Colors.red,
-          size: 60,
-        ),
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 16),
-            child: Text(
-              'We found an error.\n'
-              'Error: $error',
-              textAlign: TextAlign.center,
+      return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Icon(
+              Icons.error_outline,
+              color: Colors.red,
+              size: 60,
             ),
-          ),
-        )
-      ]);
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text(
+                  'We found an error.\n'
+                  'Error: $error',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            )
+          ]);
     } else {
       return widget.widgetErrorBuilder!(error);
     }

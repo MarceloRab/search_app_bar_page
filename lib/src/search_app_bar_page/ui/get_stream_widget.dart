@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/get_stream_controller.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/functions.dart';
 
-import 'infra/rx_get_type.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/ui/infra/rx_get_type.dart';
 
 class GetStreamWidget<T> extends StatefulWidget {
   ///[stream] Just add your stream and you will receive streamObject which is

@@ -198,8 +198,6 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
 
   bool _haveInitialData = false;
 
-  Widget? _widgetConnecty;
-
   late ScrollController _scrollController;
 
   Worker? _worker;

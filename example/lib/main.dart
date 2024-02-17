@@ -7,15 +7,16 @@ import 'package:search_app_bar_page/search_app_bar_page.dart';
 void main() {
   runApp(
     GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'SearchAppBarPage',
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
-      initialBinding: MyBinddings(),
+      initialBinding: MyBindings(),
     ),
   );
 }
 
-class MyBinddings extends Bindings {
+class MyBindings extends Bindings {
   @override
   void dependencies() {
     Get.put(TestController());
@@ -38,7 +39,7 @@ class AppPages {
 
   static final routes = [
     GetPage(name: Routes.HOME, page: () => HomePage()),
-    GetPage(name: Routes.PAGE_1, page: () => SearchAppBarStream()),
+    GetPage(name: Routes.PAGE_1, page: () => const SearchAppBarStream()),
     GetPage(name: Routes.PAGE_2, page: () => SearchPage()),
     GetPage(
       name: Routes.PAGE_5,
@@ -57,7 +58,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('HomeView'),
+        title: const Text('HomeView'),
         centerTitle: true,
       ),
       body: Center(
@@ -69,7 +70,7 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   Get.toNamed(Routes.PAGE_2);
                 },
-                child: Text(
+                child: const Text(
                   'Go to the SearchPage',
                   style: TextStyle(fontSize: 20),
                 )),
@@ -77,7 +78,7 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   Get.toNamed(Routes.PAGE_1);
                 },
-                child: Text(
+                child: const Text(
                   'Go to the SearchStreamPage',
                   style: TextStyle(fontSize: 20),
                 )),
@@ -85,7 +86,7 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   Get.toNamed(Routes.PAGE_7);
                 },
-                child: Text(
+                child: const Text(
                   'Go to the SearchRefreshPage',
                   style: TextStyle(fontSize: 20),
                 )),
@@ -93,7 +94,7 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   Get.toNamed(Routes.PAGE_3);
                 },
-                child: Text(
+                child: const Text(
                   'Go to the SearchAppBarPagination',
                   style: TextStyle(fontSize: 20),
                 )),
@@ -101,7 +102,7 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   Get.toNamed(Routes.PAGE_4);
                 },
-                child: Text(
+                child: const Text(
                   'Go to the SimpleAppBar',
                   style: TextStyle(fontSize: 20),
                 )),
@@ -109,7 +110,7 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   Get.toNamed(Routes.PAGE_5);
                 },
-                child: Text(
+                child: const Text(
                   'Go to the StreamPage',
                   style: TextStyle(fontSize: 20),
                 )),
@@ -117,7 +118,7 @@ class HomePage extends StatelessWidget {
                 onPressed: () {
                   Get.toNamed(Routes.PAGE_6);
                 },
-                child: Text(
+                child: const Text(
                   'Go to the StreamWidget',
                   style: TextStyle(fontSize: 20),
                 )),
@@ -183,7 +184,7 @@ class _SearchPageState extends State<SearchPage> {
       magnifyinGlassColor: Colors.white,
       searchAppBarcenterTitle: true,
       searchAppBarhintText: 'Search for a name',
-      searchAppBartitle: Text(
+      searchAppBartitle: const Text(
         'Search Page',
         style: TextStyle(fontSize: 20),
       ),
@@ -213,7 +214,7 @@ class _SearchPageState extends State<SearchPage> {
       ///---------------------------------------------
       rxBoolAuth: RxBoolAuth.input(
           rxBoolAuthm: Get.find<TestController>().rxAuth,
-          authFalseWidget: () => Center(
+          authFalseWidget: () => const Center(
                 child: Text(
                   'Please login.',
                   style: TextStyle(fontSize: 22),
@@ -233,7 +234,7 @@ class _SearchPageState extends State<SearchPage> {
         /// Changes to the filtered list will also reconstruct the body.
         ///-------------------------------------------------------------
         if (list.isEmpty) {
-          return Center(
+          return const Center(
               child: Text(
             'NOTHING FOUND',
             style: TextStyle(fontSize: 14),
@@ -254,13 +255,13 @@ class _SearchPageState extends State<SearchPage> {
                       Expanded(
                         child: Text(
                           'Name: ${list[index].name}',
-                          style: TextStyle(fontSize: 16),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ),
                       Expanded(
                         child: Text(
                           'Age: ${list[index].age.toStringAsFixed(2)}',
-                          style: TextStyle(fontSize: 12),
+                          style: const TextStyle(fontSize: 12),
                         ),
                       )
                     ],
@@ -286,10 +287,10 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
   Widget build(BuildContext context) {
     return SearchAppBarPageStream<Person>(
       //initialData: _initialData,
-      magnifyinGlassColor: Colors.white,
+      //magnifyinGlassColor: Colors.white,
       searchAppBarcenterTitle: true,
       searchAppBarhintText: 'Search for a name',
-      searchAppBartitle: Text(
+      searchAppBartitle: const Text(
         'Search Stream Page',
         style: TextStyle(fontSize: 20),
       ),
@@ -305,7 +306,7 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
         // ☑️ This function is inside an Obx.
         // Place other reactive verables into it.
         if (list.isEmpty) {
-          return Center(
+          return const Center(
               child: Text(
             'NOTHING FOUND',
             style: TextStyle(fontSize: 14),
@@ -330,13 +331,13 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
                             Expanded(
                               child: Text(
                                 'Name: ${list[index].name}',
-                                style: TextStyle(fontSize: 16),
+                                style: const TextStyle(fontSize: 16),
                               ),
                             ),
                             Expanded(
                               child: Text(
                                 'Age: ${list[index].age.toStringAsFixed(2)}',
-                                style: TextStyle(fontSize: 12),
+                                style: const TextStyle(fontSize: 12),
                               ),
                             )
                           ],
@@ -349,7 +350,7 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
                 onPressed: () {
                   Get.toNamed(Routes.PAGE_2);
                 },
-                child: Text(
+                child: const Text(
                   'Ir para SearchPage',
                   style: TextStyle(fontSize: 20),
                 )),
@@ -357,7 +358,7 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
                 onPressed: () {
                   setState(() {});
                 },
-                child: Text(
+                child: const Text(
                   'SetState',
                   style: TextStyle(fontSize: 20),
                 )),
@@ -367,13 +368,13 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
     );
   }
 
-  Stream<List<Person>> _streamListPerson = (() async* {
-    await Future<void>.delayed(Duration(seconds: 3));
+  final Stream<List<Person>> _streamListPerson = (() async* {
+    await Future<void>.delayed(const Duration(seconds: 3));
     //yield null;
     yield dataListPerson;
-    await Future<void>.delayed(Duration(seconds: 4));
+    await Future<void>.delayed(const Duration(seconds: 4));
     yield dataListPerson2;
-    await Future<void>.delayed(Duration(seconds: 5));
+    await Future<void>.delayed(const Duration(seconds: 5));
     //throw Exception('Erro voluntario');
     yield dataListPerson3;
   })();
@@ -531,7 +532,7 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
     return Scaffold(
       appBar: SearchAppBar(
           controller: _controller,
-          title: Text(
+          title: const Text(
             'Search Page',
             style: TextStyle(fontSize: 20),
           ),
@@ -549,7 +550,7 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
           // Place other reactive verables into it.
 
           if (list.isEmpty) {
-            return Center(
+            return const Center(
                 child: Text(
               'NOTHING FOUND',
               style: TextStyle(fontSize: 14),
@@ -571,13 +572,13 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
                         Expanded(
                           child: Text(
                             'Name: ${list[index].name}',
-                            style: TextStyle(fontSize: 16),
+                            style: const TextStyle(fontSize: 16),
                           ),
                         ),
                         Expanded(
                           child: Text(
                             'Age: ${list[index].age.toStringAsFixed(2)}',
-                            style: TextStyle(fontSize: 12),
+                            style: const TextStyle(fontSize: 12),
                           ),
                         )
                       ],
@@ -596,45 +597,15 @@ class Person {
   final String name;
 
   final int age;
-  final String? id;
-  final String? avatar;
-  final String? username;
-  final String? image;
 
   Person({
     required this.name,
     required this.age,
-    this.id,
-    this.avatar,
-    this.username,
-    this.image,
   });
 
   @override
   String toString() {
     return 'Person{name: $name, age: $age}';
-  }
-
-  factory Person.fromMap(Map<String, dynamic> map) {
-    return new Person(
-      name: map['name'] as String,
-      age: map['age'] as int,
-      id: map['id'] as String,
-      avatar: map['avatar'] as String,
-      username: map['username'] as String,
-      image: map['image'] as String,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'name': this.name,
-      'age': this.age,
-      'id': this.id,
-      'avatar': this.avatar,
-      'username': this.username,
-      'image': this.image,
-    };
   }
 }
 
@@ -645,9 +616,13 @@ void changeAuth() {
     ///------------------------------------------
     /// 1) 👇🏼
     Get.find<Test2Controller>().rxList.addAll(dataListPerson2);
-    if (!Get.find<Test2Controller>().isAuth) {
+
+    Get.find<Test2Controller>().changeAuth = true;
+    /* final controller = Get.find<Test2Controller>();
+    final isAuth = controller.isAuth;
+    if (isAuth) {
       Get.find<Test2Controller>().changeAuth = true;
-    }
+    } */
   });
 }
 
@@ -664,7 +639,7 @@ class TestGetStreamPage extends StatelessWidget {
 
       /// Have a Scaffold
       child: GetStreamPage<List<Person>>(
-        title: Text(
+        title: const Text(
           'Stream Page',
           style: TextStyle(fontSize: 18),
         ),
@@ -675,7 +650,7 @@ class TestGetStreamPage extends StatelessWidget {
         ///---------------------------------------------
         rxBoolAuth: RxBoolAuth.input(
             rxBoolAuthm: Get.find<Test2Controller>().rxAuth,
-            authFalseWidget: () => Center(
+            authFalseWidget: () => const Center(
                   child: Text(
                     'Please login.',
                     style: TextStyle(fontSize: 22),
@@ -687,7 +662,7 @@ class TestGetStreamPage extends StatelessWidget {
           ///------------------------------------------
           final list = objesctStream;
           if (list.isEmpty) {
-            return Center(
+            return const Center(
                 child: Text(
               'NOTHING FOUND',
               style: TextStyle(fontSize: 14),
@@ -711,13 +686,13 @@ class TestGetStreamPage extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   'Name: ${list[index].name}',
-                                  style: TextStyle(fontSize: 16),
+                                  style: const TextStyle(fontSize: 16),
                                 ),
                               ),
                               Expanded(
                                 child: Text(
                                   'Age: ${list[index].age.toStringAsFixed(2)}',
-                                  style: TextStyle(fontSize: 12),
+                                  style: const TextStyle(fontSize: 12),
                                 ),
                               )
                             ],
@@ -734,12 +709,12 @@ class TestGetStreamPage extends StatelessWidget {
   }
 
   Stream<List<Person>> streamListPerson = (() async* {
-    await Future<void>.delayed(Duration(seconds: 3));
+    await Future<void>.delayed(const Duration(seconds: 3));
     //yield null;
     yield dataListPerson;
-    await Future<void>.delayed(Duration(seconds: 4));
+    await Future<void>.delayed(const Duration(seconds: 4));
     yield dataListPerson2;
-    await Future<void>.delayed(Duration(seconds: 5));
+    await Future<void>.delayed(const Duration(seconds: 5));
     //throw Exception('Erro voluntario');
     yield dataListPerson3;
   })();

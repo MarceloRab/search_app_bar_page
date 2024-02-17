@@ -14,7 +14,7 @@ linter:
 
     # Util classes are awesome!
     avoid_classes_with_only_static_members: false
-    curly_braces_in_flow_control_structure: false
+    #curly_braces_in_flow_control_structure: false
     directives_ordering: false
     avoid_positional_boolean_parameters: false
     use_setters_to_change_properties: false

@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:get/state_manager.dart';
 import 'package:search_app_bar_page/search_app_bar_page.dart';
 
-import 'seacher_base_controll.dart';
-import 'utils/filters/functions_filters.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 
 class SimpleAppBarController<T> implements SeacherBase<T> {
   final listSearch = <T>[].obs;

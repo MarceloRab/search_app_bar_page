@@ -6,9 +6,9 @@ import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/fil
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/seacher_widget_page_base.dart';
 
-import '../controller/searcher_page_controller.dart';
-import 'core/search_app_bar/search_app_bar.dart';
-import 'infra/rx_get_type.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_page_controller.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/ui/core/search_app_bar/search_app_bar.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/ui/infra/rx_get_type.dart';
 
 class SearchAppBarPage<T> extends StatefulWidget
     implements SeacherScaffoldBase {

@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/get_stream_controller.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/functions.dart';
 
-import 'infra/rx_get_type.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/ui/infra/rx_get_type.dart';
 
 class GetStreamPage<T> extends StatefulWidget {
   ///  [rxBoolAuth] Insert your RxBool here that changes with the auth

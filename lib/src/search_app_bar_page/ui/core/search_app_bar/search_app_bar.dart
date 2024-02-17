@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/seacher_base_controll.dart';
 
-import 'search_paint.dart';
-import 'search_widget.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/ui/core/search_app_bar/search_paint.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/ui/core/search_app_bar/search_widget.dart';
 
 class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
   //final Searcher searcher;

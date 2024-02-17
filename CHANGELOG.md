@@ -1,5 +1,9 @@
 ## [2.2.0]
 
+* Update Min SDK
+
+## [2.2.0]
+
 * Removal of connectivity check
 
 ## [2.1.3]

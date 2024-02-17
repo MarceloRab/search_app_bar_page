@@ -1,14 +1,11 @@
-import 'dart:async';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
+import 'package:search_app_bar_page/search_app_bar_page.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_page_refresh_controller.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/seacher_widget_page_base.dart';
-
-import '../../../search_app_bar_page.dart';
 
 class SearchAppBarPageRefresh<T> extends StatefulWidget
     implements SeacherScaffoldBase {
@@ -16,14 +13,11 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
 
   final Widget? searchAppBartitle;
   final bool searchAppBarcenterTitle;
-  final IconThemeData? searchAppBariconTheme;
+  final IconThemeData? searchAppBarIconTheme;
   final Color? searchAppBarbackgroundColor;
   final Color? searchAppBarModeSearchBackgroundColor;
   final Color? searchAppBarElementsColor;
 
-  /// [searchAppBarIconConnectyOffAppBarColor] You can change the color of
-  /// [iconConnectyOffAppBar]. By default = Colors.redAccent.
-  final Color? searchAppBarIconConnectyOffAppBarColor;
   final String? searchAppBarhintText;
   final bool searchAppBarflattenOnSearch;
   final TextCapitalization searchAppBarcapitalization;
@@ -148,11 +142,10 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
     this.filtersType,
     this.searchAppBartitle,
     this.searchAppBarcenterTitle = false,
-    this.searchAppBariconTheme,
+    this.searchAppBarIconTheme,
     this.searchAppBarbackgroundColor,
     this.searchAppBarModeSearchBackgroundColor,
     this.searchAppBarElementsColor,
-    this.searchAppBarIconConnectyOffAppBarColor,
     this.searchAppBarhintText,
     this.searchAppBarflattenOnSearch = false,
     this.searchAppBarcapitalization = TextCapitalization.none,
@@ -294,7 +287,7 @@ class _SearchAppBarPageRefreshState<T>
             title: widget.searchAppBartitle,
             centerTitle: widget.searchAppBarcenterTitle,
             elevation: widget.searchAppBarElevation,
-            iconTheme: widget.searchAppBariconTheme,
+            iconTheme: widget.searchAppBarIconTheme,
             backgroundColor: widget.searchAppBarbackgroundColor,
             searchBackgroundColor: widget.searchAppBarModeSearchBackgroundColor,
             searchElementsColor: widget.searchAppBarElementsColor,
