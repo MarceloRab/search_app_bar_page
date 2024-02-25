@@ -118,7 +118,7 @@ class SearcherPageStreamController<T> extends SearcherBase<T>
     }
   }
 
-  List<T> refreshSeachList2(String? value) {
+  List<T> refreshSearchList2(String? value) {
     var list = <T>[];
 
     if (stringFilter != null || T == String) {

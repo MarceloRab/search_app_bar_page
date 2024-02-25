@@ -1,15 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class SeacherScaffoldBase {
-  final Widget? searchePageFloatingActionButton;
-  final FloatingActionButtonLocation? searchePageFloatingActionButtonLocation;
-  final FloatingActionButtonAnimator? searchePageFloatingActionButtonAnimator;
-  final List<Widget>? searchePagePersistentFooterButtons;
-  final Widget? searchePageDrawer;
-  final Widget? searchePageEndDrawer;
-  final Widget? searchePageBottomNavigationBar;
-  final Widget? searchePageBottomSheet;
+class SearcherScaffoldBase {
+  final Widget? searchPageFloatingActionButton;
+  final FloatingActionButtonLocation? searchPageFloatingActionButtonLocation;
+  final FloatingActionButtonAnimator? searchPageFloatingActionButtonAnimator;
+  final List<Widget>? searchPagePersistentFooterButtons;
+  final Widget? searchPageDrawer;
+  final Widget? searchPageEndDrawer;
+  final Widget? searchPageBottomNavigationBar;
+  final Widget? searchPageBottomSheet;
   final Color? searchPageBackgroundColor;
 
   final String? restorationId;
@@ -23,15 +23,15 @@ class SeacherScaffoldBase {
   final bool drawerEnableOpenDragGesture;
   final bool endDrawerEnableOpenDragGesture;
 
-  SeacherScaffoldBase(
-      this.searchePageFloatingActionButton,
-      this.searchePageFloatingActionButtonLocation,
-      this.searchePageFloatingActionButtonAnimator,
-      this.searchePagePersistentFooterButtons,
-      this.searchePageDrawer,
-      this.searchePageEndDrawer,
-      this.searchePageBottomNavigationBar,
-      this.searchePageBottomSheet,
+  SearcherScaffoldBase(
+      this.searchPageFloatingActionButton,
+      this.searchPageFloatingActionButtonLocation,
+      this.searchPageFloatingActionButtonAnimator,
+      this.searchPagePersistentFooterButtons,
+      this.searchPageDrawer,
+      this.searchPageEndDrawer,
+      this.searchPageBottomNavigationBar,
+      this.searchPageBottomSheet,
       this.searchPageBackgroundColor,
       this.restorationId,
       this.resizeToAvoidBottomInset,

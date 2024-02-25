@@ -11,7 +11,8 @@ import 'package:search_app_bar_page/src/search_app_bar_page/ui/seacher_widget_pa
 import '../../../search_app_bar_page.dart';
 import '../controller/searcher_page_pagination_controller.dart';
 
-class SearchAppBarPagination<T> extends StatefulWidget implements SeacherScaffoldBase {
+class SearchAppBarPagination<T> extends StatefulWidget
+    implements SearcherScaffoldBase {
   /// Parameters do SearchAppBar
 
   final Widget? searchAppBartitle;
@@ -47,26 +48,26 @@ class SearchAppBarPagination<T> extends StatefulWidget implements SeacherScaffol
   final Widget? widgetNothingFound;
 
   /// [searchePageFloaActionButton] , [searchePageFloaActionButton] ,
-  /// [searchePageFloatingActionButtonLocation] ,
-  /// [searchePageFloatingActionButtonAnimator]  ...
+  /// [searchPageFloatingActionButtonLocation] ,
+  /// [searchPageFloatingActionButtonAnimator]  ...
   /// ...
   /// are passed on to the Scaffold.
   @override
-  final Widget? searchePageFloatingActionButton;
+  final Widget? searchPageFloatingActionButton;
   @override
-  final FloatingActionButtonLocation? searchePageFloatingActionButtonLocation;
+  final FloatingActionButtonLocation? searchPageFloatingActionButtonLocation;
   @override
-  final FloatingActionButtonAnimator? searchePageFloatingActionButtonAnimator;
+  final FloatingActionButtonAnimator? searchPageFloatingActionButtonAnimator;
   @override
-  final List<Widget>? searchePagePersistentFooterButtons;
+  final List<Widget>? searchPagePersistentFooterButtons;
   @override
-  final Widget? searchePageDrawer;
+  final Widget? searchPageDrawer;
   @override
-  final Widget? searchePageEndDrawer;
+  final Widget? searchPageEndDrawer;
   @override
-  final Widget? searchePageBottomNavigationBar;
+  final Widget? searchPageBottomNavigationBar;
   @override
-  final Widget? searchePageBottomSheet;
+  final Widget? searchPageBottomSheet;
   @override
   final Color? searchPageBackgroundColor;
   @override
@@ -162,14 +163,14 @@ class SearchAppBarPagination<T> extends StatefulWidget implements SeacherScaffol
     this.magnifyinGlassColor,
     this.widgetErrorBuilder,
     this.widgetNothingFound,
-    this.searchePageFloatingActionButton,
-    this.searchePageFloatingActionButtonLocation,
-    this.searchePageFloatingActionButtonAnimator,
-    this.searchePagePersistentFooterButtons,
-    this.searchePageDrawer,
-    this.searchePageEndDrawer,
-    this.searchePageBottomNavigationBar,
-    this.searchePageBottomSheet,
+    this.searchPageFloatingActionButton,
+    this.searchPageFloatingActionButtonLocation,
+    this.searchPageFloatingActionButtonAnimator,
+    this.searchPagePersistentFooterButtons,
+    this.searchPageDrawer,
+    this.searchPageEndDrawer,
+    this.searchPageBottomNavigationBar,
+    this.searchPageBottomSheet,
     this.searchPageBackgroundColor,
     this.restorationId,
     this.resizeToAvoidBottomInset,
@@ -185,7 +186,8 @@ class SearchAppBarPagination<T> extends StatefulWidget implements SeacherScaffol
   });
 
   @override
-  _SearchAppBarPaginationState<T> createState() => _SearchAppBarPaginationState<T>();
+  _SearchAppBarPaginationState<T> createState() =>
+      _SearchAppBarPaginationState<T>();
 }
 
 class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
@@ -216,7 +218,8 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
     }
 
     if (widget.initialData != null && widget.numItemsPage == null) {
-      throw Exception('It is necessary to add the number of items per page so that '
+      throw Exception(
+          'It is necessary to add the number of items per page so that '
           'can calculate the home page');
     }
     super.initState();
@@ -245,7 +248,8 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
 
     if (_haveInitialData) {
       if (_controller.numItemsPage != 0) {
-        _controller.page = (widget.initialData!.length / widget.numItemsPage!).ceil();
+        _controller.page =
+            (widget.initialData!.length / widget.numItemsPage!).ceil();
       }
 
       _controller.listFull.addAll(widget.initialData!);
@@ -264,7 +268,8 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
     final Object callbackIdentity = Object();
     _activeListFullCallbackIdentity = callbackIdentity;
 
-    widget.futureFetchPageItems(_controller.page, '').then<void>((List<T>? data) {
+    widget.futureFetchPageItems(_controller.page, '').then<void>(
+        (List<T>? data) {
       if (_activeListFullCallbackIdentity == callbackIdentity) {
         _controller.handleListDataFullList(
             listData: data,
@@ -318,13 +323,17 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
   }
 
   void pagesListener() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 3 &&
-        _scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 3 &&
+        _scrollController.position.userScrollDirection ==
+            ScrollDirection.reverse) {
       if (_controller.rxSearch.value.isNotEmpty) {
         //if (_activeListSearchCallbackIdentity != null) {
-        if (!_controller.mapsSearch[_controller.rxSearch.value]!.isListSearchFull) {
+        if (!_controller
+            .mapsSearch[_controller.rxSearch.value]!.isListSearchFull) {
           if (!_controller.snapshotScroolPage.loadingSearchScroll) {
-            final listBuilder = _controller.haveSearchQueryPage(_controller.rxSearch.value);
+            final listBuilder =
+                _controller.haveSearchQueryPage(_controller.rxSearch.value);
 
             if (listBuilder.isListSearchFull) {
               _controller.withData(listBuilder.listSearch);
@@ -341,7 +350,8 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
               }
               _controller.togleLoadingSearchScroll(true);
 
-              _futureSearchPageQuery(_controller.rxSearch.value, scroollEndPage: true);
+              _futureSearchPageQuery(_controller.rxSearch.value,
+                  scroollEndPage: true);
             }
           }
         }
@@ -354,7 +364,9 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
 
             print('$className TESTE - PAGE- '
                 '${'${_controller.page.toString()} '}');*/
-            if (_controller.listFull.length - (_controller.page * _controller.numItemsPage!) == 0) {
+            if (_controller.listFull.length -
+                    (_controller.page * _controller.numItemsPage!) ==
+                0) {
               _controller.page++;
             } else {
               _controller.oneMoreListFullPage = true;
@@ -390,16 +402,18 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
             capitalization: widget.searchAppBarCapitalization,
             actions: widget.searchAppBarActions,
             keyboardType: widget.searchAppBarKeyboardType,
-            magnifyinGlassColor: widget.magnifyinGlassColor),
+            magnifyGlassColor: widget.magnifyinGlassColor),
         body: buildBody(),
-        floatingActionButton: widget.searchePageFloatingActionButton,
-        floatingActionButtonLocation: widget.searchePageFloatingActionButtonLocation,
-        floatingActionButtonAnimator: widget.searchePageFloatingActionButtonAnimator,
-        persistentFooterButtons: widget.searchePagePersistentFooterButtons,
-        drawer: widget.searchePageDrawer,
-        endDrawer: widget.searchePageEndDrawer,
-        bottomNavigationBar: widget.searchePageBottomNavigationBar,
-        bottomSheet: widget.searchePageBottomSheet,
+        floatingActionButton: widget.searchPageFloatingActionButton,
+        floatingActionButtonLocation:
+            widget.searchPageFloatingActionButtonLocation,
+        floatingActionButtonAnimator:
+            widget.searchPageFloatingActionButtonAnimator,
+        persistentFooterButtons: widget.searchPagePersistentFooterButtons,
+        drawer: widget.searchPageDrawer,
+        endDrawer: widget.searchPageEndDrawer,
+        bottomNavigationBar: widget.searchPageBottomNavigationBar,
+        bottomSheet: widget.searchPageBottomSheet,
         backgroundColor: widget.searchPageBackgroundColor,
         restorationId: widget.restorationId,
         resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
@@ -418,7 +432,8 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
       if (widget.rxBoolAuth?.auth.value == false) {
         return widget.rxBoolAuth!.authFalseWidget();
       }
-      if (_controller.snapshotScroolPage.snapshot.connectionState == ConnectionState.waiting) {
+      if (_controller.snapshotScroolPage.snapshot.connectionState ==
+          ConnectionState.waiting) {
         return _widgetWaiting!;
       }
 
@@ -440,7 +455,8 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
             return _widgetEndScrollPage!;
           }
 
-          return widget.paginationItemBuilder(context, index, _controller.data[index]);
+          return widget.paginationItemBuilder(
+              context, index, _controller.data[index]);
         },
       );
     });
@@ -463,7 +479,8 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
   }
 
   void initBuildSearchList(String query, {bool restart = false}) {
-    final listBuilder = _controller.haveSearchQueryPage(query, restart: restart);
+    final listBuilder =
+        _controller.haveSearchQueryPage(query, restart: restart);
 
     if (listBuilder.listSearch.isNotEmpty) {
       if (listBuilder.isListSearchFull) {
@@ -495,7 +512,8 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
 
     if (oldWidget.initialData != widget.initialData) {
       if (widget.initialData != null && widget.numItemsPage == null) {
-        throw Exception('It is necessary to add the number of items per page so that '
+        throw Exception(
+            'It is necessary to add the number of items per page so that '
             'can calculate the home page.');
       } else {
         _haveInitialData = widget.initialData != null;
@@ -504,7 +522,8 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
           if (widget.initialData!.length > _controller.listFull.length) {
             _unsubscribeListFullCallBack();
 
-            _controller.page = (widget.initialData!.length / widget.numItemsPage!).ceil();
+            _controller.page =
+                (widget.initialData!.length / widget.numItemsPage!).ceil();
 
             if (_controller.page == 0) _controller.page = 1;
 
@@ -590,23 +609,25 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
 
   Widget buildWidgetError(Object? error) {
     if (widget.widgetErrorBuilder == null) {
-      return Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-        const Icon(
-          Icons.error_outline,
-          color: Colors.red,
-          size: 60,
-        ),
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 16),
-            child: Text(
-              'We found an error.\n'
-              'Error: $error',
-              textAlign: TextAlign.center,
+      return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Icon(
+              Icons.error_outline,
+              color: Colors.red,
+              size: 60,
             ),
-          ),
-        )
-      ]);
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text(
+                  'We found an error.\n'
+                  'Error: $error',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            )
+          ]);
     } else {
       return widget.widgetErrorBuilder!(error);
     }

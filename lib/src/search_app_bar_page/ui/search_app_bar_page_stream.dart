@@ -11,27 +11,26 @@ import 'package:search_app_bar_page/search_app_bar_page.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_page_stream_controller.dart';
 
 class SearchAppBarPageStream<T> extends StatefulWidget
-    implements SeacherScaffoldBase {
-  /// Paramentros do SearchAppBar
+    implements SearcherScaffoldBase {
+  /// Parameters do SearchAppBar
 
-  final Widget? searchAppBartitle;
-  final bool searchAppBarcenterTitle;
-  final IconThemeData? searchAppBariconTheme;
-  final Color? searchAppBarbackgroundColor;
+  final Widget? searchAppBarTitle;
+  final bool searchAppBarCenterTitle;
+  final IconThemeData? searchAppBarIconTheme;
+  final Color? searchAppBarBackgroundColor;
   final Color? searchAppBarModeSearchBackgroundColor;
   final Color? searchAppBarElementsColor;
 
-  final Color? searchAppBarIconConnectyOffAppBarColor;
-  final String? searchAppBarhintText;
+  final String? searchAppBarHintText;
   final bool searchAppBarflattenOnSearch;
-  final TextCapitalization searchAppBarcapitalization;
-  final List<Widget> searchAppBaractions;
+  final TextCapitalization searchAppBarCapitalization;
+  final List<Widget> searchAppBarActions;
   final double searchAppBarElevation;
   final TextInputType? searchAppBarKeyboardType;
 
-  /// [magnifyinGlassColor] Changes the color of the magnifying glass.
+  /// [magnifyInGlassColor] Changes the color of the magnifying glass.
   /// Keeps IconTheme color by default.
-  final Color? magnifyinGlassColor;
+  final Color? magnifyInGlassColor;
 
   /// Start showing [widgetWaiting] until it shows the first data
   final Widget? widgetWaiting;
@@ -40,27 +39,27 @@ class SearchAppBarPageStream<T> extends StatefulWidget
   /// [listStream] error.
   final WidgetsErrorBuilder? widgetErrorBuilder;
 
-  /// [searchePageFloatingActionButton] , [searchePageFloatingActionButton] ,
-  /// [searchePageFloatingActionButtonLocation] ,
-  /// [searchePageFloatingActionButtonAnimator]  ...
+  /// [searchPageFloatingActionButton] , [searchPageFloatingActionButton] ,
+  /// [searchPageFloatingActionButtonLocation] ,
+  /// [searchPageFloatingActionButtonAnimator]  ...
   /// ...
   /// are passed on to the Scaffold.
   @override
-  final Widget? searchePageFloatingActionButton;
+  final Widget? searchPageFloatingActionButton;
   @override
-  final FloatingActionButtonLocation? searchePageFloatingActionButtonLocation;
+  final FloatingActionButtonLocation? searchPageFloatingActionButtonLocation;
   @override
-  final FloatingActionButtonAnimator? searchePageFloatingActionButtonAnimator;
+  final FloatingActionButtonAnimator? searchPageFloatingActionButtonAnimator;
   @override
-  final List<Widget>? searchePagePersistentFooterButtons;
+  final List<Widget>? searchPagePersistentFooterButtons;
   @override
-  final Widget? searchePageDrawer;
+  final Widget? searchPageDrawer;
   @override
-  final Widget? searchePageEndDrawer;
+  final Widget? searchPageEndDrawer;
   @override
-  final Widget? searchePageBottomNavigationBar;
+  final Widget? searchPageBottomNavigationBar;
   @override
-  final Widget? searchePageBottomSheet;
+  final Widget? searchPageBottomSheet;
   @override
   final Color? searchPageBackgroundColor;
   @override
@@ -84,15 +83,14 @@ class SearchAppBarPageStream<T> extends StatefulWidget
   @override
   final bool endDrawerEnableOpenDragGesture;
 
-  /// Parametros para o SearcherGetController
+  /// Parameters para o SearcherGetController
 
   /// [initialData] List to be filtered by Search.
-  /// These widgets will not be displayed. [widgetOffConnectyWaiting] and
   /// [widgetWaiting]
   final List<T>? initialData;
 
   /// [listStream] Just add the Stream and we are already in charge
-  /// of working with the data. There is a StremBuilder in background.
+  /// of working with the data. There is a StreamBuilder in background.
   final Stream<List<T>> listStream;
 
   /// [filtersType] These are the filters that the Controller uses to
@@ -145,28 +143,27 @@ class SearchAppBarPageStream<T> extends StatefulWidget
     this.sortCompare = true,
     this.rxBoolAuth,
     this.filtersType,
-    this.searchAppBartitle,
-    this.searchAppBarcenterTitle = false,
-    this.searchAppBariconTheme,
-    this.searchAppBarbackgroundColor,
+    this.searchAppBarTitle,
+    this.searchAppBarCenterTitle = false,
+    this.searchAppBarIconTheme,
+    this.searchAppBarBackgroundColor,
     this.searchAppBarModeSearchBackgroundColor,
     this.searchAppBarElementsColor,
-    this.searchAppBarIconConnectyOffAppBarColor,
-    this.searchAppBarhintText,
+    this.searchAppBarHintText,
     this.searchAppBarflattenOnSearch = false,
-    this.searchAppBarcapitalization = TextCapitalization.none,
-    this.searchAppBaractions = const <Widget>[],
+    this.searchAppBarCapitalization = TextCapitalization.none,
+    this.searchAppBarActions = const <Widget>[],
     this.searchAppBarElevation = 4.0,
     this.searchAppBarKeyboardType,
-    this.magnifyinGlassColor,
-    this.searchePageFloatingActionButton,
-    this.searchePageFloatingActionButtonLocation,
-    this.searchePageFloatingActionButtonAnimator,
-    this.searchePagePersistentFooterButtons,
-    this.searchePageDrawer,
-    this.searchePageEndDrawer,
-    this.searchePageBottomNavigationBar,
-    this.searchePageBottomSheet,
+    this.magnifyInGlassColor,
+    this.searchPageFloatingActionButton,
+    this.searchPageFloatingActionButtonLocation,
+    this.searchPageFloatingActionButtonAnimator,
+    this.searchPagePersistentFooterButtons,
+    this.searchPageDrawer,
+    this.searchPageEndDrawer,
+    this.searchPageBottomNavigationBar,
+    this.searchPageBottomSheet,
     this.searchPageBackgroundColor,
     this.restorationId,
     this.resizeToAvoidBottomInset,
@@ -221,7 +218,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
 
     _subscribeStream();
     _buildWidgetsDefault();
-    _subscribreSearhQuery();
+    _subscribeSearchQuery();
     if (_haveInitialData) {
       _controller.listFull.addAll(widget.initialData!);
       _controller.sortCompareList(_controller.listFull);
@@ -263,7 +260,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
         _controller.afterData(
 
             /// já tem sort dentro
-            _controller.refreshSeachList2(_controller.rxSearch.value));
+            _controller.refreshSearchList2(_controller.rxSearch.value));
       } else {
         //if (oldWidget.sortFunction != widget.sortFunction) {
         _controller.sortCompareList(_controller.listFull);
@@ -288,30 +285,30 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
     return Scaffold(
         appBar: SearchAppBar(
             controller: _controller,
-            title: widget.searchAppBartitle,
-            centerTitle: widget.searchAppBarcenterTitle,
+            title: widget.searchAppBarTitle,
+            centerTitle: widget.searchAppBarCenterTitle,
             elevation: widget.searchAppBarElevation,
-            iconTheme: widget.searchAppBariconTheme,
-            backgroundColor: widget.searchAppBarbackgroundColor,
+            iconTheme: widget.searchAppBarIconTheme,
+            backgroundColor: widget.searchAppBarBackgroundColor,
             searchBackgroundColor: widget.searchAppBarModeSearchBackgroundColor,
             searchElementsColor: widget.searchAppBarElementsColor,
-            hintText: widget.searchAppBarhintText,
+            hintText: widget.searchAppBarHintText,
             flattenOnSearch: widget.searchAppBarflattenOnSearch,
-            capitalization: widget.searchAppBarcapitalization,
-            actions: widget.searchAppBaractions,
+            capitalization: widget.searchAppBarCapitalization,
+            actions: widget.searchAppBarActions,
             keyboardType: widget.searchAppBarKeyboardType,
-            magnifyinGlassColor: widget.magnifyinGlassColor),
+            magnifyGlassColor: widget.magnifyInGlassColor),
         body: buildBody(),
-        floatingActionButton: widget.searchePageFloatingActionButton,
+        floatingActionButton: widget.searchPageFloatingActionButton,
         floatingActionButtonLocation:
-            widget.searchePageFloatingActionButtonLocation,
+            widget.searchPageFloatingActionButtonLocation,
         floatingActionButtonAnimator:
-            widget.searchePageFloatingActionButtonAnimator,
-        persistentFooterButtons: widget.searchePagePersistentFooterButtons,
-        drawer: widget.searchePageDrawer,
-        endDrawer: widget.searchePageEndDrawer,
-        bottomNavigationBar: widget.searchePageBottomNavigationBar,
-        bottomSheet: widget.searchePageBottomSheet,
+            widget.searchPageFloatingActionButtonAnimator,
+        persistentFooterButtons: widget.searchPagePersistentFooterButtons,
+        drawer: widget.searchPageDrawer,
+        endDrawer: widget.searchPageEndDrawer,
+        bottomNavigationBar: widget.searchPageBottomNavigationBar,
+        bottomSheet: widget.searchPageBottomSheet,
         backgroundColor: widget.searchPageBackgroundColor,
         restorationId: widget.restorationId,
         resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
@@ -379,7 +376,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
 
       if (_controller.rxSearch.value.isNotEmpty) {
         _controller.afterData(
-            _controller.refreshSeachList2(_controller.rxSearch.value));
+            _controller.refreshSearchList2(_controller.rxSearch.value));
       } else {
         _controller.afterData(_controller.listFull);
       }
@@ -391,10 +388,10 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
     _controller.afterConnected();
   }
 
-  void _subscribreSearhQuery() {
+  void _subscribeSearchQuery() {
     _worker = debounce(_controller.rxSearch, (String? query) {
       if (query!.isNotEmpty) {
-        _controller.afterData(_controller.refreshSeachList2(query));
+        _controller.afterData(_controller.refreshSearchList2(query));
       } else {
         _controller.afterData(_controller.listFull);
       }

@@ -15,7 +15,7 @@ class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Color? backgroundColor;
   final Color? searchBackgroundColor;
   final Color? searchElementsColor;
-  final Color? magnifyinGlassColor;
+  final Color? magnifyGlassColor;
   final String? hintText;
   final bool flattenOnSearch;
   final TextCapitalization capitalization;
@@ -27,7 +27,7 @@ class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
 
   SearchAppBar({
     //@required this.searcher,
-    Key? key,
+    super.key,
     required this.controller,
     this.elevation = 4.0,
     this.title,
@@ -42,18 +42,12 @@ class SearchAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.actions = const <Widget>[],
     int? searchButtonPosition,
     this.keyboardType,
-    this.magnifyinGlassColor,
-  })  : _searchButtonPosition = (searchButtonPosition != null &&
+    this.magnifyGlassColor,
+  }) : _searchButtonPosition = (searchButtonPosition != null &&
                 (0 <= searchButtonPosition &&
                     searchButtonPosition <= actions.length))
             ? searchButtonPosition
-            : max(actions.length, 0),
-        //assert(
-        // hideDefaultConnectyIconOffAppBar &&
-        // iconConnectyOffAppBar == null),
-        // assert(controller is DisposableInterface);
-        //assert(controller is SeacherBase),
-        super(key: key);
+            : max(actions.length, 0);
 
   // assert(controller.isModSearch != null),
   //assert(controller.search != null);
@@ -197,8 +191,7 @@ class _SearchAppBarState extends State<SearchAppBar>
         onPressed: null,
         icon: Icon(
           Icons.search,
-          color:
-              widget.magnifyinGlassColor ?? Theme.of(context).iconTheme.color,
+          color: widget.magnifyGlassColor ?? Theme.of(context).iconTheme.color,
         ),
       ),
     );

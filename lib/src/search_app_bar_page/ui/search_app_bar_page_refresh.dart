@@ -8,7 +8,7 @@ import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/fil
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/seacher_widget_page_base.dart';
 
 class SearchAppBarPageRefresh<T> extends StatefulWidget
-    implements SeacherScaffoldBase {
+    implements SearcherScaffoldBase {
   /// Paramentros do SearchAppBar
 
   final Widget? searchAppBartitle;
@@ -33,27 +33,27 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
   /// [listStream] error.
   final WidgetsErrorBuilder? widgetErrorBuilder;
 
-  /// [searchePageFloatingActionButton] , [searchePageFloatingActionButton] ,
-  /// [searchePageFloatingActionButtonLocation] ,
-  /// [searchePageFloatingActionButtonAnimator]  ...
+  /// [searchPageFloatingActionButton] , [searchPageFloatingActionButton] ,
+  /// [searchPageFloatingActionButtonLocation] ,
+  /// [searchPageFloatingActionButtonAnimator]  ...
   /// ...
   /// are passed on to the Scaffold.
   @override
-  final Widget? searchePageFloatingActionButton;
+  final Widget? searchPageFloatingActionButton;
   @override
-  final FloatingActionButtonLocation? searchePageFloatingActionButtonLocation;
+  final FloatingActionButtonLocation? searchPageFloatingActionButtonLocation;
   @override
-  final FloatingActionButtonAnimator? searchePageFloatingActionButtonAnimator;
+  final FloatingActionButtonAnimator? searchPageFloatingActionButtonAnimator;
   @override
-  final List<Widget>? searchePagePersistentFooterButtons;
+  final List<Widget>? searchPagePersistentFooterButtons;
   @override
-  final Widget? searchePageDrawer;
+  final Widget? searchPageDrawer;
   @override
-  final Widget? searchePageEndDrawer;
+  final Widget? searchPageEndDrawer;
   @override
-  final Widget? searchePageBottomNavigationBar;
+  final Widget? searchPageBottomNavigationBar;
   @override
-  final Widget? searchePageBottomSheet;
+  final Widget? searchPageBottomSheet;
   @override
   final Color? searchPageBackgroundColor;
   @override
@@ -153,14 +153,14 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
     this.searchAppBarElevation = 4.0,
     this.searchAppBarKeyboardType,
     this.magnifyinGlassColor,
-    this.searchePageFloatingActionButton,
-    this.searchePageFloatingActionButtonLocation,
-    this.searchePageFloatingActionButtonAnimator,
-    this.searchePagePersistentFooterButtons,
-    this.searchePageDrawer,
-    this.searchePageEndDrawer,
-    this.searchePageBottomNavigationBar,
-    this.searchePageBottomSheet,
+    this.searchPageFloatingActionButton,
+    this.searchPageFloatingActionButtonLocation,
+    this.searchPageFloatingActionButtonAnimator,
+    this.searchPagePersistentFooterButtons,
+    this.searchPageDrawer,
+    this.searchPageEndDrawer,
+    this.searchPageBottomNavigationBar,
+    this.searchPageBottomSheet,
     this.searchPageBackgroundColor,
     this.restorationId,
     this.resizeToAvoidBottomInset,
@@ -296,23 +296,23 @@ class _SearchAppBarPageRefreshState<T>
             capitalization: widget.searchAppBarcapitalization,
             actions: widget.searchAppBaractions,
             keyboardType: widget.searchAppBarKeyboardType,
-            magnifyinGlassColor: widget.magnifyinGlassColor),
+            magnifyGlassColor: widget.magnifyinGlassColor),
         body: RefreshIndicator(
             key: _refreshIndicatorKey,
             onRefresh: () async {
               _subscribe(isRefresh: true);
             },
             child: buildBody()),
-        floatingActionButton: widget.searchePageFloatingActionButton,
+        floatingActionButton: widget.searchPageFloatingActionButton,
         floatingActionButtonLocation:
-            widget.searchePageFloatingActionButtonLocation,
+            widget.searchPageFloatingActionButtonLocation,
         floatingActionButtonAnimator:
-            widget.searchePageFloatingActionButtonAnimator,
-        persistentFooterButtons: widget.searchePagePersistentFooterButtons,
-        drawer: widget.searchePageDrawer,
-        endDrawer: widget.searchePageEndDrawer,
-        bottomNavigationBar: widget.searchePageBottomNavigationBar,
-        bottomSheet: widget.searchePageBottomSheet,
+            widget.searchPageFloatingActionButtonAnimator,
+        persistentFooterButtons: widget.searchPagePersistentFooterButtons,
+        drawer: widget.searchPageDrawer,
+        endDrawer: widget.searchPageEndDrawer,
+        bottomNavigationBar: widget.searchPageBottomNavigationBar,
+        bottomSheet: widget.searchPageBottomSheet,
         backgroundColor: widget.searchPageBackgroundColor,
         restorationId: widget.restorationId,
         resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,

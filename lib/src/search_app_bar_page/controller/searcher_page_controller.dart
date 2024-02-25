@@ -62,7 +62,8 @@ class SearcherPageController<T> extends SearcherBase<T> {
         stringFilter = (T value) => value as String;
       } else {
         if (filter == null) {
-          throw Exception('If you dont want to filter by a String, it is necessary '
+          throw Exception(
+              'If you dont want to filter by a String, it is necessary '
               'to add the filtering function.');
         }
         /*else if (sortFunction == null) {
@@ -77,7 +78,8 @@ class SearcherPageController<T> extends SearcherBase<T> {
     }
 
     if (stringFilter != null && filter != null) {
-      throw Exception('You need to choose between one of the filtering mechanisms.');
+      throw Exception(
+          'You need to choose between one of the filtering mechanisms.');
     }
 
     //bancoInit.close();

@@ -1,183 +1,191 @@
+## [2.3.1]
+
+- Fixed words Spell Checker
+
+## [2.3.0]
+
+- Fixed if [stringFilter] presents a null value
+
+## [2.2.1]
+
+- Update Min SDK
+
 ## [2.2.0]
 
-* Update Min SDK
-
-## [2.2.0]
-
-* Removal of connectivity check
+- Removal of connectivity check
 
 ## [2.1.3]
 
-* New Flutter Version
+- New Flutter Version
 
 ## [2.1.2]
 
-* Minimal improvement
+- Minimal improvement
 
 ## [2.1.1]
 
-* Fix to change sortFunction to reset SearchAppBarPage after setState.
+- Fix to change sortFunction to reset SearchAppBarPage after setState.
 
 ## [2.1.0]
 
-* By request. Added option to add filtering function manually.
+- By request. Added option to add filtering function manually.
   Removes the need to return a String. May generate exception if the user
   types a letter and the dev wants to filter by the number. In this case,
   you need to handle the exception within the manual filtering function.
-  New parameter for = > SearchAppBarPageStream and = > SearchAppBarPage is ```[filter]```.
-* Now the dev can add its own sorting function  ```[sortFunction]```.
-  By default sorting is done from the return of ```[stringFilter]```.
-* See example
+  New parameter for = > SearchAppBarPageStream and = > SearchAppBarPage is `[filter]`.
+- Now the dev can add its own sorting function `[sortFunction]`.
+  By default sorting is done from the return of `[stringFilter]`.
+- See example
 
 ## [2.0.7]
 
-* Minimal improvement in the example
+- Minimal improvement in the example
 
 ## [2.0.6]
 
-* Correction in readme log.
+- Correction in readme log.
 
 ## [2.0.5]
 
-* Fixing error for connection check.
+- Fixing error for connection check.
 
 ## [2.0.4]
 
-* Minimal improvement
+- Minimal improvement
 
 ## [2.0.3]
 
-* Updated dependences.
+- Updated dependences.
 
 ## [2.0.2]
 
-* Updated packages.
+- Updated packages.
 
 ## [2.0.1]
 
-* Updated packages.
+- Updated packages.
 
 ## [2.0.0]
 
-* Now all packages are in nullsafety!
+- Now all packages are in nullsafety!
 
 ## [2.0.0-nullsafety.17]
 
-* One More Minimal improvement nullsafety. 🙈
+- One More Minimal improvement nullsafety. 🙈
 
 ## [2.0.0-nullsafety.16]
 
-* Minimal improvement nullsafety.
+- Minimal improvement nullsafety.
 
 ## [2.0.0-nullsafety.15]
 
-* Minimal improvement SearchAppBarPagination nullsafety.
+- Minimal improvement SearchAppBarPagination nullsafety.
 
 ## [2.0.0-nullsafety.14]
 
-* Minimal improvement nullsafety.
+- Minimal improvement nullsafety.
 
 ## [2.0.0-nullsafety.13]
 
-* Fix in SearchAppBarPage.
+- Fix in SearchAppBarPage.
 
 ## [2.0.0-nullsafety.12]
 
-* Minimal improvement flutter web. Need to maintain Search status on larger screens.
+- Minimal improvement flutter web. Need to maintain Search status on larger screens.
 
 ## [2.0.0-nullsafety.11]
 
-* Minimal improvement nullsafety.
+- Minimal improvement nullsafety.
 
 ## [2.0.0-nullsafety.10]
 
-* Minimal improvement extensions.
+- Minimal improvement extensions.
 
 ## [2.0.0-nullsafety.9]
 
-* Now you can assemble a Widget from RxString, RxInt, RxDouble, RxNumber and RxList. With the
-  ```[getStreamWidget]``` extension. It turns your Rx variable into a ```[GetStreamWidget]```. If
+- Now you can assemble a Widget from RxString, RxInt, RxDouble, RxNumber and RxList. With the
+  `[getStreamWidget]` extension. It turns your Rx variable into a `[GetStreamWidget]`. If
   there is nothing in the stream, it starts the wait. When you add something, it launches
   obxBuilder. If there is an error, it starts the ErrorWidget. Ready to use.
 
 ## [2.0.0-nullsafety.8]
 
-* The StreamSubscription were all getting canceled. However, why add repeated lines of
-  _subscription?.cancel() stops generating warning.
+- The StreamSubscription were all getting canceled. However, why add repeated lines of
+  \_subscription?.cancel() stops generating warning.
 
 ## [2.0.0-nullsafety.7]
 
-* Minimal improvement.
+- Minimal improvement.
 
 ## [2.0.0-nullsafety.6]
 
-* Small improvement.
+- Small improvement.
 
 ## [2.0.0-nullsafety.5]
 
-* Added ```[SearchAppBarRefresh]```. Now you can request data from your API and manually renew your
+- Added `[SearchAppBarRefresh]`. Now you can request data from your API and manually renew your
   requirements.
 
 ## [2.0.0-nullsafety.4]
 
-* Small improvement in nullsafety.
+- Small improvement in nullsafety.
 
 ## [2.0.0-nullsafety.3]
 
-* Small improvement in Flutter 2.0.
+- Small improvement in Flutter 2.0.
 
 ## [2.0.0-nullsafety.2]
 
-* Null-Safety initial
+- Null-Safety initial
 
 ## [1.6.0]
 
-* Added ```[GertStreamPage]``` and ```[GetStreamWidget]``` merging another package to make life
+- Added `[GertStreamPage]` and `[GetStreamWidget]` merging another package to make life
   easier for the developer. Updated packages in use. Waiting for this package to update to
   null-safe.
 
 ## [1.5.1]
 
-* Small improvement.
+- Small improvement.
 
 ## [1.5.0]
 
-* Update packages. Need to change from get_state_manager to get. The get_state_manager package has
+- Update packages. Need to change from get_state_manager to get. The get_state_manager package has
   been deprecated.
 
 ## [1.4.2]
 
-* Only improvements in the presentation of exceptions.
+- Only improvements in the presentation of exceptions.
 
 ## [1.4.1]
 
-* Now the builders methods have been changed to obxBuilders, as they can receive Rx variables to
+- Now the builders methods have been changed to obxBuilders, as they can receive Rx variables to
   reconstruct the screens.
 
 ## [1.4.0+1]
 
-* Testing SearchAppBarPagination with a real API. See complete example.
+- Testing SearchAppBarPagination with a real API. See complete example.
 
 ## [1.3.3]
 
-* Corrections in didUpdateWidget for setState.
+- Corrections in didUpdateWidget for setState.
 
 ## [1.3.2]
 
-* Minor corrections.
+- Minor corrections.
 
 ## [1.3.1+1]
 
-* Correction in the readme. One more time.
+- Correction in the readme. One more time.
 
 ## [1.3.0]
 
-* Learned the creative way to add bool parameter of auth to your page. configures ```[rxBoolAuth]```
+- Learned the creative way to add bool parameter of auth to your page. configures `[rxBoolAuth]`
   .
-* To add other Rx parameters, just configure them within the ```[obxListBuilder]``` function in
+- To add other Rx parameters, just configure them within the `[obxListBuilder]` function in
   SearchAppBarPage and SearchAppBarPageStream. See complete example for details. So your page will
   be complete.
-* Before it was ```[listBuilder]``` now ```[obxListBuilder]``` because this function can receive Rx
+- Before it was `[listBuilder]` now `[obxListBuilder]` because this function can receive Rx
   variables for reactivity.
 
 ## [1.2.1]
@@ -291,5 +299,3 @@
 ## [0.0.1]
 
 - Initial release.
-
-

@@ -181,10 +181,10 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     //return SearchAppBarPage<String>(
     return SearchAppBarPage<Person>(
-      magnifyinGlassColor: Colors.white,
-      searchAppBarcenterTitle: true,
-      searchAppBarhintText: 'Search for a name',
-      searchAppBartitle: const Text(
+      magnifyGlassColor: Colors.white,
+      searchAppBarCenterTitle: true,
+      searchAppBarHintText: 'Search for a name',
+      searchAppBarTitle: const Text(
         'Search Page',
         style: TextStyle(fontSize: 20),
       ),
@@ -245,7 +245,8 @@ class _SearchPageState extends State<SearchPage> {
           itemBuilder: (_, index) {
             return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4)),
                 // color: Theme.of(context).primaryColorDark,
                 child: Padding(
                   padding: const EdgeInsets.all(14.0),
@@ -287,9 +288,9 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
     return SearchAppBarPageStream<Person>(
       //initialData: _initialData,
       //magnifyinGlassColor: Colors.white,
-      searchAppBarcenterTitle: true,
-      searchAppBarhintText: 'Search for a name',
-      searchAppBartitle: const Text(
+      searchAppBarCenterTitle: true,
+      searchAppBarHintText: 'Search for a name',
+      searchAppBarTitle: const Text(
         'Search Stream Page',
         style: TextStyle(fontSize: 20),
       ),
@@ -318,8 +319,10 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
                 itemCount: list.length,
                 itemBuilder: (_, index) {
                   return Card(
-                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 4),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4)),
                       // color: Theme.of(context).primaryColorDark,
                       child: Padding(
                         padding: const EdgeInsets.all(14.0),
@@ -535,7 +538,7 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
           ),
           centerTitle: true,
           hintText: 'Search for a name',
-          magnifyinGlassColor: Colors.white),
+          magnifyGlassColor: Colors.white),
 
       /// -------------------------------------
       /// Reactive widget for the filtered list.
@@ -557,8 +560,10 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
             itemCount: list.length,
             itemBuilder: (_, index) {
               return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)),
                   // color: Theme.of(context).primaryColorDark,
                   child: Padding(
                     padding: const EdgeInsets.all(14.0),
@@ -670,8 +675,10 @@ class TestGetStreamPage extends StatelessWidget {
                   itemCount: list.length,
                   itemBuilder: (_, index) {
                     return Card(
-                        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 4),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4)),
                         child: Padding(
                           padding: const EdgeInsets.all(14.0),
                           child: Row(

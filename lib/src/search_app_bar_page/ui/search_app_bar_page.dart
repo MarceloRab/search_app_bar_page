@@ -11,40 +11,40 @@ import 'package:search_app_bar_page/src/search_app_bar_page/ui/core/search_app_b
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/infra/rx_get_type.dart';
 
 class SearchAppBarPage<T> extends StatefulWidget
-    implements SeacherScaffoldBase {
-  /// Paramentros do SearchAppBar
+    implements SearcherScaffoldBase {
+  /// Parameters of SearchAppBar
 
-  final Widget? searchAppBartitle;
-  final bool searchAppBarcenterTitle;
-  final IconThemeData? searchAppBariconTheme;
-  final Color? searchAppBarbackgroundColor;
+  final Widget? searchAppBarTitle;
+  final bool searchAppBarCenterTitle;
+  final IconThemeData? searchAppBarIconTheme;
+  final Color? searchAppBarBackgroundColor;
   final Color? searchAppBarModeSearchBackgroundColor;
   final Color? searchAppBarElementsColor;
-  final String? searchAppBarhintText;
+  final String? searchAppBarHintText;
   final bool searchAppBarflattenOnSearch;
-  final TextCapitalization searchAppBarcapitalization;
-  final List<Widget> searchAppBaractions;
+  final TextCapitalization searchAppBarCapitalization;
+  final List<Widget> searchAppBarActions;
   final double searchAppBarElevation;
   final TextInputType? searchAppBarKeyboardType;
-  final Color? magnifyinGlassColor;
+  final Color? magnifyGlassColor;
 
-  /// Parametros para o Scaffold
+  /// Parameters Scaffold
   @override
-  final Widget? searchePageFloatingActionButton;
+  final Widget? searchPageFloatingActionButton;
   @override
-  final FloatingActionButtonLocation? searchePageFloatingActionButtonLocation;
+  final FloatingActionButtonLocation? searchPageFloatingActionButtonLocation;
   @override
-  final FloatingActionButtonAnimator? searchePageFloatingActionButtonAnimator;
+  final FloatingActionButtonAnimator? searchPageFloatingActionButtonAnimator;
   @override
-  final List<Widget>? searchePagePersistentFooterButtons;
+  final List<Widget>? searchPagePersistentFooterButtons;
   @override
-  final Widget? searchePageDrawer;
+  final Widget? searchPageDrawer;
   @override
-  final Widget? searchePageEndDrawer;
+  final Widget? searchPageEndDrawer;
   @override
-  final Widget? searchePageBottomNavigationBar;
+  final Widget? searchPageBottomNavigationBar;
   @override
-  final Widget? searchePageBottomSheet;
+  final Widget? searchPageBottomSheet;
   @override
   final Color? searchPageBackgroundColor;
   @override
@@ -68,7 +68,7 @@ class SearchAppBarPage<T> extends StatefulWidget
   @override
   final bool endDrawerEnableOpenDragGesture;
 
-  /// Parametros para o SearcherGetController
+  /// Parameters para o SearcherGetController
 
   /// [listFull] List to be filtered by Search.
   final List<T> listFull;
@@ -108,7 +108,7 @@ class SearchAppBarPage<T> extends StatefulWidget
   const SearchAppBarPage(
       {Key? key,
 
-      /// Parametros para o SearcherGetController
+      /// Parameters para o SearcherGetController
       required this.listFull,
       required this.obxListBuilder,
       this.sortCompare = true,
@@ -118,31 +118,31 @@ class SearchAppBarPage<T> extends StatefulWidget
       this.stringFilter,
       this.rxBoolAuth,
 
-      /// Paramentros do SearchAppBar
-      this.searchAppBartitle,
-      this.searchAppBarcenterTitle = false,
-      this.searchAppBariconTheme,
-      this.searchAppBarbackgroundColor,
+      /// Parameters do SearchAppBar
+      this.searchAppBarTitle,
+      this.searchAppBarCenterTitle = false,
+      this.searchAppBarIconTheme,
+      this.searchAppBarBackgroundColor,
       this.searchAppBarModeSearchBackgroundColor,
       this.searchAppBarElementsColor,
-      this.searchAppBarhintText,
+      this.searchAppBarHintText,
       this.searchAppBarflattenOnSearch = false,
-      this.searchAppBarcapitalization = TextCapitalization.none,
-      this.searchAppBaractions = const <Widget>[],
+      this.searchAppBarCapitalization = TextCapitalization.none,
+      this.searchAppBarActions = const <Widget>[],
       this.searchAppBarElevation = 4.0,
       this.searchAppBarKeyboardType,
-      this.magnifyinGlassColor,
+      this.magnifyGlassColor,
 
-      /// Parametros para o Scaffold
+      /// Parameters para o Scaffold
 
-      this.searchePageFloatingActionButton,
-      this.searchePageFloatingActionButtonLocation,
-      this.searchePageFloatingActionButtonAnimator,
-      this.searchePagePersistentFooterButtons,
-      this.searchePageDrawer,
-      this.searchePageEndDrawer,
-      this.searchePageBottomNavigationBar,
-      this.searchePageBottomSheet,
+      this.searchPageFloatingActionButton,
+      this.searchPageFloatingActionButtonLocation,
+      this.searchPageFloatingActionButtonAnimator,
+      this.searchPagePersistentFooterButtons,
+      this.searchPageDrawer,
+      this.searchPageEndDrawer,
+      this.searchPageBottomNavigationBar,
+      this.searchPageBottomSheet,
       this.searchPageBackgroundColor,
       this.resizeToAvoidBottomInset,
       this.primary = true,
@@ -237,19 +237,19 @@ class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
     return Scaffold(
         appBar: SearchAppBar(
             controller: _controller,
-            title: widget.searchAppBartitle,
-            centerTitle: widget.searchAppBarcenterTitle,
+            title: widget.searchAppBarTitle,
+            centerTitle: widget.searchAppBarCenterTitle,
             elevation: widget.searchAppBarElevation,
-            iconTheme: widget.searchAppBariconTheme,
-            backgroundColor: widget.searchAppBarbackgroundColor,
+            iconTheme: widget.searchAppBarIconTheme,
+            backgroundColor: widget.searchAppBarBackgroundColor,
             searchBackgroundColor: widget.searchAppBarModeSearchBackgroundColor,
             searchElementsColor: widget.searchAppBarElementsColor,
-            hintText: widget.searchAppBarhintText,
+            hintText: widget.searchAppBarHintText,
             flattenOnSearch: widget.searchAppBarflattenOnSearch,
-            capitalization: widget.searchAppBarcapitalization,
-            actions: widget.searchAppBaractions,
+            capitalization: widget.searchAppBarCapitalization,
+            actions: widget.searchAppBarActions,
             keyboardType: widget.searchAppBarKeyboardType,
-            magnifyinGlassColor: widget.magnifyinGlassColor),
+            magnifyGlassColor: widget.magnifyGlassColor),
         body: Obx(() {
           if (widget.rxBoolAuth?.auth.value == false) {
             return widget.rxBoolAuth!.authFalseWidget();
@@ -257,16 +257,16 @@ class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
           return widget.obxListBuilder(context, _controller.listSearch.toList(),
               _controller.isModSearch);
         }),
-        floatingActionButton: widget.searchePageFloatingActionButton,
+        floatingActionButton: widget.searchPageFloatingActionButton,
         floatingActionButtonLocation:
-            widget.searchePageFloatingActionButtonLocation,
+            widget.searchPageFloatingActionButtonLocation,
         floatingActionButtonAnimator:
-            widget.searchePageFloatingActionButtonAnimator,
-        persistentFooterButtons: widget.searchePagePersistentFooterButtons,
-        drawer: widget.searchePageDrawer,
-        endDrawer: widget.searchePageEndDrawer,
-        bottomNavigationBar: widget.searchePageBottomNavigationBar,
-        bottomSheet: widget.searchePageBottomSheet,
+            widget.searchPageFloatingActionButtonAnimator,
+        persistentFooterButtons: widget.searchPagePersistentFooterButtons,
+        drawer: widget.searchPageDrawer,
+        endDrawer: widget.searchPageEndDrawer,
+        bottomNavigationBar: widget.searchPageBottomNavigationBar,
+        bottomSheet: widget.searchPageBottomSheet,
         backgroundColor: widget.searchPageBackgroundColor,
         restorationId: widget.restorationId,
         resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,

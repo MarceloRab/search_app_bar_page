@@ -24,19 +24,28 @@ typedef FutureFetchPageItems<T> = Future<List<T>> Function(
 
 class Filters {
   static Filter<String?> startsWith = (test, query) {
-    final realTest = _prepareString(test!);
+    if (test == null) {
+      return false;
+    }
+    final realTest = _prepareString(test);
     final realQuery = _prepareString(query!);
     return realTest.startsWith(realQuery);
   };
 
   static Filter<String?> equals = (test, query) {
-    final realTest = _prepareString(test!);
+    if (test == null) {
+      return false;
+    }
+    final realTest = _prepareString(test);
     final realQuery = _prepareString(query!);
     return realTest == realQuery;
   };
 
   static Filter<String?> contains = (test, query) {
-    final realTest = _prepareString(test!);
+    if (test == null) {
+      return false;
+    }
+    final realTest = _prepareString(test);
     final realQuery = _prepareString(query!);
     return realTest.contains(realQuery);
   };
