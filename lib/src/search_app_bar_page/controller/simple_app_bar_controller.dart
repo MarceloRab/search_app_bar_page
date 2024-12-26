@@ -76,7 +76,12 @@ class SimpleAppBarController<T> implements SearcherBase<T> {
       }
     }
 
-    if (bancoInit.canUpdate) {
+    //TODO: mudado aqui para 5.0
+    /* if (bancoInit.canUpdate) {
+        bancoInit.close();
+      } */
+
+    if (bancoInit.subject.isClosed) {
       bancoInit.close();
     }
     sortCompareList(listFull);
@@ -109,9 +114,10 @@ class SimpleAppBarController<T> implements SearcherBase<T> {
 
   FutureOr onClose() {
     _worker?.dispose();
-    _isModSearch.close();
-    rxSearch.close();
-    listSearch.close();
-    bancoInit.close();
+    //_isModSearch.close();
+    //rxSearch.close();
+    //listSearch.close();
+    //TODO:retirado aqui
+    // bancoInit.close();
   }
 }

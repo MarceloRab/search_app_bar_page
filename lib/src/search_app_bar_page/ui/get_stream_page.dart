@@ -206,11 +206,11 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
   }
 
   AppBar _buildAppBar(BuildContext context) {
-    final increasedActions = <Widget?>[];
-    increasedActions.addAll(widget.actions);
+    final List<Widget>? increasedActions = [];
+    increasedActions!.addAll(widget.actions);
 
     if (_iconConnectyOffAppBar != null) {
-      increasedActions.insert(0, _iconConnectyOffAppBar);
+      increasedActions.insert(0, _iconConnectyOffAppBar!);
     }
 
     return AppBar(

@@ -562,6 +562,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
   void dispose() {
     _unsubscribeListFullCallBack();
     _unsubscribeSearhCallBack();
+    //TODO: para 5.0
     _controller.onClose();
     _scrollController.removeListener(pagesListener);
     _scrollController.dispose();

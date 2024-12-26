@@ -144,9 +144,10 @@ class SearcherPageController<T> extends SearcherBase<T> {
 
   FutureOr onClose() {
     _worker?.dispose();
-    _isModSearch.close();
-    rxSearch.close();
-    listSearch.close();
-    bancoInit.close();
+    //_isModSearch.close();
+    //rxSearch.close();
+    //listSearch.close();
+    //TODO:retirado aqui
+    // bancoInit.close();
   }
 }

@@ -374,9 +374,15 @@ class _SearchAppBarPageRefreshState<T>
       if (!_controller.bancoInitValue) {
         // Mostrar lupa do Search
         _controller.bancoInitValue = true;
-        if (_controller.bancoInit.canUpdate) {
+
+        //TODO: mudado aqui para 5.0
+        /* if (_controller.bancoInit.canUpdate) {
           _controller.bancoInit.close();
-        }
+        } */
+
+        /* if (_controller.bancoInit.subject.isClosed) {
+          _controller.bancoInit.close();
+        } */
       }
 
       downConnectyWithoutData = false;

@@ -131,7 +131,7 @@ class SearchAppBarPageStream<T> extends StatefulWidget
   final RxBoolAuth? rxBoolAuth;
 
   const SearchAppBarPageStream({
-    Key? key,
+    super.key,
     required this.listStream,
     required this.obxListBuilder,
     this.initialData,
@@ -176,9 +176,10 @@ class SearchAppBarPageStream<T> extends StatefulWidget
     this.drawerEnableOpenDragGesture = true,
     this.endDrawerEnableOpenDragGesture = true,
     this.widgetWaiting,
-  }) : super(key: key);
+  });
 
   @override
+  // ignore: lines_longer_than_80_chars
   State<SearchAppBarPageStream<T>> createState() =>
       _SearchAppBarPageStreamState<T>();
 }
@@ -350,6 +351,8 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
     }
     _subscription?.cancel();
 
+    //_controller.bancoInit.close();
+
     super.dispose();
   }
 
@@ -365,9 +368,15 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
         if (!_controller.bancoInitValue) {
           // Mostrar lupa do Search
           _controller.bancoInitValue = true;
-          if (_controller.bancoInit.canUpdate) {
+
+          //TODO: mudado aqui para 5.0
+          /* if (_controller.bancoInit.canUpdate) {
             _controller.bancoInit.close();
-          }
+          } */
+
+          /* if (_controller.bancoInit.subject.isPaused) {
+            _controller.bancoInit.close();
+          } */
         }
       }
 

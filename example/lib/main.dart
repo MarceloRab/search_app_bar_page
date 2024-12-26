@@ -1,7 +1,9 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 //import 'package:diacritic/diacritic.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:search_app_bar_page/search_app_bar_page.dart';
 
 void main() {
@@ -11,12 +13,12 @@ void main() {
       title: 'SearchAppBarPage',
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
-      initialBinding: MyBindings(),
+      //initialBinding: MyBindings(),
     ),
   );
 }
 
-class MyBindings extends Bindings {
+class MyBindings extends BindingsInterface {
   @override
   void dependencies() {
     Get.put(TestController());
@@ -27,18 +29,18 @@ abstract class Routes {
   static const HOME = '/home';
   static const PAGE_1 = '/page-1';
   static const PAGE_2 = '/page-2';
-  static const PAGE_3 = '/page-3';
+  /* static const PAGE_3 = '/page-3';
   static const PAGE_4 = '/page-4';
   static const PAGE_5 = '/page-5';
   static const PAGE_6 = '/page-6';
-  static const PAGE_7 = '/page-7';
+  static const PAGE_7 = '/page-7'; */
 }
 
 class AppPages {
   static const INITIAL = Routes.HOME;
 
   static final routes = [
-    GetPage(name: Routes.HOME, page: () => HomePage()),
+    GetPage(name: Routes.HOME, page: () => HomePage(), binding: MyBindings()),
     GetPage(name: Routes.PAGE_1, page: () => const SearchAppBarStream()),
     GetPage(name: Routes.PAGE_2, page: () => SearchPage()),
     GetPage(
@@ -80,46 +82,6 @@ class HomePage extends StatelessWidget {
                 },
                 child: const Text(
                   'Go to the SearchStreamPage',
-                  style: TextStyle(fontSize: 20),
-                )),
-            MaterialButton(
-                onPressed: () {
-                  Get.toNamed(Routes.PAGE_7);
-                },
-                child: const Text(
-                  'Go to the SearchRefreshPage',
-                  style: TextStyle(fontSize: 20),
-                )),
-            MaterialButton(
-                onPressed: () {
-                  Get.toNamed(Routes.PAGE_3);
-                },
-                child: const Text(
-                  'Go to the SearchAppBarPagination',
-                  style: TextStyle(fontSize: 20),
-                )),
-            MaterialButton(
-                onPressed: () {
-                  Get.toNamed(Routes.PAGE_4);
-                },
-                child: const Text(
-                  'Go to the SimpleAppBar',
-                  style: TextStyle(fontSize: 20),
-                )),
-            MaterialButton(
-                onPressed: () {
-                  Get.toNamed(Routes.PAGE_5);
-                },
-                child: const Text(
-                  'Go to the StreamPage',
-                  style: TextStyle(fontSize: 20),
-                )),
-            MaterialButton(
-                onPressed: () {
-                  Get.toNamed(Routes.PAGE_6);
-                },
-                child: const Text(
-                  'Go to the StreamWidget',
                   style: TextStyle(fontSize: 20),
                 )),
           ],
@@ -223,7 +185,7 @@ class _SearchPageState extends State<SearchPage> {
       filtersType: FiltersTypes.contains,
       obxListBuilder: (context, list, isModSearch) {
         // ☑️ This function is inside an Obx.
-        // Place other reactive verables into it.
+        // Place other reactive variables into it.
 
         ///----------------------------------------------------
         /// Changes to the rxList will also rebuild the widget.
@@ -245,8 +207,7 @@ class _SearchPageState extends State<SearchPage> {
           itemBuilder: (_, index) {
             return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 // color: Theme.of(context).primaryColorDark,
                 child: Padding(
                   padding: const EdgeInsets.all(14.0),
@@ -304,7 +265,7 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
       filtersType: FiltersTypes.contains,
       obxListBuilder: (context, list, isModSearch) {
         // ☑️ This function is inside an Obx.
-        // Place other reactive verables into it.
+        // Place other reactive variables into it.
         if (list.isEmpty) {
           return const Center(
               child: Text(
@@ -319,10 +280,8 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
                 itemCount: list.length,
                 itemBuilder: (_, index) {
                   return Card(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 4),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4)),
+                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                       // color: Theme.of(context).primaryColorDark,
                       child: Padding(
                         padding: const EdgeInsets.all(14.0),
@@ -404,7 +363,7 @@ final dataListPerson2 = <Person>[
   Person(name: 'Thiago Silva', age: 33),
   Person(name: 'Charles Ristow', age: 47),
   Person(name: 'Raquel Montenegro', age: 19),
-  Person(name: 'Rafael Peireira', age: 15),
+  Person(name: 'Rafael Pereira', age: 15),
   Person(name: 'Nome Comum', age: 33),
 ];
 
@@ -421,7 +380,7 @@ final dataListPerson3 = <Person>[
   Person(name: 'Leticia Maciel', age: 47),
   Person(name: 'Patricia Oliveira', age: 19),
   Person(name: 'Pedro Lima', age: 15),
-  Person(name: 'Fabio Melo', age: 51),
+  Person(name: 'Fábio Melo', age: 51),
   Person(name: 'Junior Rabelo', age: 33),
   Person(name: 'Lucia Maciel', age: 47),
   Person(name: 'Ana Oliveira', age: 19),
@@ -434,17 +393,17 @@ final dataListPerson3 = <Person>[
   Person(name: 'Esther Guerra', age: 23),
   Person(name: 'Pedro Braga', age: 19),
   Person(name: 'Milu Silva', age: 17),
-  Person(name: 'William Ristow', age: 47),
+  Person(name: 'William Carvalho', age: 47),
   Person(name: 'Elias Tato', age: 22),
-  Person(name: 'Dada Istomesmo', age: 44),
+  Person(name: 'Dada IstoMesmo', age: 44),
   Person(name: 'Nome Incomum', age: 52),
   Person(name: 'Qualquer Nome', age: 9),
   Person(name: 'First Last', age: 11),
   Person(name: 'Bom Dia', age: 23),
-  Person(name: 'Bem Mequiz', age: 13),
-  Person(name: 'Mal Mequer', age: 71),
+  Person(name: 'Bem Malaquias', age: 13),
+  Person(name: 'Mal Miqueias', age: 71),
   Person(name: 'Quem Sabe', age: 35),
-  Person(name: 'Miriam Leitao', age: 33),
+  Person(name: 'Miriam Leitão', age: 33),
   Person(name: 'Gabriel Mentiroso', age: 19),
   Person(name: 'Caio Petro', age: 27),
   Person(name: 'Tanto Nome', age: 66),
@@ -464,9 +423,10 @@ class SimpleAppBarPage extends StatefulWidget {
   bool compare = false;
 
   SimpleAppBarPage(
-      {required this.stringFilter,
-      required this.listFull,
+      {super.key,
+      required this.stringFilter,
       required this.filtersType,
+      required this.listFull,
       required this.compare});
 
   @override
@@ -560,10 +520,8 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
             itemCount: list.length,
             itemBuilder: (_, index) {
               return Card(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4)),
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                   // color: Theme.of(context).primaryColorDark,
                   child: Padding(
                     padding: const EdgeInsets.all(14.0),
@@ -675,10 +633,8 @@ class TestGetStreamPage extends StatelessWidget {
                   itemCount: list.length,
                   itemBuilder: (_, index) {
                     return Card(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 4),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4)),
+                        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                         child: Padding(
                           padding: const EdgeInsets.all(14.0),
                           child: Row(

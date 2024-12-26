@@ -109,10 +109,10 @@ class SearcherPageRefreshController<T> extends SearcherBase<T>
 
   FutureOr onClose() {
     //_worker?.dispose();
-    _isModSearch.close();
-    rxSearch.close();
+    // _isModSearch.close();
+    // rxSearch.close();
     _rxSnapshot.close();
-    bancoInit.close();
+    //bancoInit.close();
   }
 
   @override

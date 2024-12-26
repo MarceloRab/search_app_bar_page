@@ -228,6 +228,7 @@ class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
 
   @override
   void dispose() {
+    //TODO: para 5.0
     _controller.onClose();
     super.dispose();
   }

@@ -291,9 +291,15 @@ class SearcherPagePaginationController<T>
   set initialChangeList(List<T> list) {
     if (!bancoInitValue) {
       bancoInitValue = true;
-      if (bancoInit.canUpdate) {
+
+      //TODO: mudado aqui para 5.0
+      /* if (bancoInit.canUpdate) {
         bancoInit.close();
-      }
+      } */
+
+      /* if (bancoInit.subject.isClosed) {
+        bancoInit.close();
+      } */
     }
 
     listFull.addAll(list);
@@ -315,9 +321,14 @@ class SearcherPagePaginationController<T>
     // para aparecer a lupa no AppBar
     if (!bancoInitValue) {
       bancoInitValue = true;
-      if (bancoInit.canUpdate) {
+      //TODO: mudado aqui para 5.0
+      /* if (bancoInit.canUpdate) {
         bancoInit.close();
-      }
+      } */
+
+      /* if (bancoInit.subject.isClosed) {
+        bancoInit.close();
+      } */
     }
 
     listFull.addAll(listData);
@@ -519,9 +530,10 @@ class SearcherPagePaginationController<T>
 
   FutureOr onClose() {
     _snapshotScroolPage.close();
-    _isModSearch.close();
-    rxSearch.close();
-    bancoInit.close();
+    //_isModSearch.close();
+    //rxSearch.close();
+    //TODO:retirado aqui
+    //bancoInit.close();
   }
 
   @override

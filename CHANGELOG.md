@@ -1,3 +1,19 @@
+## [2.4.1]
+
+- Same as before
+
+## [2.4.0]
+
+- Update get Package 5.0 and >. Crash on previous version. Go back to v. 2.3.1 to use get package 4.6.6 or lower than 5.0
+
+## [2.3.3]
+
+- Corrections
+
+## [2.3.2]
+
+- Updating
+
 ## [2.3.1]
 
 - Fixed words Spell Checker

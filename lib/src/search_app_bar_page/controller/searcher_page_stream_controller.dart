@@ -168,10 +168,11 @@ class SearcherPageStreamController<T> extends SearcherBase<T>
   }*/
 
   FutureOr onClose() {
-    _isModSearch.close();
-    rxSearch.close();
+    //_isModSearch.close();
+    //rxSearch.close();
     _rxSnapshot.close();
-    bancoInit.close();
+    //TODO: retirado aqui
+    //bancoInit.close();
   }
 
   @override

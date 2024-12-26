@@ -1,9 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:get/state_manager.dart';
+import 'package:get/get.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_base_control.dart';
-
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/core/search_app_bar/search_paint.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/core/search_app_bar/search_widget.dart';
 
@@ -112,22 +111,33 @@ class _SearchAppBarState extends State<SearchAppBar>
     _controller.reverse();
   }
 
-  Future<bool> _onWillPop(bool isInSearchMode) async {
+  /* Future<bool> _onWillPop(bool isInSearchMode) async {
     if (isInSearchMode) {
       cancelSearch();
       return false;
     } else {
       return true;
     }
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Obx(() {
       final bool isInSearchMode = widget.controller.isModSearch;
-      return WillPopScope(
-        onWillPop: () => _onWillPop(isInSearchMode),
+      //return WillPopScope(
+      //onWillPop: () => _onWillPop(isInSearchMode),
+      return PopScope(
+        onPopInvokedWithResult: (didPop, dynamic) {
+          if (isInSearchMode) {
+            cancelSearch();
+            return;
+          } else {
+            //SystemNavigator.pop();
+            Get.back();
+            return;
+          }
+        },
         child: Stack(
           children: [
             _buildAppBar(context),
