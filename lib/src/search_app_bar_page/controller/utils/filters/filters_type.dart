@@ -1,4 +1,5 @@
 enum FiltersTypes { startsWith, equals, contains }
 
 typedef StringFilter<T> = String? Function(T test);
-typedef FuncionRefresh<T> = Future<List<T>> Function();
+typedef FunctionRefresh<T> = Future<List<T>> Function();
+typedef WhereFilter<T> = bool Function(T test, String? query);

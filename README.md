@@ -2,7 +2,7 @@
 
 A Flutter package to give you a simple search page.
 
-#### Translation [Em Português](doc/README.pt.md )
+#### Translation [Em Português](doc/README.pt.md)
 
 ## Introduction
 
@@ -28,7 +28,7 @@ package for more than 01 year and has not responded to my request for changes by
 We have four pages: <blockquote> SearchAppBarPage, SearchAppBarPageStream, SearchAppBarPagination
 and SimpleAppBarPage</blockquote>
 
-🔎 <span> </span> ```SearchAppBarPage``` needs a list that is the complete list to be filtered and a
+🔎 <span> </span> `SearchAppBarPage` needs a list that is the complete list to be filtered and a
 function that is passed on to build the Widget depending on the filtered list. If you type the page,
 you need [stringFilter]. This is a function that receives the parameter T (type of list) and you
 choose it as the Return String from the object. As in the example below. It was typed as Person and
@@ -36,24 +36,25 @@ returned person.name. This will be used to filter by the search query.
 
 ## Tips
 
-The function ```[obxListBuilder]``` is inside an Obx. Place reactive verables into it.
+The function `[obxListBuilder]` is inside an Obx. Place reactive verables into it.
 
 ##### ✳️ There are two ways to add reactive variables.
 
-* Boot your controller into a StatefulWidget. <p>
+- Boot your controller into a StatefulWidget. <p>
 
-- Pass the reactive variable inside this function ```[obxListBuilder]``` in SearchAppBarPage and
+* Pass the reactive variable inside this function `[obxListBuilder]` in SearchAppBarPage and
   SearchAppBarPageStream.
 
------
+---
 
-* Add reactive authentication parameters. Insert your RxBool that changes with the authentication
+- Add reactive authentication parameters. Insert your RxBool that changes with the authentication
   status to reactivity. The body will be rebuilt when authentication is false.
-  Set ```[rxBoolAuth]``` to SearchAppBarPage, SearchAppBarPageStream and SearchAppBarPagination.
+  Set `[rxBoolAuth]` to SearchAppBarPage, SearchAppBarPageStream and SearchAppBarPagination.
 
 [Example full](https://pub.dev/packages/search_app_bar_page/example) for more details. Both examples
 in SearchAppBarPage.
------
+
+---
 
 ```dart
 class SearchAppBarPage<T> extends StatefulWidget {
@@ -67,7 +68,7 @@ class SearchAppBarPage<T> extends StatefulWidget {
       /// [obxListBuilder] Function applied when it is filtering in search.
       @required this.obxListBuilder,
 
-      /// [stringFilter] Required if you type. 
+      /// [stringFilter] Required if you type.
       ///You should at least type with String.
       this.stringFilter
       //...
@@ -119,6 +120,18 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
+  bool startsWithListCalendar(Person test, String? query) {
+    if (query == null) {
+      return false;
+    }
+    final realTestName = removeDiacritics(test.name).toLowerCase();
+    final realTestAge = removeDiacritics(test.age.toString()).toLowerCase();
+
+    final realQuery = removeDiacritics(query.toLowerCase());
+    // return realTest.contains(realQuery);
+    return realTestName.startsWith(realQuery) || realTestAge.startsWith(realQuery);
+  }
+
   @override
   Widget build(BuildContext context) {
     //return SearchAppBarPage<String>(
@@ -138,6 +151,14 @@ class _SearchPageState extends State<SearchPage> {
       /// ✅ Add the auth reactive parameters.
       ///  The body will be rebuilt when the auth is false.
       ///---------------------------------------------
+      /// Do your own research manually.
+
+      //whereFilter: startsWithListCalendar,
+
+      onSubmit: (query, listFiltered) {
+        debugPrint('🚀 main.dart - query - $query');
+        debugPrint('🚀 main.dart - listFiltered - ${listFiltered.toString()}');
+      },
       rxBoolAuth: RxBoolAuth.input(
           rxBoolAuthm: Get
               .find<TestController>()
@@ -240,7 +261,7 @@ class Person {
 
 ```
 
-🔎 ```SearchAppBarPageStream``` needs a stream that is already worked on, that is, there is already
+🔎 `SearchAppBarPageStream` needs a stream that is already worked on, that is, there is already
 a Widget by default for error and waiting. You can modify them at will. You also need a function
 that is passed on to assemble the Widget that will be presented on the Body, depending on the
 filtered list. This is renewed by the natural flow of the stream and also by the search filtering.
@@ -253,11 +274,11 @@ class SearchAppBarPageStream<T> extends StatefulWidget {
       /// final Stream<List<T>> listStream;
       @required this.listStream,
 
-      ///final FunctionList<T> obxListBuilder; 
+      ///final FunctionList<T> obxListBuilder;
       /// Function applied when receiving data through Stream or filtering in search.
       @required this.obxListBuilder,
 
-      /// [stringFilter] Required if you type. 
+      /// [stringFilter] Required if you type.
       ///You should at least type with String.
       this.stringFilter
       // ...
@@ -417,7 +438,7 @@ class Person {
 
 ```
 
-🔎 ```SearchAppBarPageRefresh``` need a Future that will be remade the Refresh. It is important not
+🔎 `SearchAppBarPageRefresh` need a Future that will be remade the Refresh. It is important not
 to put parentheses in the parameter. See below.
 
 ```dart
@@ -428,11 +449,11 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget {
       /// final FuncionRefresh<T> functionRefresh
       required this.functionRefresh,
 
-      ///final FunctionList<T> obxListBuilder; 
+      ///final FunctionList<T> obxListBuilder;
       /// Function applied when receiving data through Stream or filtering in search.
       @required this.obxListBuilder,
 
-      /// [stringFilter] Required if you type. 
+      /// [stringFilter] Required if you type.
       ///You should at least type with String.
       this.stringFilter
       // ...
@@ -486,7 +507,7 @@ class _SearchAppBarRefreshState extends State<SearchAppBarRefresh> {
         style: TextStyle(fontSize: 20),
       ),
 
-      ///  Do not insert parentheses here.  
+      ///  Do not insert parentheses here.
       functionRefresh: _futureList,
       stringFilter: (Person person) => person.name,
       //stringFilter: (Person person) => person.age.toString(),
@@ -568,7 +589,7 @@ class _SearchAppBarRefreshState extends State<SearchAppBarRefresh> {
 }
 ```
 
-🔎 <span> </span> ```SearchAppBarPagination``` is built for fragmented requests for your API. If you
+🔎 <span> </span> `SearchAppBarPagination` is built for fragmented requests for your API. If you
 have hundreds of data and would like to send them in parts, in addition to being able to filter them
 efficiently, this Widget is the chosen one. There is a cache of requests to avoid getting (REST)
 unnecessarily. The cache reset when a screen is disposed. What differs from StreamPage is that a
@@ -592,11 +613,11 @@ class SearchAppBarPagination<T> extends StatefulWidget {
       ///filtered. We make the necessary changes on the device side to update the
       ///page to be requested. Eg: If numItemsPage = 6 and you receive 05 or 11
       ///or send empty, = >>> it means that the data is over.
-      ///typedef FutureFetchPageItems<T> = Future<List<T>> Function(int page, String query);       
+      ///typedef FutureFetchPageItems<T> = Future<List<T>> Function(int page, String query);
       /// final FutureFetchPageItems<T> futureFetchPageItems;
       @required this.futureFetchPageItems,
 
-      /// [stringFilter] Required if you type. 
+      /// [stringFilter] Required if you type.
       ///You should at least type with String.
       this.stringFilter
       // ...
@@ -717,7 +738,7 @@ class Person {
 
 ### Example of server side function.
 
-##### Attencion: The number of elements must be more than 14 ```(numItemsPage > 14)```.
+##### Attencion: The number of elements must be more than 14 `(numItemsPage > 14)`.
 
 Ex: If numItemsPage = 20 (total items on a page) and you send a list with a length less than 20 or
 send an empty list, = >>> means that the data is over. If you send null: if there is no data yet,
@@ -725,12 +746,12 @@ return an Exception; if a data already exists, nothing happens.
 
 #### Return types for future FetchPageItems.
 
-- List equal to numItemsPage ```(list.length == numItemsPage)``` = continues to request new pages.
-- Empty list or list smaller than numItemsPage ```(list.length < numItemsPage)``` = ends the request
+- List equal to numItemsPage `(list.length == numItemsPage)` = continues to request new pages.
+- Empty list or list smaller than numItemsPage `(list.length < numItemsPage)` = ends the request
   for pages. Be it a complete list, be it the list filtered by the search. The API request for a
   list filtered by the search is only fulfilled if the complete list is not finalized or the list
   request filtered by the search has not been finalized by the same principles above.
-- List longer than numItemsPage ```(list.length> numItemsPage)``` = return an Exception. The current
+- List longer than numItemsPage `(list.length> numItemsPage)` = return an Exception. The current
   page is calculated depending on the numItemsPage being constant.
 - Null return. If you send null: if there is still no data, return an Exception; if a data already
   exists, it returns the same data in the cache. For now the cahe is restarted when the screen
@@ -802,7 +823,7 @@ Future<List<Person>> _futureListPerson(int page, String query) async {
 }
 ```
 
-🔎 <span> </span> ```SimpleAppBarPage``` you need to do the work of assembling your page manually.
+🔎 <span> </span> `SimpleAppBarPage` you need to do the work of assembling your page manually.
 Start your controller, close it and implement the didUpdateWidget method for setState or Hot Reload
 on your page. There is already a widget to fit the body of your page => [RxListWidget].
 
@@ -949,7 +970,7 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
 These are the filters that the Controller uses to filter the list. Divide the filters into three
 types:
 
-```enum FiltersTypes { startsWith, equals, contains }```
+`enum FiltersTypes { startsWith, equals, contains }`
 
 Default = FiltersTypes.contains;
 
@@ -980,9 +1001,9 @@ at: https://blog.usejournal.com/change-app-bar-in-flutter-with-animation-cfffb34
 
 All merits for Rodolfo (rodolfoggp@gmail.com) and Nishant Desai.
 
-------
-New Components
-------
+---
+
+## New Components
 
 #### ✷ GetStreamPage
 
@@ -1119,13 +1140,13 @@ class Person {
   }
 }
 ```
-#### ✷ GetStreamWidget without Scaffold parameters.
 
+#### ✷ GetStreamWidget without Scaffold parameters.
 
 #### ✷ Rx extension in reactive Widgets
 
 Now you can assemble a Widget from RxString, RxInt, RxDouble, RxNumber and RxList. With the
-```[getStreamWidget]``` extension. It turns your Rx variable into a ```[GetStreamWidget]```. If
+`[getStreamWidget]` extension. It turns your Rx variable into a `[GetStreamWidget]`. If
 there is nothing in the stream, it starts the wait. When you add something, it launches
 obxBuilder. If there is an error, it starts the ErrorWidget. Ready to use.
 

@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 //import 'package:diacritic/diacritic.dart';
 
+import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -29,6 +30,7 @@ abstract class Routes {
   static const HOME = '/home';
   static const PAGE_1 = '/page-1';
   static const PAGE_2 = '/page-2';
+  static const PAGE_5 = '/page-5';
   /* static const PAGE_3 = '/page-3';
   static const PAGE_4 = '/page-4';
   static const PAGE_5 = '/page-5';
@@ -139,24 +141,49 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
+  bool startsWithListCalendar(Person test, String? query) {
+    if (query == null) {
+      return false;
+    }
+    final realTestName = removeDiacritics(test.name).toLowerCase();
+    final realTestAge = removeDiacritics(test.age.toString()).toLowerCase();
+
+    final realQuery = removeDiacritics(query.toLowerCase());
+    // return realTest.contains(realQuery);
+    return realTestName.startsWith(realQuery) ||
+        realTestAge.startsWith(realQuery);
+  }
+
   @override
   Widget build(BuildContext context) {
     //return SearchAppBarPage<String>(
     return SearchAppBarPage<Person>(
-      magnifyGlassColor: Colors.white,
+      magnifyGlassColor: Colors.black,
       searchAppBarCenterTitle: true,
       searchAppBarHintText: 'Search for a name',
+
+      /// Do your own research manually.
+      //whereFilter: startsWithListCalendar,
       searchAppBarTitle: const Text(
         'Search Page',
         style: TextStyle(fontSize: 20),
       ),
 
+      ///
+      onSubmit: (query, listFiltered) {
+        debugPrint('🚀 main.dart - query - $query');
+        debugPrint('🚀 main.dart - listFiltered - ${listFiltered.toString()}');
+      },
+
       /// Add list. Use setState if your list changes.
       listFull: dataListPerson2,
 
       /// sort default compare by stringFilter return.
+
       //sortFunction: (Person a, Person b) => a.age.compareTo(b.age),
+
       //filtersType: FiltersTypes.equals,
+
       stringFilter: (Person person) => person.name,
 
       /// If you want to make your own filtering function.
@@ -207,7 +234,8 @@ class _SearchPageState extends State<SearchPage> {
           itemBuilder: (_, index) {
             return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4)),
                 // color: Theme.of(context).primaryColorDark,
                 child: Padding(
                   padding: const EdgeInsets.all(14.0),
@@ -244,6 +272,21 @@ class SearchAppBarStream extends StatefulWidget {
 }
 
 class _SearchAppBarStreamState extends State<SearchAppBarStream> {
+  String _prepareString(String string) =>
+      removeDiacritics(string).toLowerCase();
+
+  bool myWhereFunction(Person person, String? query) {
+    if (query == null) {
+      return false;
+    }
+    debugPrint('🚀 main.dart - person.name - ${person.name}');
+    final realTest = _prepareString(person.name);
+    final realQuery = _prepareString(query);
+    final test = realTest.startsWith(realQuery);
+    debugPrint('🚀 main.dart - test - $test');
+    return test;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SearchAppBarPageStream<Person>(
@@ -258,6 +301,7 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
 
       /// Add stream. Use setState if your stream change.
       listStream: _streamListPerson,
+      //whereFilter: myWhereFunction,
       stringFilter: (Person person) => person.name,
       //stringFilter: (Person person) => person.age.toString(),
       /// sort default compare by stringFilter return.
@@ -280,8 +324,10 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
                 itemCount: list.length,
                 itemBuilder: (_, index) {
                   return Card(
-                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 4),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4)),
                       // color: Theme.of(context).primaryColorDark,
                       child: Padding(
                         padding: const EdgeInsets.all(14.0),
@@ -520,8 +566,10 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
             itemCount: list.length,
             itemBuilder: (_, index) {
               return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)),
                   // color: Theme.of(context).primaryColorDark,
                   child: Padding(
                     padding: const EdgeInsets.all(14.0),
@@ -633,8 +681,10 @@ class TestGetStreamPage extends StatelessWidget {
                   itemCount: list.length,
                   itemBuilder: (_, index) {
                     return Card(
-                        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 4),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4)),
                         child: Padding(
                           padding: const EdgeInsets.all(14.0),
                           child: Row(

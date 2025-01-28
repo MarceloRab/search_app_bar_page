@@ -38,6 +38,7 @@ class SearcherPageController<T> extends SearcherBase<T> {
 
   FiltersTypes? filtersType;
   late Filter<String?> _filters;
+  WhereFilter<T>? whereFilter;
   StringFilter<T>? stringFilter;
   SortList<T>? sortFunction;
   Filter<T>? filter;
@@ -50,36 +51,43 @@ class SearcherPageController<T> extends SearcherBase<T> {
 
   SearcherPageController({
     required this.listFull,
+    this.whereFilter,
     this.stringFilter,
     this.sortCompare,
     this.filter,
     this.sortFunction,
     this.filtersType = FiltersTypes.contains,
-  }) {
-    if (stringFilter == null) {
-      if (T == String) {
-        //stringFilter = _defaultFilter;
-        stringFilter = (T value) => value as String;
-      } else {
-        if (filter == null) {
-          throw Exception(
-              'If you dont want to filter by a String, it is necessary '
-              'to add the filtering function.');
-        }
-        /*else if (sortFunction == null) {
+  }) : assert(
+            whereFilter == null && stringFilter == null ||
+                whereFilter == null && stringFilter != null ||
+                stringFilter == null && whereFilter != null,
+            'Two functions ([whereFilter] ante [stringFilter]) should not be present at the same time.') {
+    if (whereFilter == null) {
+      if (stringFilter == null) {
+        if (T == String) {
+          //stringFilter = _defaultFilter;
+          stringFilter = (T value) => value as String;
+        } else {
+          if (filter == null) {
+            throw Exception(
+                'If you dont want to filter by a String, it is necessary '
+                'to add the filtering function.');
+          }
+          /*else if (sortFunction == null) {
           throw Exception(
               'You choose to sort your list. Need to add the order function.');
         }*/
-        /*throw Exception(
+          /*throw Exception(
             'You need to construct your object s return String in the '
             'stringFilter function. If there is no return String, your '
             'list object must be a String.');*/
+        }
       }
-    }
 
-    if (stringFilter != null && filter != null) {
-      throw Exception(
-          'You need to choose between one of the filtering mechanisms.');
+      if (stringFilter != null && filter != null) {
+        throw Exception(
+            'You need to choose between one of the filtering mechanisms.');
+      }
     }
 
     //bancoInit.close();
@@ -91,13 +99,15 @@ class SearcherPageController<T> extends SearcherBase<T> {
   }
 
   void initFilters() {
-    if (stringFilter != null || T == String) {
-      if (filtersType.toString() == FiltersTypes.startsWith.toString()) {
-        _filters = Filters.startsWith;
-      } else if (filtersType.toString() == FiltersTypes.equals.toString()) {
-        _filters = Filters.equals;
-      } else {
-        _filters = Filters.contains;
+    if (whereFilter == null) {
+      if (stringFilter != null || T == String) {
+        if (filtersType.toString() == FiltersTypes.startsWith.toString()) {
+          _filters = Filters.startsWith;
+        } else if (filtersType.toString() == FiltersTypes.equals.toString()) {
+          _filters = Filters.equals;
+        } else {
+          _filters = Filters.contains;
+        }
       }
     }
   }
@@ -111,18 +121,24 @@ class SearcherPageController<T> extends SearcherBase<T> {
   void refreshSearchList(String? value) {
     var list = <T>[];
 
-    if (stringFilter != null || T == String) {
-      list = listFull
-          .where(
-            (element) => _filters(stringFilter!(element), value),
-          )
-          .toList();
+    if (whereFilter != null) {
+      //list = listFull.where(whereFunction!).toList();
+      list = listFull.where((element) => whereFilter!(element, value)).toList();
     } else {
-      if (value!.isEmpty)
-        list = listFull;
-      else
-        list = listFull.where((element) => filter!(element, value)).toList();
+      if (stringFilter != null || T == String) {
+        list = listFull
+            .where(
+              (element) => _filters(stringFilter!(element), value),
+            )
+            .toList();
+      } else {
+        if (value!.isEmpty)
+          list = listFull;
+        else
+          list = listFull.where((element) => filter!(element, value)).toList();
+      }
     }
+
     /*final list = listFull
         .where((element) => _filters(stringFilter!(element), value))
         .toList();*/

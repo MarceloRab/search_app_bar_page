@@ -108,6 +108,12 @@ class SearchAppBarPageStream<T> extends StatefulWidget
   /// The list will be filtered by the person.name contains (default) a query.
   final StringFilter<T>? stringFilter;
 
+  /// [whereFilter] Required if you type.
+  ///If you don't want to use a String from your
+  /// Object, pass it directly to a function to delete an item from your list.
+  /// ex.: whereFilter: (Person person) => bool return - used to filter dates by the largest String,
+  final WhereFilter<T>? whereFilter;
+
   /// [filter] Add function to do filtering manually.
   /// If you leave this parameter not null the parameter [stringFilter]
   /// must be null
@@ -130,13 +136,17 @@ class SearchAppBarPageStream<T> extends StatefulWidget
   /// status to have reactivity.
   final RxBoolAuth? rxBoolAuth;
 
+  //final OnSubmitted<T>? onSubmit;
+
   const SearchAppBarPageStream({
     super.key,
     required this.listStream,
     required this.obxListBuilder,
+    //this.onSubmit,
     this.initialData,
     this.widgetErrorBuilder,
     this.stringFilter,
+    this.whereFilter,
     this.filter,
     this.sortFunction,
     //this.compareSort,
@@ -209,6 +219,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
 
     _controller = SearcherPageStreamController<T>(
         stringFilter: widget.stringFilter,
+        whereFilter: widget.whereFilter,
         filter: widget.filter,
         sortFunction: widget.sortFunction,
         sortCompare: widget.sortCompare,
@@ -284,8 +295,9 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: SearchAppBar(
+        appBar: SearchAppBar<T>(
             controller: _controller,
+            //onSubmit: widget.onSubmit,
             title: widget.searchAppBarTitle,
             centerTitle: widget.searchAppBarCenterTitle,
             elevation: widget.searchAppBarElevation,

@@ -88,6 +88,13 @@ class SearchAppBarPage<T> extends StatefulWidget
   /// The list will be filtered by the person.name contains (default) a query.
   final StringFilter<T>? stringFilter;
 
+  /// [whereFilter] Required if you want to make your own function to delete
+  /// components from your list.
+  ///If you don't want to use a String from your
+  /// Object, pass it directly to a function to delete an item from your list.
+  /// ex.: whereFilter: (Person person) => bool return - used to filter dates by the largest String,
+  final WhereFilter<T>? whereFilter;
+
   /// [filter] Add function to do filtering manually.
   /// If you leave this parameter not null the parameter [stringFilter]
   /// must be null
@@ -105,17 +112,21 @@ class SearchAppBarPage<T> extends StatefulWidget
   /// status to have reactivity.
   final RxBoolAuth? rxBoolAuth;
 
+  final OnSubmitted<T>? onSubmit;
+
   const SearchAppBarPage(
-      {Key? key,
+      {super.key,
 
       /// Parameters para o SearcherGetController
       required this.listFull,
       required this.obxListBuilder,
+      this.onSubmit,
       this.sortCompare = true,
       this.filtersType,
       this.filter,
       this.sortFunction,
       this.stringFilter,
+      this.whereFilter,
       this.rxBoolAuth,
 
       /// Parameters do SearchAppBar
@@ -153,10 +164,7 @@ class SearchAppBarPage<T> extends StatefulWidget
       this.drawerEdgeDragWidth,
       this.drawerEnableOpenDragGesture = true,
       this.endDrawerEnableOpenDragGesture = true,
-      this.restorationId})
-      :
-        //assert(listFull != null),
-        super(key: key);
+      this.restorationId});
 
   @override
   _SearchAppBarPageState<T> createState() => _SearchAppBarPageState<T>();
@@ -184,6 +192,7 @@ class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
     _controller = SearcherPageController<T>(
         listFull: widget.listFull,
         stringFilter: widget.stringFilter,
+        whereFilter: widget.whereFilter,
         //compareSort: widget.compareSort,
         filter: widget.filter,
         sortFunction: widget.sortFunction,
@@ -236,8 +245,9 @@ class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: SearchAppBar(
+        appBar: SearchAppBar<T>(
             controller: _controller,
+            onSubmit: widget.onSubmit,
             title: widget.searchAppBarTitle,
             centerTitle: widget.searchAppBarCenterTitle,
             elevation: widget.searchAppBarElevation,

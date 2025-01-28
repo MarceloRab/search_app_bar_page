@@ -15,6 +15,8 @@ abstract class SearcherBase<T> {
 
   bool get bancoInitValue => bancoInit.value;
 
+  //final listSearch = <T>[].obs;
+
   /* final StreamController<bool> bancoInit = StreamController<bool>();
 
   set bancoInitValue(bool value) => bancoInit.stream.last = value;

@@ -1,3 +1,39 @@
+## [3.0.0-release.5]
+
+- see [2.4.2] below.
+
+## [3.0.0-release.4]
+
+- see [2.4.2] below.
+
+## [3.0.0-release.3]
+
+- Add [whereFilter] - see below [2.4.2]
+
+## [3.0.0-release.1]
+
+- Adapting to get package 5.0.0
+
+## [3.0.0-release.2]
+
+- Adapting to get package 5.0.0
+
+## [3.0.0-release.1]
+
+- Adapting to get package 5.0.0
+
+## [2.5.0]
+
+- Now you can use the 'esc' key to exit and the 'enter' key to return from [onSubmitted] in SearchAppBarPage. Fixed animation on larger screens like Flutter Web.
+
+## [2.4.2]
+
+- Add [whereFilter] Required if you want to make your own function to delete components from
+  your list. If you don't want to use a String from your Object, pass it directly to a function
+  to delete an item from your list.
+  ex.: whereFilter: (Person person, Sring? query) => bool return - used to
+  filter dates by the largest String,
+
 ## [2.4.1]
 
 - Same as before

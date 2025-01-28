@@ -7,9 +7,8 @@ import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/seacher_widget_page_base.dart';
 
-class SearchAppBarPageRefresh<T> extends StatefulWidget
-    implements SearcherScaffoldBase {
-  /// Paramentros do SearchAppBar
+class SearchAppBarPageRefresh<T> extends StatefulWidget implements SearcherScaffoldBase {
+  /// Parameters do SearchAppBar
 
   final Widget? searchAppBartitle;
   final bool searchAppBarcenterTitle;
@@ -87,7 +86,7 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
   /// [functionRefresh] Just add the future function and we are already
   /// in charge of working with the data. There is a FutureBuilder
   /// in background.
-  final FuncionRefresh<T> functionRefresh;
+  final FunctionRefresh<T> functionRefresh;
 
   /// [filtersType] These are the filters that the Controller uses to
   /// filter the list. Divide the filters into three types:
@@ -129,10 +128,13 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
   final Color? refreshBackgroundColor;
   final RefreshIndicatorTriggerMode refreshTriggerMode;
 
+  //final OnSubmitted<T>? onSubmit;
+
   const SearchAppBarPageRefresh({
     Key? key,
     required this.functionRefresh,
     required this.obxListBuilder,
+    //this.onSubmit,
     this.initialData,
     this.widgetErrorBuilder,
     this.stringFilter,
@@ -180,12 +182,10 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
   }) : super(key: key);
 
   @override
-  State<SearchAppBarPageRefresh<T>> createState() =>
-      _SearchAppBarPageRefreshState<T>();
+  State<SearchAppBarPageRefresh<T>> createState() => _SearchAppBarPageRefreshState<T>();
 }
 
-class _SearchAppBarPageRefreshState<T>
-    extends State<SearchAppBarPageRefresh<T>> {
+class _SearchAppBarPageRefreshState<T> extends State<SearchAppBarPageRefresh<T>> {
   // T as List
 
   bool _haveInitialData = false;
@@ -201,8 +201,7 @@ class _SearchAppBarPageRefreshState<T>
 
   Object? _activeCallbackIdentity;
 
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
@@ -260,8 +259,7 @@ class _SearchAppBarPageRefreshState<T>
 
     if (_controller.listFuture.isNotEmpty) {
       if (_controller.rxSearch.value.isNotEmpty) {
-        _controller.afterData(
-            _controller.refreshSeachList2(_controller.rxSearch.value));
+        _controller.afterData(_controller.refreshSeachList2(_controller.rxSearch.value));
       } else {
         _controller.sortCompareList(_controller.listFuture);
         _controller.afterData(_controller.listFuture);
@@ -282,8 +280,9 @@ class _SearchAppBarPageRefreshState<T>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: SearchAppBar(
+        appBar: SearchAppBar<T>(
             controller: _controller,
+            //onSubmit: widget.onSubmit,
             title: widget.searchAppBartitle,
             centerTitle: widget.searchAppBarcenterTitle,
             elevation: widget.searchAppBarElevation,
@@ -304,10 +303,8 @@ class _SearchAppBarPageRefreshState<T>
             },
             child: buildBody()),
         floatingActionButton: widget.searchPageFloatingActionButton,
-        floatingActionButtonLocation:
-            widget.searchPageFloatingActionButtonLocation,
-        floatingActionButtonAnimator:
-            widget.searchPageFloatingActionButtonAnimator,
+        floatingActionButtonLocation: widget.searchPageFloatingActionButtonLocation,
+        floatingActionButtonAnimator: widget.searchPageFloatingActionButtonAnimator,
         persistentFooterButtons: widget.searchPagePersistentFooterButtons,
         drawer: widget.searchPageDrawer,
         endDrawer: widget.searchPageEndDrawer,
@@ -345,8 +342,7 @@ class _SearchAppBarPageRefreshState<T>
       }
 
       //final isListFull = widget.searcher.rxSearch.value.isEmpty;
-      return widget.obxListBuilder(
-          context, _controller.snapshot.data!, _controller.isModSearch);
+      return widget.obxListBuilder(context, _controller.snapshot.data!, _controller.isModSearch);
     });
   }
 
@@ -391,8 +387,7 @@ class _SearchAppBarPageRefreshState<T>
       _controller.sortCompareList(_controller.listFuture);
 
       if (_controller.rxSearch.value.isNotEmpty) {
-        _controller.afterData(
-            _controller.refreshSeachList2(_controller.rxSearch.value));
+        _controller.afterData(_controller.refreshSeachList2(_controller.rxSearch.value));
       } else {
         _controller.afterData(_controller.listFuture);
       }
@@ -421,25 +416,23 @@ class _SearchAppBarPageRefreshState<T>
 
   Widget buildWidgetError(Object? error) {
     if (widget.widgetErrorBuilder == null) {
-      return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Icon(
-              Icons.error_outline,
-              color: Colors.red,
-              size: 60,
+      return Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+        const Icon(
+          Icons.error_outline,
+          color: Colors.red,
+          size: 60,
+        ),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: Text(
+              'We found an error.\n'
+              'Error: $error',
+              textAlign: TextAlign.center,
             ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Text(
-                  'We found an error.\n'
-                  'Error: $error',
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            )
-          ]);
+          ),
+        )
+      ]);
     } else {
       return widget.widgetErrorBuilder!(error);
     }
