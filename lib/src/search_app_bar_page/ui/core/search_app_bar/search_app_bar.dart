@@ -1,3 +1,4 @@
+import 'dart:isolate';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -47,7 +48,8 @@ class SearchAppBar<T> extends StatefulWidget implements PreferredSizeWidget {
     this.keyboardType,
     this.magnifyGlassColor,
   }) : _searchButtonPosition = (searchButtonPosition != null &&
-                (0 <= searchButtonPosition && searchButtonPosition <= actions.length))
+                (0 <= searchButtonPosition &&
+                    searchButtonPosition <= actions.length))
             ? searchButtonPosition
             : max(actions.length, 0);
 
@@ -64,10 +66,14 @@ class SearchAppBar<T> extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _SearchAppBarState<T> extends State<SearchAppBar<T>>
-    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   double? _rippleStartX, _rippleStartY;
+  // Ripple animation (CustomPaint radius)
   late AnimationController _controller;
   late Animation<double> _animation;
+  // Fade animation (AppBar opacity)
+  late AnimationController _fadeController;
+  late Animation<double> _fade;
   double? _elevation;
   //Widget? _iconConnectyOffAppBar;
 
@@ -81,9 +87,27 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 150));
-    _animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
+    // Ripple controller (starts AFTER fade completes)
+    _controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 150));
+    final curvedRipple =
+        CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic);
+    _animation = Tween(begin: 0.0, end: 1.0).animate(curvedRipple);
     _controller.addStatusListener(animationStatusListener);
+
+    // Fade-out controller (drives AppBar opacity from 1.0 -> 0.0)
+    _fadeController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 50));
+    final curvedFade =
+        CurvedAnimation(parent: _fadeController, curve: Curves.easeOutCubic);
+    _fade = Tween<double>(begin: 1.0, end: 0.0).animate(curvedFade);
+
+    // When fade completes, start the ripple
+    _fadeController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _controller.forward(from: 0.0);
+      }
+    });
     _elevation = widget.elevation;
   }
 
@@ -106,16 +130,21 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
   }
 
   void onSearchTapUp(TapUpDetails details) {
-    _rippleStartX = details.globalPosition.dx;
-    _rippleStartY = details.globalPosition.dy;
-    _controller.forward();
+    // Use local coordinates so the ripple is relative to the AppBar/dialog
+    _rippleStartX = details.localPosition.dx;
+    _rippleStartY = details.localPosition.dy;
+    if (_fadeController.isAnimating || _controller.isAnimating) return;
+    // Start sequence: fade -> ripple (ripple will be started by fade's listener)
+    _fadeController.forward(from: 0.0);
   }
 
   void cancelSearch() {
     widget.controller.isModSearch = false;
     widget.controller.rxSearch.value = '';
     _elevation = widget.elevation;
-    _controller.reverse();
+    // Reset both animations to initial state (AppBar fully visible, no ripple)
+    _controller.reset();
+    _fadeController.reset();
   }
 
   /* Future<bool> _onWillPop(bool isInSearchMode) async {
@@ -130,7 +159,6 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final screenWidth = MediaQuery.of(context).size.width;
     return Obx(() {
       final bool isInSearchMode = widget.controller.isModSearch;
       //return WillPopScope(
@@ -142,19 +170,29 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
             return;
           } else {
             //SystemNavigator.pop();
-            Get.back();
+            if (maxWidthHeaderSearch == Get.width) {
+              Get.back();
+            }
+
             return;
           }
         },
         child: Stack(
           children: [
             _buildAppBar(context),
-            _buildAnimation(screenWidth),
+            _buildAnimation(),
             _buildSearchWidget(isInSearchMode, context),
           ],
         ),
       );
     });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _fadeController.dispose();
+    super.dispose();
   }
 
   Widget _buildAppBar(BuildContext context) {
@@ -169,8 +207,43 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
       increasedActions.insert(0, _iconConnectyOffAppBar!);
       removeSearcher.insert(0, _iconConnectyOffAppBar!);
     } */
-
+//
     return Obx(() {
+      // Always use LayoutBuilder to capture the current available width
+
+      final bancoInitValue = widget.controller.bancoInitValue;
+      final actionUse = bancoInitValue ? increasedActions : removeSearcher;
+
+      // if (widget.controller.listSearch != null)
+      return LayoutBuilder(builder: (context, constraints) {
+        maxWidthHeaderSearch = constraints.maxWidth;
+
+        // Use the standalone fade animation (runs before ripple)
+        final fadeOut = _fade;
+
+        return GestureDetector(
+          onTapUp: onSearchTapUp,
+          child: IgnorePointer(
+            ignoring: widget.controller.isModSearch,
+            child: FadeTransition(
+              opacity: fadeOut,
+              child: AppBar(
+                backgroundColor: widget.backgroundColor ??
+                    Theme.of(context).appBarTheme.foregroundColor,
+                iconTheme:
+                    widget.iconTheme ?? Theme.of(context).appBarTheme.iconTheme,
+                title: widget.title,
+                elevation: _elevation,
+                centerTitle: widget.centerTitle,
+                actions: actionUse,
+              ),
+            ),
+          ),
+        );
+      });
+    });
+
+    /* return Obx(() {
       if (widget.controller.bancoInitValue)
         // if (widget.controller.listSearch != null)
         return LayoutBuilder(builder: (context, constraints) {
@@ -204,7 +277,7 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
           ),
         );
       }
-    });
+    }); */
   }
 
   Widget _buildSearchButton(BuildContext context) {
@@ -217,19 +290,21 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
     );
   }
 
-  AnimatedBuilder _buildAnimation(double screenWidth) {
+  AnimatedBuilder _buildAnimation() {
     _rippleStartX = _rippleStartX ?? 0;
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, child) {
+        final containerWidth = (maxWidthHeaderSearch > 0)
+            ? maxWidthHeaderSearch
+            : MediaQuery.of(context).size.width;
         return CustomPaint(
           painter: AppBarPainter(
             containerHeight: widget.preferredSize.height,
-
-            //TODO: pegar apenas
-            center: Offset(min(_rippleStartX!, maxWidthHeaderSearch), _rippleStartY ?? 0),
-            // increase radius in % from 0% to 100% of screenWidth
-            radius: _animation.value * screenWidth,
+            center:
+                Offset(min(_rippleStartX!, containerWidth), _rippleStartY ?? 0),
+            // grow up to ~112% of the container width to emphasize the sweep
+            radius: _animation.value * containerWidth * 1.12,
             context: context,
             color: widget.searchBackgroundColor ?? Colors.white,
           ),
