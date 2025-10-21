@@ -6,29 +6,28 @@ class AppBarPainter extends CustomPainter {
   final BuildContext? context;
 
   final Color? color;
-  double? statusBarHeight, screenWidth;
 
-  AppBarPainter(
-      {this.context,
-      this.containerHeight,
-      this.center,
-      this.radius,
-      this.color}) {
-    statusBarHeight = MediaQuery.of(context!).padding.top;
-    screenWidth = MediaQuery.of(context!).size.width;
-  }
+  const AppBarPainter({
+    this.context,
+    this.containerHeight,
+    this.center,
+    this.radius,
+    this.color,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
-    final Paint circlePainter = Paint();
-    circlePainter.color = color!;
-    canvas.clipRect(
-        Rect.fromLTWH(0, 0, screenWidth!, containerHeight! + statusBarHeight!));
+    final Paint circlePainter = Paint()..color = color!;
+
+    // Clip strictly to the painter's available width and the intended container height.
+    // This avoids leaking the ripple outside dialogs/alerts with constrained width.
+    final clipWidth = size.width;
+    final clipHeight = containerHeight ?? size.height;
+    canvas.clipRect(Rect.fromLTWH(0, 0, clipWidth, clipHeight));
+
     canvas.drawCircle(center!, radius!, circlePainter);
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
-  }
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }

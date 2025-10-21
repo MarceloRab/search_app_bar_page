@@ -47,8 +47,7 @@ class SearchAppBar<T> extends StatefulWidget implements PreferredSizeWidget {
     this.keyboardType,
     this.magnifyGlassColor,
   }) : _searchButtonPosition = (searchButtonPosition != null &&
-                (0 <= searchButtonPosition &&
-                    searchButtonPosition <= actions.length))
+                (0 <= searchButtonPosition && searchButtonPosition <= actions.length))
             ? searchButtonPosition
             : max(actions.length, 0);
 
@@ -82,8 +81,7 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 150));
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 150));
     _animation = Tween(begin: 0.0, end: 1.0).animate(_controller);
     _controller.addStatusListener(animationStatusListener);
     _elevation = widget.elevation;
@@ -182,10 +180,8 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
             child: AppBar(
               backgroundColor:
                   //widget.backgroundColor ?? Theme.of(context).appBarTheme.color,
-                  widget.backgroundColor ??
-                      Theme.of(context).appBarTheme.foregroundColor,
-              iconTheme:
-                  widget.iconTheme ?? Theme.of(context).appBarTheme.iconTheme,
+                  widget.backgroundColor ?? Theme.of(context).appBarTheme.foregroundColor,
+              iconTheme: widget.iconTheme ?? Theme.of(context).appBarTheme.iconTheme,
               title: widget.title,
               elevation: _elevation,
               centerTitle: widget.centerTitle,
@@ -199,10 +195,8 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
           child: AppBar(
             backgroundColor:
                 //widget.backgroundColor ?? Theme.of(context).appBarTheme.color,
-                widget.backgroundColor ??
-                    Theme.of(context).appBarTheme.foregroundColor,
-            iconTheme:
-                widget.iconTheme ?? Theme.of(context).appBarTheme.iconTheme,
+                widget.backgroundColor ?? Theme.of(context).appBarTheme.foregroundColor,
+            iconTheme: widget.iconTheme ?? Theme.of(context).appBarTheme.iconTheme,
             title: widget.title,
             elevation: _elevation,
             centerTitle: widget.centerTitle,
@@ -231,8 +225,9 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
         return CustomPaint(
           painter: AppBarPainter(
             containerHeight: widget.preferredSize.height,
-            center: Offset(
-                min(_rippleStartX!, maxWidthHeaderSearch), _rippleStartY ?? 0),
+
+            //TODO: pegar apenas
+            center: Offset(min(_rippleStartX!, maxWidthHeaderSearch), _rippleStartY ?? 0),
             // increase radius in % from 0% to 100% of screenWidth
             radius: _animation.value * screenWidth,
             context: context,

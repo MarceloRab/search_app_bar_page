@@ -98,7 +98,7 @@ class TestController extends GetxController {
 
   set changeAuth(bool value) => rxAuth.value = value;
 
-  bool get isAuth => rxAuth.value;
+  //bool get isAuth => rxAuth.value;
 
   final rxList = <Person>[].obs;
 }
@@ -150,8 +150,7 @@ class _SearchPageState extends State<SearchPage> {
 
     final realQuery = removeDiacritics(query.toLowerCase());
     // return realTest.contains(realQuery);
-    return realTestName.startsWith(realQuery) ||
-        realTestAge.startsWith(realQuery);
+    return realTestName.startsWith(realQuery) || realTestAge.startsWith(realQuery);
   }
 
   @override
@@ -161,6 +160,55 @@ class _SearchPageState extends State<SearchPage> {
       magnifyGlassColor: Colors.black,
       searchAppBarCenterTitle: true,
       searchAppBarHintText: 'Search for a name',
+      searchAppBarActions: [
+        IconButton(
+          icon: const Icon(Icons.pageview),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Search Dialog'),
+                content: SizedBox(
+                  width: double.maxFinite,
+                  height: 400,
+                  child: SearchAppBarPage<Person>(
+                    searchAppBarTitle: const Text('Search in Dialog'),
+                    searchAppBarHintText: 'Search for a name',
+                    listFull: dataListPerson2,
+                    stringFilter: (Person person) => person.name,
+                    filtersType: FiltersTypes.contains,
+                    obxListBuilder: (context, list, isModSearch) {
+                      if (list.isEmpty) {
+                        return const Center(
+                          child: Text('NOTHING FOUND'),
+                        );
+                      }
+                      return ListView.builder(
+                        itemCount: list.length,
+                        itemBuilder: (_, index) {
+                          return ListTile(
+                            title: Text(list[index].name),
+                            subtitle: Text('Age: ${list[index].age}'),
+                            onTap: () {
+                              Navigator.of(context).pop(list[index]);
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Close'),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ],
 
       /// Do your own research manually.
       //whereFilter: startsWithListCalendar,
@@ -234,8 +282,7 @@ class _SearchPageState extends State<SearchPage> {
           itemBuilder: (_, index) {
             return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 // color: Theme.of(context).primaryColorDark,
                 child: Padding(
                   padding: const EdgeInsets.all(14.0),
@@ -272,8 +319,7 @@ class SearchAppBarStream extends StatefulWidget {
 }
 
 class _SearchAppBarStreamState extends State<SearchAppBarStream> {
-  String _prepareString(String string) =>
-      removeDiacritics(string).toLowerCase();
+  String _prepareString(String string) => removeDiacritics(string).toLowerCase();
 
   bool myWhereFunction(Person person, String? query) {
     if (query == null) {
@@ -324,10 +370,8 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
                 itemCount: list.length,
                 itemBuilder: (_, index) {
                   return Card(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 4),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4)),
+                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                       // color: Theme.of(context).primaryColorDark,
                       child: Padding(
                         padding: const EdgeInsets.all(14.0),
@@ -566,10 +610,8 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
             itemCount: list.length,
             itemBuilder: (_, index) {
               return Card(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4)),
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                   // color: Theme.of(context).primaryColorDark,
                   child: Padding(
                     padding: const EdgeInsets.all(14.0),
@@ -681,10 +723,8 @@ class TestGetStreamPage extends StatelessWidget {
                   itemCount: list.length,
                   itemBuilder: (_, index) {
                     return Card(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 4),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4)),
+                        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                         child: Padding(
                           padding: const EdgeInsets.all(14.0),
                           child: Row(

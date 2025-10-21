@@ -1,3 +1,7 @@
+## [3.0.0-release.6]
+
+- see [2.4.2] below.
+
 ## [3.0.0-release.5]
 
 - see [2.4.2] below.
