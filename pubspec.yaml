@@ -1,7 +1,7 @@
 name: search_app_bar_page
 description: A search page built for minimal work and good performance. Enjoy.
-version: 3.0.0-release.6
-#version: 2.5.0
+version: 3.0.0-release.7
+#version: 2.5.1
 homepage: https://github.com/MarceloRab/search_app_bar_page
 
 environment:
@@ -11,10 +11,12 @@ dependencies:
   flutter:
     sdk: flutter
 
+  diacritic: ">=0.1.5 <1.0.0"
   #get: ">=4.6.6 <5.0.0"
+
   get: ^5.0.0-release-candidate-9.3.2
   meta: ">=1.7.0 <2.0.0"
-  diacritic: ">=0.1.5 <1.0.0"
+
   #connectivity: ">=3.0.6 <4.0.0"
 
 dev_dependencies:

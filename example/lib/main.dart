@@ -137,6 +137,7 @@ class _SearchPageState extends State<SearchPage> {
       /// Reactive variable as parameter within the function [obxListBuilder]
       ///------------------------------------------
       /// 👇🏼
+      // ignore: invalid_use_of_protected_member
       controll_1.rxList.refresh();
     });
   }
@@ -150,8 +151,7 @@ class _SearchPageState extends State<SearchPage> {
 
     final realQuery = removeDiacritics(query.toLowerCase());
     // return realTest.contains(realQuery);
-    return realTestName.startsWith(realQuery) ||
-        realTestAge.startsWith(realQuery);
+    return realTestName.startsWith(realQuery) || realTestAge.startsWith(realQuery);
   }
 
   @override
@@ -283,8 +283,7 @@ class _SearchPageState extends State<SearchPage> {
           itemBuilder: (_, index) {
             return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                 // color: Theme.of(context).primaryColorDark,
                 child: Padding(
                   padding: const EdgeInsets.all(14.0),
@@ -321,8 +320,7 @@ class SearchAppBarStream extends StatefulWidget {
 }
 
 class _SearchAppBarStreamState extends State<SearchAppBarStream> {
-  String _prepareString(String string) =>
-      removeDiacritics(string).toLowerCase();
+  String _prepareString(String string) => removeDiacritics(string).toLowerCase();
 
   bool myWhereFunction(Person person, String? query) {
     if (query == null) {
@@ -373,10 +371,8 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
                 itemCount: list.length,
                 itemBuilder: (_, index) {
                   return Card(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 4),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4)),
+                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                       // color: Theme.of(context).primaryColorDark,
                       child: Padding(
                         padding: const EdgeInsets.all(14.0),
@@ -615,10 +611,8 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
             itemCount: list.length,
             itemBuilder: (_, index) {
               return Card(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4)),
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                   // color: Theme.of(context).primaryColorDark,
                   child: Padding(
                     padding: const EdgeInsets.all(14.0),
@@ -730,10 +724,8 @@ class TestGetStreamPage extends StatelessWidget {
                   itemCount: list.length,
                   itemBuilder: (_, index) {
                     return Card(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 4),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4)),
+                        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                         child: Padding(
                           padding: const EdgeInsets.all(14.0),
                           child: Row(
