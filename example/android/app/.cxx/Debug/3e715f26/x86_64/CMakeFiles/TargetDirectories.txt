@@ -1,2 +1,0 @@
-C:/Users/Rabelo/projects/search_app_bar_page/example/android/app/.cxx/Debug/3e715f26/x86_64/CMakeFiles/edit_cache.dir
-C:/Users/Rabelo/projects/search_app_bar_page/example/android/app/.cxx/Debug/3e715f26/x86_64/CMakeFiles/rebuild_cache.dir
