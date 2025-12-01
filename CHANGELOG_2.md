@@ -1,3 +1,7 @@
+## [3.0.1-release.9]
+
+- Add the command to clear the Search text field. GlobalKey< SearchAppBarPageState< Person>> searchAppBarKey = GlobalKey(); Use searchAppBarKey.currentState!.clearSearch(); when desired.
+
 ## [3.0.0-release.8]
 
 - Add configuration for text in search mode

@@ -2,6 +2,7 @@
 //import 'package:diacritic/diacritic.dart';
 
 import 'package:diacritic/diacritic.dart';
+import 'package:example/page_test.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -297,9 +298,15 @@ class _SearchPageState extends State<SearchPage> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: Text(
-                          'Name: ${list[index].name}',
-                          style: const TextStyle(fontSize: 16),
+                        child: TextButton(
+                          onPressed: () {
+                            searchAppBarKey.currentState?.clearSearch();
+                            Get.to(() => const MyWidget());
+                          },
+                          child: Text(
+                            'Name: ${list[index].name}',
+                            style: const TextStyle(fontSize: 16),
+                          ),
                         ),
                       ),
                       Expanded(

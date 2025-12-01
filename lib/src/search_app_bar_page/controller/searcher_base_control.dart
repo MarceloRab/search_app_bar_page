@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
 
 abstract class SearcherBase<T> {
-  final TextEditingController textController = TextEditingController();
+  VoidCallback? onCancelSearch;
   //
   final RxBool _isModSearch = false.obs;
 
@@ -27,8 +27,6 @@ abstract class SearcherBase<T> {
   bool get bancoInitValue => bancoInit.value;
 */
   void sortCompareList(List<T> list);
-
-  void clearSearch();
 
   bool? sortCompare = true;
 }

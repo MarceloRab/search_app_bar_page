@@ -112,6 +112,8 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
       }
     });
     _elevation = widget.elevation;
+
+    widget.controller.onCancelSearch = cancelSearch;
   }
 
   /* @override

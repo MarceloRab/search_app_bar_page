@@ -182,7 +182,7 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
   SearchAppBarPageState();
 
   void clearSearch() {
-    _controller.clearSearch();
+    _controller.onCancelSearch?.call();
   }
 
   @override

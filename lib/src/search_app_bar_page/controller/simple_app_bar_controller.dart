@@ -1,9 +1,8 @@
 import 'dart:async';
+import 'dart:ui';
 
-import 'package:flutter/src/widgets/editable_text.dart';
 import 'package:get/state_manager.dart';
 import 'package:search_app_bar_page/search_app_bar_page.dart';
-
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_base_control.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 
@@ -37,12 +36,7 @@ class SimpleAppBarController<T> implements SearcherBase<T> {
   set isModSearch(bool value) => _isModSearch.value = value;
 
   @override
-  void clearSearch() {
-    if (isModSearch) {
-      rxSearch.value = '';
-      textController.clear();
-    }
-  }
+  VoidCallback? onCancelSearch;
 
   @override
   bool? sortCompare = true;
@@ -129,7 +123,4 @@ class SimpleAppBarController<T> implements SearcherBase<T> {
     //TODO:retirado aqui
     // bancoInit.close();
   }
-
-  @override
-  TextEditingController get textController => throw UnimplementedError();
 }

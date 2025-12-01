@@ -39,7 +39,7 @@ class SearchWidget<T> extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _SearchWidgetState<T> extends State<SearchWidget<T>> {
-  //final TextEditingController textController = TextEditingController();
+  final TextEditingController textController = TextEditingController();
   late Map<Type, Action<Intent>> actions = <Type, Action<Intent>>{
     //NextIntent: _nextAction,
     //PreviousIntent: _previousAction,
@@ -95,7 +95,7 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
         ),
         onPressed: () {
           widget.controller.rxSearch('');
-          widget.controller.textController.clear();
+          textController.clear();
         },
       );
     });
@@ -126,7 +126,7 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
         actions: actions,
         child: TextField(
             // key: UniqueKey(),
-            controller: widget.controller.textController,
+            controller: textController,
             //textAlign: TextAlign.left,
             //autocorrect: false,
             keyboardType: widget.keyboardType,
@@ -158,13 +158,13 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
 
   TextEditingController _configController() {
     //final TextEditingController textController = TextEditingController();
-    widget.controller.textController.value =
+    textController.value =
         TextEditingValue(text: widget.controller.rxSearch.value);
     //TextEditingValue(text: controller.rxSearch.value ?? '');
-    widget.controller.textController.selection = TextSelection.fromPosition(
-      TextPosition(offset: widget.controller.textController.text.length),
+    textController.selection = TextSelection.fromPosition(
+      TextPosition(offset: textController.text.length),
     );
-    return widget.controller.textController;
+    return textController;
   }
 }
 
