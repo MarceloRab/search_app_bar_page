@@ -1,4 +1,4 @@
-mixin SearcherPaginnationBase<T> {
+mixin SearcherPaginationBase<T> {
   void inState();
 
   void waiting();

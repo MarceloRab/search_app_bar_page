@@ -27,6 +27,8 @@ class SearchAppBarPageStream<T> extends StatefulWidget
   final List<Widget> searchAppBarActions;
   final double searchAppBarElevation;
   final TextInputType? searchAppBarKeyboardType;
+  final Color? searchTextColor;
+  final double searchTextSize;
 
   /// [magnifyInGlassColor] Changes the color of the magnifying glass.
   /// Keeps IconTheme color by default.
@@ -166,6 +168,8 @@ class SearchAppBarPageStream<T> extends StatefulWidget
     this.searchAppBarElevation = 4.0,
     this.searchAppBarKeyboardType,
     this.magnifyInGlassColor,
+    this.searchTextColor,
+    this.searchTextSize = 18.0,
     this.searchPageFloatingActionButton,
     this.searchPageFloatingActionButtonLocation,
     this.searchPageFloatingActionButtonAnimator,
@@ -310,6 +314,8 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
             capitalization: widget.searchAppBarCapitalization,
             actions: widget.searchAppBarActions,
             keyboardType: widget.searchAppBarKeyboardType,
+            searchTextSize: widget.searchTextSize,
+            searchTextColor: widget.searchTextColor,
             magnifyGlassColor: widget.magnifyInGlassColor),
         body: buildBody(),
         floatingActionButton: widget.searchPageFloatingActionButton,

@@ -1,6 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
 
 abstract class SearcherBase<T> {
+  final TextEditingController textController = TextEditingController();
+  //
   final RxBool _isModSearch = false.obs;
 
   bool get isModSearch => _isModSearch.value;
@@ -24,6 +27,8 @@ abstract class SearcherBase<T> {
   bool get bancoInitValue => bancoInit.value;
 */
   void sortCompareList(List<T> list);
+
+  void clearSearch();
 
   bool? sortCompare = true;
 }

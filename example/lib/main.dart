@@ -151,16 +151,21 @@ class _SearchPageState extends State<SearchPage> {
 
     final realQuery = removeDiacritics(query.toLowerCase());
     // return realTest.contains(realQuery);
-    return realTestName.startsWith(realQuery) || realTestAge.startsWith(realQuery);
+    return realTestName.startsWith(realQuery) ||
+        realTestAge.startsWith(realQuery);
   }
+
+  final GlobalKey<SearchAppBarPageState<Person>> searchAppBarKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
     //return SearchAppBarPage<String>(
     return SearchAppBarPage<Person>(
+      key: searchAppBarKey,
       magnifyGlassColor: Colors.black,
       searchAppBarCenterTitle: true,
       searchAppBarHintText: 'Search for a name',
+      searchTextColor: Colors.red,
       searchAppBarActions: [
         IconButton(
           icon: const Icon(Icons.pageview),
@@ -189,7 +194,8 @@ class _SearchPageState extends State<SearchPage> {
                         itemBuilder: (_, index) {
                           return ListTile(
                             title: Text(list[index].name),
-                            subtitle: Text('Age: ${list[index].age}'),
+                            subtitle: GestureDetector(
+                                child: Text('Age: ${list[index].age}')),
                             onTap: () {
                               Navigator.of(context).pop(list[index]);
                             },
@@ -283,7 +289,8 @@ class _SearchPageState extends State<SearchPage> {
           itemBuilder: (_, index) {
             return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4)),
                 // color: Theme.of(context).primaryColorDark,
                 child: Padding(
                   padding: const EdgeInsets.all(14.0),
@@ -320,7 +327,8 @@ class SearchAppBarStream extends StatefulWidget {
 }
 
 class _SearchAppBarStreamState extends State<SearchAppBarStream> {
-  String _prepareString(String string) => removeDiacritics(string).toLowerCase();
+  String _prepareString(String string) =>
+      removeDiacritics(string).toLowerCase();
 
   bool myWhereFunction(Person person, String? query) {
     if (query == null) {
@@ -371,8 +379,10 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
                 itemCount: list.length,
                 itemBuilder: (_, index) {
                   return Card(
-                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 4),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4)),
                       // color: Theme.of(context).primaryColorDark,
                       child: Padding(
                         padding: const EdgeInsets.all(14.0),
@@ -611,8 +621,10 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
             itemCount: list.length,
             itemBuilder: (_, index) {
               return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)),
                   // color: Theme.of(context).primaryColorDark,
                   child: Padding(
                     padding: const EdgeInsets.all(14.0),
@@ -724,8 +736,10 @@ class TestGetStreamPage extends StatelessWidget {
                   itemCount: list.length,
                   itemBuilder: (_, index) {
                     return Card(
-                        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 4),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4)),
                         child: Padding(
                           padding: const EdgeInsets.all(14.0),
                           child: Row(

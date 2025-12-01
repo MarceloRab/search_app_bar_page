@@ -15,6 +15,8 @@ class SearchAppBar<T> extends StatefulWidget implements PreferredSizeWidget {
   final Color? backgroundColor;
   final Color? searchBackgroundColor;
   final Color? searchElementsColor;
+  final Color? searchTextColor;
+  final double searchTextSize;
   final Color? magnifyGlassColor;
   final String? hintText;
   final bool flattenOnSearch;
@@ -39,6 +41,8 @@ class SearchAppBar<T> extends StatefulWidget implements PreferredSizeWidget {
     this.backgroundColor,
     this.searchBackgroundColor,
     this.searchElementsColor,
+    this.searchTextColor,
+    this.searchTextSize = 18.0,
     this.hintText,
     this.flattenOnSearch = false,
     this.capitalization = TextCapitalization.none,
@@ -47,7 +51,8 @@ class SearchAppBar<T> extends StatefulWidget implements PreferredSizeWidget {
     this.keyboardType,
     this.magnifyGlassColor,
   }) : _searchButtonPosition = (searchButtonPosition != null &&
-                (0 <= searchButtonPosition && searchButtonPosition <= actions.length))
+                (0 <= searchButtonPosition &&
+                    searchButtonPosition <= actions.length))
             ? searchButtonPosition
             : max(actions.length, 0);
 
@@ -86,14 +91,18 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
   void initState() {
     super.initState();
     // Ripple controller (starts AFTER fade completes)
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 150));
-    final curvedRipple = CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic);
+    _controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 150));
+    final curvedRipple =
+        CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic);
     _animation = Tween(begin: 0.0, end: 1.0).animate(curvedRipple);
     _controller.addStatusListener(animationStatusListener);
 
     // Fade-out controller (drives AppBar opacity from 1.0 -> 0.0)
-    _fadeController = AnimationController(vsync: this, duration: const Duration(milliseconds: 50));
-    final curvedFade = CurvedAnimation(parent: _fadeController, curve: Curves.easeOutCubic);
+    _fadeController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 50));
+    final curvedFade =
+        CurvedAnimation(parent: _fadeController, curve: Curves.easeOutCubic);
     _fade = Tween<double>(begin: 1.0, end: 0.0).animate(curvedFade);
 
     // When fade completes, start the ripple
@@ -222,9 +231,10 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
             child: FadeTransition(
               opacity: fadeOut,
               child: AppBar(
-                backgroundColor:
-                    widget.backgroundColor ?? Theme.of(context).appBarTheme.foregroundColor,
-                iconTheme: widget.iconTheme ?? Theme.of(context).appBarTheme.iconTheme,
+                backgroundColor: widget.backgroundColor ??
+                    Theme.of(context).appBarTheme.foregroundColor,
+                iconTheme:
+                    widget.iconTheme ?? Theme.of(context).appBarTheme.iconTheme,
                 title: widget.title,
                 elevation: _elevation,
                 centerTitle: widget.centerTitle,
@@ -288,12 +298,14 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, child) {
-        final containerWidth =
-            (maxWidthHeaderSearch > 0) ? maxWidthHeaderSearch : MediaQuery.of(context).size.width;
+        final containerWidth = (maxWidthHeaderSearch > 0)
+            ? maxWidthHeaderSearch
+            : MediaQuery.of(context).size.width;
         return CustomPaint(
           painter: AppBarPainter(
             containerHeight: widget.preferredSize.height,
-            center: Offset(min(_rippleStartX!, containerWidth), _rippleStartY ?? 0),
+            center:
+                Offset(min(_rippleStartX!, containerWidth), _rippleStartY ?? 0),
             // grow up to ~112% of the container width to emphasize the sweep
             radius: _animation.value * containerWidth * 1.12,
             context: context,
@@ -315,6 +327,10 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
             textCapitalization: widget.capitalization,
             hintText: widget.hintText,
             keyboardType: widget.keyboardType,
+            searchTextColor: widget.searchTextColor ??
+                widget.searchElementsColor ??
+                Theme.of(context).primaryColor,
+            searchTextSize: widget.searchTextSize,
           )
         : const SizedBox.shrink();
   }

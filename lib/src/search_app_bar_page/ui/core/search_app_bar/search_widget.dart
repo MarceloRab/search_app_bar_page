@@ -7,6 +7,8 @@ import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/fil
 
 class SearchWidget<T> extends StatefulWidget implements PreferredSizeWidget {
   final Color? color;
+  final Color? searchTextColor;
+  final double searchTextSize;
   final VoidCallback onCancelSearch;
 
   final TextCapitalization? textCapitalization;
@@ -22,6 +24,8 @@ class SearchWidget<T> extends StatefulWidget implements PreferredSizeWidget {
     required this.onCancelSearch,
     this.onSubmit,
     this.color,
+    this.searchTextColor,
+    this.searchTextSize = 18.0,
     this.textCapitalization,
     this.hintText,
     this.keyboardType = TextInputType.text,
@@ -35,8 +39,7 @@ class SearchWidget<T> extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _SearchWidgetState<T> extends State<SearchWidget<T>> {
-  final TextEditingController textController = TextEditingController();
-
+  //final TextEditingController textController = TextEditingController();
   late Map<Type, Action<Intent>> actions = <Type, Action<Intent>>{
     //NextIntent: _nextAction,
     //PreviousIntent: _previousAction,
@@ -92,7 +95,7 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
         ),
         onPressed: () {
           widget.controller.rxSearch('');
-          textController.text = '';
+          widget.controller.textController.clear();
         },
       );
     });
@@ -123,7 +126,7 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
         actions: actions,
         child: TextField(
             // key: UniqueKey(),
-            controller: textController,
+            controller: widget.controller.textController,
             //textAlign: TextAlign.left,
             //autocorrect: false,
             keyboardType: widget.keyboardType,
@@ -135,7 +138,10 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
             ),
             textCapitalization:
                 widget.textCapitalization ?? TextCapitalization.none,
-            style: const TextStyle(fontSize: 18.0),
+            style: TextStyle(
+                fontSize: widget.searchTextSize,
+                color:
+                    widget.searchTextColor ?? Theme.of(context).primaryColor),
             onChanged: widget.controller.rxSearch.call,
             onSubmitted: (value) {
               if (widget.controller is SearcherPageController<T>) {
@@ -152,13 +158,13 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
 
   TextEditingController _configController() {
     //final TextEditingController textController = TextEditingController();
-    textController.value =
+    widget.controller.textController.value =
         TextEditingValue(text: widget.controller.rxSearch.value);
     //TextEditingValue(text: controller.rxSearch.value ?? '');
-    textController.selection = TextSelection.fromPosition(
-      TextPosition(offset: textController.text.length),
+    widget.controller.textController.selection = TextSelection.fromPosition(
+      TextPosition(offset: widget.controller.textController.text.length),
     );
-    return textController;
+    return widget.controller.textController;
   }
 }
 

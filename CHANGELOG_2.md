@@ -1,3 +1,7 @@
+## [3.0.0-release.8]
+
+- Add configuration for text in search mode
+
 ## [3.0.0-release.7]
 
 - We have updated so that the SearchAppBar can be used inside an alert dialog.
@@ -29,6 +33,11 @@
 ## [3.0.0-release.1]
 
 - Adapting to get package 5.0.0
+-
+
+## [2.5.2]
+
+- Add configuration for text in search mode
 
 ## [2.5.1]
 

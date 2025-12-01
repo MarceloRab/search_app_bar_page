@@ -25,9 +25,9 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
   final double searchAppBarElevation;
   final TextInputType? searchAppBarKeyboardType;
 
-  /// [magnifyinGlassColor] Changes the color of the magnifying glass.
+  /// [magnifyInGlassColor] Changes the color of the magnifying glass.
   /// Keeps IconTheme color by default.
-  final Color? magnifyinGlassColor;
+  final Color? magnifyInGlassColor;
 
   /// [widgetErrorBuilder] Widget built by the Object error returned by the
   /// [listStream] error.
@@ -76,6 +76,8 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
   final bool drawerEnableOpenDragGesture;
   @override
   final bool endDrawerEnableOpenDragGesture;
+  final Color? searchTextColor;
+  final double searchTextSize;
 
   /// Parametros para o SearcherGetController
 
@@ -155,7 +157,9 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
     this.searchAppBaractions = const <Widget>[],
     this.searchAppBarElevation = 4.0,
     this.searchAppBarKeyboardType,
-    this.magnifyinGlassColor,
+    this.magnifyInGlassColor,
+    this.searchTextColor,
+    this.searchTextSize = 18.0,
     this.searchPageFloatingActionButton,
     this.searchPageFloatingActionButtonLocation,
     this.searchPageFloatingActionButtonAnimator,
@@ -195,8 +199,8 @@ class _SearchAppBarPageRefreshState<T>
 
   bool downConnectyWithoutData = false;
 
-  Widget? _widgetConnecty;
-  Widget? _widgetWaiting;
+  late final Widget? _widgetConnecty;
+  late final Widget? _widgetWaiting;
 
   Worker? _worker;
 
@@ -300,7 +304,9 @@ class _SearchAppBarPageRefreshState<T>
             capitalization: widget.searchAppBarcapitalization,
             actions: widget.searchAppBaractions,
             keyboardType: widget.searchAppBarKeyboardType,
-            magnifyGlassColor: widget.magnifyinGlassColor),
+            searchTextSize: widget.searchTextSize,
+            searchTextColor: widget.searchTextColor,
+            magnifyGlassColor: widget.magnifyInGlassColor),
         body: RefreshIndicator(
             key: _refreshIndicatorKey,
             onRefresh: () async {

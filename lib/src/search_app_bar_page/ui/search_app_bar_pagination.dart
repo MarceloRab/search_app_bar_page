@@ -32,9 +32,9 @@ class SearchAppBarPagination<T> extends StatefulWidget
   final double searchAppBarElevation;
   final TextInputType? searchAppBarKeyboardType;
 
-  /// [magnifyinGlassColor] Changes the color of the magnifying glass.
+  /// [magnifyInGlassColor] Changes the color of the magnifying glass.
   /// Keeps IconTheme color by default.
-  final Color? magnifyinGlassColor;
+  final Color? magnifyInGlassColor;
 
   /// [widgetEndScrollPage] shown when the end of the page arrives and
   /// awaits the Future of the data on the next page
@@ -90,6 +90,8 @@ class SearchAppBarPagination<T> extends StatefulWidget
   final bool drawerEnableOpenDragGesture;
   @override
   final bool endDrawerEnableOpenDragGesture;
+  final Color? searchTextColor;
+  final double searchTextSize;
 
   /// [initialData] List to be filtered by Search.
   /// These widgets will not be displayed. [widgetOffConnectyWaiting] and
@@ -163,7 +165,9 @@ class SearchAppBarPagination<T> extends StatefulWidget
     this.searchAppBarActions = const <Widget>[],
     this.searchAppBarElevation = 4.0,
     this.searchAppBarKeyboardType,
-    this.magnifyinGlassColor,
+    this.magnifyInGlassColor,
+    this.searchTextColor,
+    this.searchTextSize = 18.0,
     this.widgetErrorBuilder,
     this.widgetNothingFound,
     this.searchPageFloatingActionButton,
@@ -342,7 +346,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
               _controller.withData(listBuilder.listSearch);
             } else {
               debugPrint('listFullSearchQuery '
-                  '${listBuilder.listSearch.toString()}');
+                  '${listBuilder.listSearch}');
 
               if (listBuilder.listSearch.length -
                       (_controller.pageSearch * _controller.numItemsPage!) ==
@@ -406,7 +410,9 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
             capitalization: widget.searchAppBarCapitalization,
             actions: widget.searchAppBarActions,
             keyboardType: widget.searchAppBarKeyboardType,
-            magnifyGlassColor: widget.magnifyinGlassColor),
+            searchTextSize: widget.searchTextSize,
+            searchTextColor: widget.searchTextColor,
+            magnifyGlassColor: widget.magnifyInGlassColor),
         body: buildBody(),
         floatingActionButton: widget.searchPageFloatingActionButton,
         floatingActionButtonLocation:

@@ -12,7 +12,10 @@ typedef CallBack = void Function();
 typedef CallBackListData<T> = void Function(List<T> listData);
 
 class SearcherPagePaginationController<T>
-    implements SearcherBase<T>, SearcherPaginnationBase<T> {
+    implements SearcherBase<T>, SearcherPaginationBase<T> {
+  @override
+  final TextEditingController textController = TextEditingController();
+  //
   final RxBool _isModSearch = false.obs;
 
   @override
@@ -34,6 +37,14 @@ class SearcherPagePaginationController<T>
 
   @override
   set bancoInitValue(bool value) => bancoInit.value = value;
+
+  @override
+  void clearSearch() {
+    if (isModSearch) {
+      rxSearch.value = '';
+      textController.clear();
+    }
+  }
 
   @override
   bool get bancoInitValue => bancoInit.value;

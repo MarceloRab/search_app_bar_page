@@ -15,6 +15,15 @@ class SearcherPageController<T> extends SearcherBase<T> {
   set isModSearch(bool value) => _isModSearch.value = value;
 
   @override
+  void clearSearch() {
+    if (isModSearch) {
+      rxSearch.value = '';
+      textController.clear();
+      //isModSearch = false;
+    }
+  }
+
+  @override
   final RxString rxSearch = ''.obs;
 
   @override

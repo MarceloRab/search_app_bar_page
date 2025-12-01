@@ -27,6 +27,8 @@ class SearchAppBarPage<T> extends StatefulWidget
   final double searchAppBarElevation;
   final TextInputType? searchAppBarKeyboardType;
   final Color? magnifyGlassColor;
+  final Color? searchTextColor;
+  final double searchTextSize;
 
   /// Parameters Scaffold
   @override
@@ -143,6 +145,8 @@ class SearchAppBarPage<T> extends StatefulWidget
       this.searchAppBarElevation = 4.0,
       this.searchAppBarKeyboardType,
       this.magnifyGlassColor,
+      this.searchTextColor,
+      this.searchTextSize = 18.0,
 
       /// Parameters para o Scaffold
 
@@ -167,15 +171,19 @@ class SearchAppBarPage<T> extends StatefulWidget
       this.restorationId});
 
   @override
-  _SearchAppBarPageState<T> createState() => _SearchAppBarPageState<T>();
+  SearchAppBarPageState<T> createState() => SearchAppBarPageState<T>();
 }
 
-class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
+class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
   late SearcherPageController<T> _controller;
 
   //Worker _worker;
 
-  _SearchAppBarPageState();
+  SearchAppBarPageState();
+
+  void clearSearch() {
+    _controller.clearSearch();
+  }
 
   @override
   void initState() {
@@ -260,6 +268,8 @@ class _SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
             capitalization: widget.searchAppBarCapitalization,
             actions: widget.searchAppBarActions,
             keyboardType: widget.searchAppBarKeyboardType,
+            searchTextSize: widget.searchTextSize,
+            searchTextColor: widget.searchTextColor,
             magnifyGlassColor: widget.magnifyGlassColor),
         body: Obx(() {
           if (widget.rxBoolAuth?.auth.value == false) {
