@@ -162,6 +162,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     //return SearchAppBarPage<String>(
     return SearchAppBarPage<Person>(
+      autoFocus: false,
       key: searchAppBarKey,
       magnifyGlassColor: Colors.black,
       searchAppBarCenterTitle: true,

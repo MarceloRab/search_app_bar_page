@@ -116,6 +116,8 @@ class SearchAppBarPage<T> extends StatefulWidget
 
   final OnSubmitted<T>? onSubmit;
 
+  final bool autoFocus;
+
   const SearchAppBarPage(
       {super.key,
 
@@ -130,6 +132,7 @@ class SearchAppBarPage<T> extends StatefulWidget
       this.stringFilter,
       this.whereFilter,
       this.rxBoolAuth,
+      this.autoFocus = true,
 
       /// Parameters do SearchAppBar
       this.searchAppBarTitle,
@@ -270,6 +273,7 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
             keyboardType: widget.searchAppBarKeyboardType,
             searchTextSize: widget.searchTextSize,
             searchTextColor: widget.searchTextColor,
+            autoFocus: widget.autoFocus,
             magnifyGlassColor: widget.magnifyGlassColor),
         body: Obx(() {
           if (widget.rxBoolAuth?.auth.value == false) {

@@ -140,6 +140,8 @@ class SearchAppBarPageStream<T> extends StatefulWidget
 
   //final OnSubmitted<T>? onSubmit;
 
+  final bool autoFocus;
+
   const SearchAppBarPageStream({
     super.key,
     required this.listStream,
@@ -190,6 +192,7 @@ class SearchAppBarPageStream<T> extends StatefulWidget
     this.drawerEnableOpenDragGesture = true,
     this.endDrawerEnableOpenDragGesture = true,
     this.widgetWaiting,
+    this.autoFocus = true,
   });
 
   @override
@@ -316,6 +319,7 @@ class _SearchAppBarPageStreamState<T> extends State<SearchAppBarPageStream<T>> {
             keyboardType: widget.searchAppBarKeyboardType,
             searchTextSize: widget.searchTextSize,
             searchTextColor: widget.searchTextColor,
+            autoFocus: widget.autoFocus,
             magnifyGlassColor: widget.magnifyInGlassColor),
         body: buildBody(),
         floatingActionButton: widget.searchPageFloatingActionButton,

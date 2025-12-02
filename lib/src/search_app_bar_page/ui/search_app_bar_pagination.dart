@@ -139,6 +139,8 @@ class SearchAppBarPagination<T> extends StatefulWidget
 
   //final OnSubmitted<T>? onSubmit;
 
+  final bool autoFocus;
+
   const SearchAppBarPagination({
     super.key,
     required this.futureFetchPageItems,
@@ -190,6 +192,7 @@ class SearchAppBarPagination<T> extends StatefulWidget
     this.drawerEnableOpenDragGesture = true,
     this.endDrawerEnableOpenDragGesture = true,
     this.widgetWaiting,
+    this.autoFocus = true,
   });
 
   @override
@@ -412,6 +415,7 @@ class _SearchAppBarPaginationState<T> extends State<SearchAppBarPagination<T>> {
             keyboardType: widget.searchAppBarKeyboardType,
             searchTextSize: widget.searchTextSize,
             searchTextColor: widget.searchTextColor,
+            autoFocus: widget.autoFocus,
             magnifyGlassColor: widget.magnifyInGlassColor),
         body: buildBody(),
         floatingActionButton: widget.searchPageFloatingActionButton,

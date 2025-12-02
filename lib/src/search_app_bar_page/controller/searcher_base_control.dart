@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
 
 abstract class SearcherBase<T> {
   VoidCallback? onCancelSearch;
+
+  bool autoFocus = true;
   //
   final RxBool _isModSearch = false.obs;
 

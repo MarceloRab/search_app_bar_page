@@ -29,6 +29,8 @@ class SearchAppBar<T> extends StatefulWidget implements PreferredSizeWidget {
 
   final OnSubmitted<T>? onSubmit;
 
+  final bool autoFocus;
+
   SearchAppBar({
     //@required this.searcher,
     super.key,
@@ -50,6 +52,7 @@ class SearchAppBar<T> extends StatefulWidget implements PreferredSizeWidget {
     int? searchButtonPosition,
     this.keyboardType,
     this.magnifyGlassColor,
+    this.autoFocus = true,
   }) : _searchButtonPosition = (searchButtonPosition != null &&
                 (0 <= searchButtonPosition &&
                     searchButtonPosition <= actions.length))

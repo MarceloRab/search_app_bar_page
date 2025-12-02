@@ -37,7 +37,6 @@
 ## [3.0.0-release.1]
 
 - Adapting to get package 5.0.0
--
 
 ## [2.5.2]
 

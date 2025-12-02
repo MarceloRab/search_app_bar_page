@@ -28,6 +28,9 @@ class SearcherPagePaginationController<T>
   set isModSearch(bool value) => _isModSearch.value = value;
 
   @override
+  bool autoFocus = true;
+
+  @override
   bool? sortCompare = true;
 
   @override

@@ -1,3 +1,47 @@
+## [3.0.2-release.10]
+
+- Fix: Clear search when navigating to a different page. Search is reactivated when returning to the page. Use `searchAppBarKey.currentState!.clearSearch();` to clear the search, leveraging `final GlobalKey<SearchAppBarPageState<Person>> searchAppBarKey = GlobalKey();`.
+
+## [3.0.1-release.9]
+
+- Add the command to clear the Search text field. GlobalKey< SearchAppBarPageState< Person>> searchAppBarKey = GlobalKey(); Use searchAppBarKey.currentState!.clearSearch(); when desired.
+
+## [3.0.0-release.8]
+
+- Add configuration for text in search mode
+
+## [3.0.0-release.7]
+
+- We have updated so that the SearchAppBar can be used inside an alert dialog.
+
+## [3.0.0-release.6]
+
+- see [2.4.2] below.
+
+## [3.0.0-release.5]
+
+- see [2.4.2] below.
+
+## [3.0.0-release.4]
+
+- see [2.4.2] below.
+
+## [3.0.0-release.3]
+
+- Add [whereFilter] - see below [2.4.2]
+
+## [3.0.0-release.1]
+
+- Adapting to get package 5.0.0
+
+## [3.0.0-release.2]
+
+- Adapting to get package 5.0.0
+
+## [3.0.0-release.1]
+
+- Adapting to get package 5.0.0
+
 ## [2.5.4]
 
 - Fix: Clear search when navigating to a different page. Search is reactivated when returning to the page. Use `searchAppBarKey.currentState!.clearSearch();` to clear the search, leveraging `final GlobalKey<SearchAppBarPageState<Person>> searchAppBarKey = GlobalKey();`.

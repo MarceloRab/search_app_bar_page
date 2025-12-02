@@ -131,6 +131,8 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
   final Color? refreshBackgroundColor;
   final RefreshIndicatorTriggerMode refreshTriggerMode;
 
+  final bool autoFocus;
+
   //final OnSubmitted<T>? onSubmit;
 
   const SearchAppBarPageRefresh({
@@ -184,6 +186,7 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
     this.refreshDisplacement = 40.0,
     this.refreshColor,
     this.refreshTriggerMode = RefreshIndicatorTriggerMode.onEdge,
+    this.autoFocus = true,
   }) : super(key: key);
 
   @override
@@ -306,6 +309,7 @@ class _SearchAppBarPageRefreshState<T>
             keyboardType: widget.searchAppBarKeyboardType,
             searchTextSize: widget.searchTextSize,
             searchTextColor: widget.searchTextColor,
+            autoFocus: widget.autoFocus,
             magnifyGlassColor: widget.magnifyInGlassColor),
         body: RefreshIndicator(
             key: _refreshIndicatorKey,

@@ -18,6 +18,9 @@ class SearcherPageRefreshController<T> extends SearcherBase<T>
   set isModSearch(bool value) => _isModSearch.value = value;
 
   @override
+  bool autoFocus = true;
+
+  @override
   final rxSearch = ''.obs;
   @override
   bool? sortCompare = true;

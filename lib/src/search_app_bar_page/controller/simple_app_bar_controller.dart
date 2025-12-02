@@ -36,6 +36,9 @@ class SimpleAppBarController<T> implements SearcherBase<T> {
   set isModSearch(bool value) => _isModSearch.value = value;
 
   @override
+  bool autoFocus = true;
+
+  @override
   VoidCallback? onCancelSearch;
 
   @override

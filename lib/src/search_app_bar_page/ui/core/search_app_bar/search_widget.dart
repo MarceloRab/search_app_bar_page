@@ -19,6 +19,8 @@ class SearchWidget<T> extends StatefulWidget implements PreferredSizeWidget {
 
   final OnSubmitted<T>? onSubmit;
 
+  final bool autoFocus;
+
   const SearchWidget({
     required this.controller,
     required this.onCancelSearch,
@@ -29,6 +31,7 @@ class SearchWidget<T> extends StatefulWidget implements PreferredSizeWidget {
     this.textCapitalization,
     this.hintText,
     this.keyboardType = TextInputType.text,
+    this.autoFocus = true,
   });
 
   @override
@@ -130,7 +133,7 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
             //textAlign: TextAlign.left,
             //autocorrect: false,
             keyboardType: widget.keyboardType,
-            autofocus: true,
+            autofocus: widget.autoFocus,
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: const EdgeInsets.only(top: 12.0),
