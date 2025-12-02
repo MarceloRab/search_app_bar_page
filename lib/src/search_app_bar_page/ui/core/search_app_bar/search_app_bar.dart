@@ -336,6 +336,7 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
                 widget.searchElementsColor ??
                 Theme.of(context).primaryColor,
             searchTextSize: widget.searchTextSize,
+            autoFocus: widget.autoFocus,
           )
         : const SizedBox.shrink();
   }

@@ -1,3 +1,15 @@
+## [3.0.2-release.13]
+
+- add auto focus to search field.
+
+## [3.0.2-release.11]
+
+- add auto focus to search field.
+
+## [3.0.2-release.10]
+
+- Fix: Clear search when navigating to a different page. Search is reactivated when returning to the page. Use `searchAppBarKey.currentState!.clearSearch();` to clear the search, leveraging `final GlobalKey<SearchAppBarPageState<Person>> searchAppBarKey = GlobalKey();`.
+
 ## [3.0.1-release.9]
 
 - Add the command to clear the Search text field. GlobalKey< SearchAppBarPageState< Person>> searchAppBarKey = GlobalKey(); Use searchAppBarKey.currentState!.clearSearch(); when desired.
