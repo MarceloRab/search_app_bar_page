@@ -15,6 +15,9 @@ class SearcherPageController<T> extends SearcherBase<T> {
   set isModSearch(bool value) => _isModSearch.value = value;
 
   @override
+  VoidCallback? onCancelSearch;
+
+  @override
   bool autoFocus = true;
 
   @override
