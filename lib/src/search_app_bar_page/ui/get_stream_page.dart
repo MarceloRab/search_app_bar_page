@@ -57,7 +57,7 @@ class GetStreamPage<T> extends StatefulWidget {
 
   ///AppBar parameters
 
-  final Color? appBarbackgroundColor;
+  final Color? appBarBackgroundColor;
   final Widget? title;
   final bool centerTitle;
   final IconThemeData? iconTheme;
@@ -77,7 +77,7 @@ class GetStreamPage<T> extends StatefulWidget {
   ///[iconConnectyOffAppBar]`.
 
   const GetStreamPage(
-      {Key? key,
+      {super.key,
       required this.stream,
       required this.obxWidgetBuilder,
       this.initialData,
@@ -102,16 +102,14 @@ class GetStreamPage<T> extends StatefulWidget {
       this.drawerEdgeDragWidth,
       this.drawerEnableOpenDragGesture = true,
       this.endDrawerEnableOpenDragGesture = true,
-      this.appBarbackgroundColor,
+      this.appBarBackgroundColor,
       this.title,
       this.centerTitle = false,
       this.elevation = 4.0,
       this.actions = const <Widget>[],
       this.iconTheme,
       this.iconConnectyOffAppBar,
-      this.iconConnectyOffAppBarColor})
-      //: assert(S is List<DisposableInterface>),
-      : super(key: key);
+      this.iconConnectyOffAppBarColor});
 
   @override
   _GetStreamPageState<T> createState() => _GetStreamPageState<T>();
@@ -124,15 +122,15 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
 
   Widget? _widgetWaiting;
 
-  bool downConnectyWithoutData = false;
+  bool downConnectWithoutData = false;
 
-  Widget? _widgetConnecty;
+  late Widget? _widgetConnect;
 
   StreamSubscription? _subscriptionConnecty;
 
   bool haveData = false;
 
-  Widget? _iconConnectyOffAppBar;
+  Widget? _iconConnectOffAppBar;
 
   @override
   void initState() {
@@ -186,7 +184,7 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
       } else {
         //objesctStream ??= data;
         haveData = true;
-        downConnectyWithoutData = false;
+        downConnectWithoutData = false;
         _controller.afterData(data);
       }
     }, onError: (Object error) {
@@ -206,17 +204,17 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
   }
 
   AppBar _buildAppBar(BuildContext context) {
-    final List<Widget>? increasedActions = [];
-    increasedActions!.addAll(widget.actions);
+    final List<Widget> increasedActions = [];
+    increasedActions.addAll(widget.actions);
 
-    if (_iconConnectyOffAppBar != null) {
-      increasedActions.insert(0, _iconConnectyOffAppBar!);
+    if (_iconConnectOffAppBar != null) {
+      increasedActions.insert(0, _iconConnectOffAppBar!);
     }
 
     return AppBar(
       backgroundColor:
           //widget.appBarbackgroundColor ?? Theme.of(context).appBarTheme.color,
-          widget.appBarbackgroundColor ??
+          widget.appBarBackgroundColor ??
               Theme.of(context).appBarTheme.foregroundColor,
       iconTheme: widget.iconTheme ?? Theme.of(context).appBarTheme.iconTheme,
       title: widget.title,
@@ -231,9 +229,9 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
       if (widget.rxBoolAuth?.auth.value == false) {
         return widget.rxBoolAuth!.authFalseWidget();
       }
-      if (downConnectyWithoutData) {
+      if (downConnectWithoutData) {
         /// Apenas anuncia quando nao tem a primeira data e esta sem conexao
-        return _widgetConnecty!;
+        return _widgetConnect!;
       }
 
       if (_controller.snapshot.connectionState == ConnectionState.waiting) {

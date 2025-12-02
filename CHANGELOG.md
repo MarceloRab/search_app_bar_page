@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.0.2-release.16]
+
+- Fix refresh screen when returning to Search. Tip: use [onSubmit] for the enter key on desktop or keyboard on mobile.
+
 ## [3.0.2-release.15]
 
 - minimal fix
@@ -59,6 +63,10 @@
 ## [3.0.0-release.1]
 
 - Adapting to get package 5.0.0
+
+## [2.5.9]
+
+- Fix refresh screen when returning to Search. Tip: use [onSubmit] for the enter key on desktop or keyboard on mobile.
 
 ## [2.5.8]
 

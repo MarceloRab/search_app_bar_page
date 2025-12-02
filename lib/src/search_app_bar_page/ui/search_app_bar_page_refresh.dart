@@ -136,7 +136,7 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
   //final OnSubmitted<T>? onSubmit;
 
   const SearchAppBarPageRefresh({
-    Key? key,
+    super.key,
     required this.functionRefresh,
     required this.obxListBuilder,
     //this.onSubmit,
@@ -187,7 +187,7 @@ class SearchAppBarPageRefresh<T> extends StatefulWidget
     this.refreshColor,
     this.refreshTriggerMode = RefreshIndicatorTriggerMode.onEdge,
     this.autoFocus = true,
-  }) : super(key: key);
+  });
 
   @override
   State<SearchAppBarPageRefresh<T>> createState() =>

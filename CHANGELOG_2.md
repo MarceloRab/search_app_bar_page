@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.0.2-release.16]
+
+- Fix refresh screen when returning to Search. Tip: use [onSubmit] for the enter key on desktop or keyboard on mobile.
+
+## [3.0.2-release.15]
+
+- minimal fix
+
 ## [3.0.2-release.14]
 
 - minimal fix

@@ -30,14 +30,13 @@ class GetStreamWidget<T> extends StatefulWidget {
   final T? initialData;
 
   const GetStreamWidget(
-      {Key? key,
+      {super.key,
       required this.stream,
       required this.obxWidgetBuilder,
       this.widgetErrorBuilder,
       this.widgetWaiting,
       this.initialData,
-      this.rxBoolAuth})
-      : super(key: key);
+      this.rxBoolAuth});
 
   @override
   _GetStreamWidgetState<T> createState() => _GetStreamWidgetState<T>();

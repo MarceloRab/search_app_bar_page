@@ -2,7 +2,6 @@ include: package:lint/analysis_options.yaml
 
 linter:
   rules:
-
     # Use parameter order as in json response
     always_put_required_named_parameters_first: false
     prefer_function_declarations_over_variables: false
@@ -42,7 +41,3 @@ linter:
 
     # Blindly follow the Flutter code style, which prefers types everywhere
     always_specify_types: false
-
-    # Back to the 80s
-    lines_longer_than_80_chars: true
-

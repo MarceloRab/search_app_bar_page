@@ -196,8 +196,7 @@ class _SearchPageState extends State<SearchPage> {
                         itemBuilder: (_, index) {
                           return ListTile(
                             title: Text(list[index].name),
-                            subtitle: GestureDetector(
-                                child: Text('Age: ${list[index].age}')),
+                            subtitle: Text('Age: ${list[index].age}'),
                             onTap: () {
                               Navigator.of(context).pop(list[index]);
                             },
@@ -229,7 +228,7 @@ class _SearchPageState extends State<SearchPage> {
       ///
       onSubmit: (query, listFiltered) {
         debugPrint('🚀 main.dart - query - $query');
-        debugPrint('🚀 main.dart - listFiltered - ${listFiltered.toString()}');
+        debugPrint('🚀 main.dart - listFiltered - $listFiltered');
       },
 
       /// Add list. Use setState if your list changes.
@@ -274,7 +273,6 @@ class _SearchPageState extends State<SearchPage> {
         ///----------------------------------------------------
         /// Changes to the rxList will also rebuild the widget.
         ///----------------------------------------------------
-        print(' TEST -- ${controll_1.rxList.length.toString()} ');
 
         ///-------------------------------------------------------------
         /// Changes to the filtered list will also reconstruct the body.
@@ -299,15 +297,9 @@ class _SearchPageState extends State<SearchPage> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: TextButton(
-                          onPressed: () {
-                            searchAppBarKey.currentState?.clearSearch();
-                            Get.to(() => const MyWidget());
-                          },
-                          child: Text(
-                            'Name: ${list[index].name}',
-                            style: const TextStyle(fontSize: 16),
-                          ),
+                        child: Text(
+                          'Name: ${list[index].name}',
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ),
                       Expanded(
@@ -796,7 +788,7 @@ class Test2Controller extends GetxController {
 
   set changeAuth(bool value) => rxAuth.value = value;
 
-  get isAuth => rxAuth.value;
+  //get isAuth => rxAuth.value;
 
   final rxList = <Person>[].obs;
 }
