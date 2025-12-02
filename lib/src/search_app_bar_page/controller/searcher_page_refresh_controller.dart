@@ -21,6 +21,9 @@ class SearcherPageRefreshController<T> extends SearcherBase<T>
   bool autoFocus = true;
 
   @override
+  VoidCallback? onCancelSearch;
+
+  @override
   final rxSearch = ''.obs;
   @override
   bool? sortCompare = true;

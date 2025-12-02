@@ -1,3 +1,13 @@
+# Changelog
+
+## [3.0.2-release.15]
+
+- minimal fix
+
+## [3.0.2-release.14]
+
+- minimal fix
+
 ## [3.0.2-release.13]
 
 - add auto focus to search field.
@@ -38,7 +48,7 @@
 
 - Add [whereFilter] - see below [2.4.2]
 
-## [3.0.0-release.1]
+## [3.0.0-release.1] (duplicate, remove or rename)
 
 - Adapting to get package 5.0.0
 
@@ -49,6 +59,14 @@
 ## [3.0.0-release.1]
 
 - Adapting to get package 5.0.0
+
+## [2.5.8]
+
+- minimal fix
+
+## [2.5.7]
+
+- minimal fix
 
 ## [2.5.6]
 

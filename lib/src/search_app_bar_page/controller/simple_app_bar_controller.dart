@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:get/state_manager.dart';
 import 'package:search_app_bar_page/search_app_bar_page.dart';
