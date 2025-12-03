@@ -15,8 +15,6 @@ class SearcherPagePaginationController<T>
     implements SearcherBase<T>, SearcherPaginationBase<T> {
   //
 
-  @override
-  VoidCallback? onCancelSearch;
   final RxBool _isModSearch = false.obs;
 
   @override
@@ -26,6 +24,12 @@ class SearcherPagePaginationController<T>
 
   @override
   set isModSearch(bool value) => _isModSearch.value = value;
+
+  @override
+  VoidCallback? onCancelSearch;
+
+  @override
+  ValueChanged<TapUpDetails?>? initShowSearch;
 
   @override
   bool autoFocus = true;

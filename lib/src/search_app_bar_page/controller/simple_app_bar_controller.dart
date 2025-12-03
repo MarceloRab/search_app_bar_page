@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
 import 'package:search_app_bar_page/search_app_bar_page.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_base_control.dart';
@@ -39,6 +40,9 @@ class SimpleAppBarController<T> implements SearcherBase<T> {
 
   @override
   VoidCallback? onCancelSearch;
+
+  @override
+  ValueChanged<TapUpDetails?>? initShowSearch;
 
   @override
   bool? sortCompare = true;

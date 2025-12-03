@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_base_control.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_page_controller.dart';
@@ -43,28 +42,6 @@ class SearchWidget<T> extends StatefulWidget implements PreferredSizeWidget {
 
 class _SearchWidgetState<T> extends State<SearchWidget<T>> {
   final TextEditingController textController = TextEditingController();
-  late Map<Type, Action<Intent>> actions = <Type, Action<Intent>>{
-    //NextIntent: _nextAction,
-    //PreviousIntent: _previousAction,
-    UnFocusIntent: _unFocusAction,
-  };
-
-  late final KCallbackAction<UnFocusIntent> _unFocusAction;
-
-  @override
-  void initState() {
-    /* if (widget.focusField == null) {
-      widget.focusField == FocusNode();
-    } */
-    _unFocusAction =
-        KCallbackAction<UnFocusIntent>(onInvoke: handleUnFocusKeyPress);
-    super.initState();
-  }
-
-  void handleUnFocusKeyPress(UnFocusIntent intent) {
-    //widget.focusField!.unfocus();
-    widget.onCancelSearch();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +56,7 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
           _buildBackButton(),
           Expanded(child: _buildTextField()),
           _buildClearButton(),
+          const SizedBox(width: 8),
         ],
       ),
     );
@@ -114,49 +92,37 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
 
   Widget _buildTextField() {
     _configController();
-    return Shortcuts(
-      shortcuts: <LogicalKeySet, Intent>{
-        // LogicalKeySet(LogicalKeyboardKey.tab): const NextIntent(true),
 
-        LogicalKeySet(LogicalKeyboardKey.escape): const UnFocusIntent(),
-        //LogicalKeySet(LogicalKeyboardKey.arrowDown): const NextIntent(false),
-        //LogicalKeySet(LogicalKeyboardKey.arrowUp): const PreviousIntent(false),
-        /* LogicalKeySet(LogicalKeyboardKey.enter): widget.onSubmit != null
-            ? widget.onSubmit!(widget.controller.rxSearch.value, widget.controller.listSearch)
-            : null, */
-      },
-      child: Actions(
-        actions: actions,
-        child: TextField(
-            // key: UniqueKey(),
-            controller: textController,
-            //textAlign: TextAlign.left,
-            //autocorrect: false,
-            keyboardType: widget.keyboardType,
-            autofocus: widget.autoFocus,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.only(top: 12.0),
-              hintText: widget.hintText,
-            ),
-            textCapitalization:
-                widget.textCapitalization ?? TextCapitalization.none,
-            style: TextStyle(
-                fontSize: widget.searchTextSize,
-                color:
-                    widget.searchTextColor ?? Theme.of(context).primaryColor),
-            onChanged: widget.controller.rxSearch.call,
-            onSubmitted: (value) {
-              if (widget.controller is SearcherPageController<T>) {
-                widget.onSubmit?.call(
-                    value,
-                    (widget.controller as SearcherPageController).listSearch
-                        as List<T>);
-                widget.onCancelSearch();
-              }
-            }),
-      ),
-    );
+    return TextField(
+        // key: UniqueKey(),
+        controller: textController,
+        focusNode: widget.controller is SearcherPageController<T>
+            ? (widget.controller as SearcherPageController<T>).focusSearch
+            : null,
+        //textAlign: TextAlign.left,
+        //autocorrect: false,
+        keyboardType: widget.keyboardType,
+        autofocus: widget.autoFocus,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.only(top: 12.0),
+          hintText: widget.hintText,
+        ),
+        textCapitalization:
+            widget.textCapitalization ?? TextCapitalization.none,
+        style: TextStyle(
+            fontSize: widget.searchTextSize,
+            color: widget.searchTextColor ?? Theme.of(context).primaryColor),
+        onChanged: widget.controller.rxSearch.call,
+        onSubmitted: (value) {
+          if (widget.controller is SearcherPageController<T>) {
+            widget.onSubmit?.call(
+                value,
+                (widget.controller as SearcherPageController).listSearch
+                    as List<T>);
+            widget.onCancelSearch();
+          }
+        });
   }
 
   TextEditingController _configController() {
@@ -169,15 +135,10 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
     );
     return textController;
   }
-}
 
-class KCallbackAction<T extends Intent> extends CallbackAction<T> {
-  // ignore: use_super_parameters
-  KCallbackAction({required void Function(T) onInvoke})
-      : super(onInvoke: onInvoke);
-}
-
-class UnFocusIntent extends Intent {
-  const UnFocusIntent();
-// ignore: eol_at_end_of_file
+  @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
+  }
 }

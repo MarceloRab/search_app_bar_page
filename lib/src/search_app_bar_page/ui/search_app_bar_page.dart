@@ -1,14 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/state_manager.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_page_controller.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
-import 'package:search_app_bar_page/src/search_app_bar_page/ui/seacher_widget_page_base.dart';
-
-import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_page_controller.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/core/search_app_bar/search_app_bar.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/infra/rx_get_type.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/ui/seacher_widget_page_base.dart';
 
 class SearchAppBarPage<T> extends StatefulWidget
     implements SearcherScaffoldBase {
@@ -114,9 +113,15 @@ class SearchAppBarPage<T> extends StatefulWidget
   /// status to have reactivity.
   final RxBoolAuth? rxBoolAuth;
 
+  /// [onSubmit] Function called when submitting the search.
+  /// Use the Enter key to submit the search.
   final OnSubmitted<T>? onSubmit;
 
+  /// [autoFocus] Whether to focus the search field automatically when
   final bool autoFocus;
+
+  /// [widthLargeScreenThreshold] Width threshold to consider a large screen layout.
+  final double widthLargeScreenThreshold;
 
   const SearchAppBarPage(
       {super.key,
@@ -133,6 +138,7 @@ class SearchAppBarPage<T> extends StatefulWidget
       this.whereFilter,
       this.rxBoolAuth,
       this.autoFocus = true,
+      this.widthLargeScreenThreshold = 1100.0,
 
       /// Parameters do SearchAppBar
       this.searchAppBarTitle,
@@ -180,7 +186,31 @@ class SearchAppBarPage<T> extends StatefulWidget
 class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
   late SearcherPageController<T> _controller;
 
-  //Worker _worker;
+  late final bool Function(KeyEvent) _keyboardHandler;
+  bool _escapeKeyHeldDown = false;
+
+  bool _handleGlobalKeyEvent(KeyEvent event) {
+    if (event.logicalKey != LogicalKeyboardKey.escape) {
+      return false;
+    }
+    if (event is KeyUpEvent) {
+      _escapeKeyHeldDown = false;
+      return false;
+    }
+    if (event is! KeyDownEvent || _escapeKeyHeldDown) {
+      return false;
+    }
+
+    _escapeKeyHeldDown = true;
+
+    if (isModSearch) {
+      clearSearch();
+    } else {
+      initShowSearch();
+      _controller.focusSearch.requestFocus();
+    }
+    return false;
+  }
 
   SearchAppBarPageState();
 
@@ -188,8 +218,15 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
     _controller.onCancelSearch?.call();
   }
 
+  void initShowSearch() {
+    _controller.initShowSearch?.call(null);
+  }
+
+  bool get isModSearch => _controller.isModSearch;
+
   @override
   void initState() {
+    //_escapeAction = KCallbackAction<EscapeIntent>(onInvoke: _handleUnFocusKeyPress);
     super.initState();
     /*_controller = Get.put(SearcherPageController<T>(
         listFull: widget.listFull,
@@ -211,6 +248,9 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
         filtersType: widget.filtersType)
       ..initFilters()
       ..onReady();
+
+    _keyboardHandler = _handleGlobalKeyEvent;
+    HardwareKeyboard.instance.addHandler(_keyboardHandler);
   }
 
   @override
@@ -252,10 +292,13 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
 
   @override
   void dispose() {
-    //TODO: para 5.0
+    HardwareKeyboard.instance.removeHandler(_keyboardHandler);
     _controller.onClose();
     super.dispose();
   }
+
+  bool get isSmallOrMobileScreen =>
+      GetPlatform.isMobile || Get.width < widget.widthLargeScreenThreshold;
 
   @override
   Widget build(BuildContext context) {
@@ -308,4 +351,14 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
         drawerEnableOpenDragGesture: widget.drawerEnableOpenDragGesture,
         endDrawerEnableOpenDragGesture: widget.endDrawerEnableOpenDragGesture);
   }
+}
+
+class KCallbackAction<T extends Intent> extends CallbackAction<T> {
+  // ignore: use_super_parameters
+  KCallbackAction({required void Function(T) onInvoke})
+      : super(onInvoke: onInvoke);
+}
+
+class EscapeIntent extends Intent {
+  const EscapeIntent();
 }

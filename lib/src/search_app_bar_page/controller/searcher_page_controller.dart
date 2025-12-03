@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_base_control.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
@@ -16,6 +17,9 @@ class SearcherPageController<T> extends SearcherBase<T> {
 
   @override
   VoidCallback? onCancelSearch;
+
+  @override
+  ValueChanged<TapUpDetails?>? initShowSearch;
 
   @override
   bool autoFocus = true;
@@ -54,6 +58,8 @@ class SearcherPageController<T> extends SearcherBase<T> {
   Worker? _worker;
 
   //StringFilter<T> get _defaultFilter => (T value) => value as String;
+
+  final focusSearch = FocusNode();
 
   SearcherPageController({
     required this.listFull,
@@ -166,6 +172,7 @@ class SearcherPageController<T> extends SearcherBase<T> {
 
   FutureOr onClose() {
     _worker?.dispose();
+    focusSearch.dispose();
     //_isModSearch.close();
     //rxSearch.close();
     //listSearch.close();

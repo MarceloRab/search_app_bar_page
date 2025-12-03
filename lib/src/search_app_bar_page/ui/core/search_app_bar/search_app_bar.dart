@@ -82,13 +82,12 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
   late Animation<double> _fade;
   double? _elevation;
   //Widget? _iconConnectyOffAppBar;
+  //late final void Function(RawKeyEvent) _keyboardListener;
 
   @override
   bool get wantKeepAlive => true;
 
   double maxWidthHeaderSearch = 0;
-
-  //final ProductsController controller = Modular.get<ProductsController>();
 
   @override
   void initState() {
@@ -117,6 +116,7 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
     _elevation = widget.elevation;
 
     widget.controller.onCancelSearch = cancelSearch;
+    widget.controller.initShowSearch = onSearchTapUp;
   }
 
   /* @override
@@ -137,10 +137,19 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
     }
   }
 
-  void onSearchTapUp(TapUpDetails details) {
+  void onSearchTapUp(TapUpDetails? details) {
     // Use local coordinates so the ripple is relative to the AppBar/dialog
-    _rippleStartX = details.localPosition.dx;
-    _rippleStartY = details.localPosition.dy;
+    // If details is null, start ripple from the left edge (x=0) and vertically centered (y=AppBar height/2)
+
+    if (widget.controller.isModSearch) return;
+    if (details == null) {
+      _rippleStartX = 0;
+      _rippleStartY = widget.preferredSize.height / 2;
+    } else {
+      _rippleStartX = details.localPosition.dx;
+      _rippleStartY = details.localPosition.dy;
+    }
+
     if (_fadeController.isAnimating || _controller.isAnimating) return;
     // Start sequence: fade -> ripple (ripple will be started by fade's listener)
     _fadeController.forward(from: 0.0);
@@ -198,6 +207,7 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
 
   @override
   void dispose() {
+    //RawKeyboard.instance.removeListener(_keyboardListener);
     _controller.dispose();
     _fadeController.dispose();
     super.dispose();

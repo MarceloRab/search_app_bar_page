@@ -2,10 +2,8 @@
 //import 'package:diacritic/diacritic.dart';
 
 import 'package:diacritic/diacritic.dart';
-import 'package:example/page_test.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:search_app_bar_page/search_app_bar_page.dart';
 
 void main() {

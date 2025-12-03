@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.2-release.17]
+
+- use the Esc key on the keyboard in web mode to enter and exit Search mode.
+- use `searchAppBarKey.currentState!.initShowSearch()` to open the search
+- use `searchAppBarKey.currentState!.isModoSearch` even without filtering anything
+- use [widthLargeScreenThreshold] for using the escape key to enter and exit isModoSearch
+
 ## [3.0.2-release.16]
 
 - Fix refresh screen when returning to Search. Tip: use [onSubmit] for the enter key on desktop or keyboard on mobile.
