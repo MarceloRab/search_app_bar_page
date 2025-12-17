@@ -117,6 +117,9 @@ class SearchAppBarPage<T> extends StatefulWidget
   /// Use the Enter key to submit the search.
   final OnSubmitted<T>? onSubmit;
 
+  /// [onEnter] Triggers highlightIndex when isModSearch is false.
+  final OnEnter<T>? onEnter;
+
   /// [autoFocus] Whether to focus the search field automatically when
   final bool autoFocus;
 
@@ -130,6 +133,7 @@ class SearchAppBarPage<T> extends StatefulWidget
       required this.listFull,
       required this.obxListBuilder,
       this.onSubmit,
+      this.onEnter,
       this.sortCompare = true,
       this.filtersType,
       this.filter,
@@ -190,9 +194,64 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
   bool _escapeKeyHeldDown = false;
 
   bool _handleGlobalKeyEvent(KeyEvent event) {
+    if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+      if (event is KeyDownEvent) {
+        _controller.incrementSelection();
+      }
+      return true; // Use true se quiser capturar o evento e evitar propagação
+    } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+      if (event is KeyDownEvent) {
+        _controller.decrementSelection();
+      }
+      return true;
+    } /* else if (event.logicalKey == LogicalKeyboardKey.enter ||
+        event.logicalKey == LogicalKeyboardKey.numpadEnter) {
+      if (event is KeyDownEvent) {
+        if (!isModSearch) {
+          widget.onEnter?.call(_controller.listFull, _controller.highLightIndex.value);
+        } else {
+          widget.onSubmit?.call(
+              _controller.rxSearch.value, _controller.listSearch, _controller.highLightIndex.value);
+        }
+      }
+      return true;
+    } */
+
+    final primaryFocus = FocusManager.instance.primaryFocus;
+    // Ignora FocusScopeNode - só bloqueia se for um FocusNode de widget interativo (TextField, etc)
+    final isInteractiveWidget = primaryFocus != null &&
+        primaryFocus is! FocusScopeNode &&
+        !_controller.focusSearch.hasFocus;
+    debugPrint(
+        '🚀 primaryFocus: ${primaryFocus.runtimeType} - ${primaryFocus?.debugLabel}');
+    debugPrint('🚀 isInteractiveWidget: $isInteractiveWidget');
+
+    if (!isInteractiveWidget) {
+      debugPrint(
+          '🚀 _controller.focusSearch.hasFocus: ${_controller.focusSearch.hasFocus}');
+      if (event.logicalKey == LogicalKeyboardKey.enter ||
+          event.logicalKey == LogicalKeyboardKey.numpadEnter) {
+        // Se existe foco em widget interativo (não focusSearch), não processa o Enter
+
+        if (event is KeyDownEvent) {
+          if (!isModSearch) {
+            widget.onEnter
+                ?.call(_controller.listFull, _controller.highLightIndex.value);
+          } else {
+            widget.onSubmit?.call(_controller.rxSearch.value,
+                _controller.listSearch, _controller.highLightIndex.value);
+          }
+        }
+        return true;
+      }
+    }
+
+    //if (_controller.focusSearch.hasFocus) {
+
     if (event.logicalKey != LogicalKeyboardKey.escape) {
       return false;
     }
+
     if (event is KeyUpEvent) {
       _escapeKeyHeldDown = false;
       return false;
@@ -224,6 +283,18 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
   }
 
   bool get isModSearch => _controller.isModSearch;
+
+  void onEnter() {
+    //* gera sobreposição caso haja outro Textfield na tela
+    /* if (widget.onEnter != null) {
+      final list = _controller.isModSearch ? _controller.listSearch : _controller.listFull;
+      widget.onEnter!(list, _controller.highLightIndex.value);
+    } */
+
+    if (widget.onEnter != null && !_controller.isModSearch) {
+      widget.onEnter!(_controller.listFull, _controller.highLightIndex.value);
+    }
+  }
 
   @override
   void initState() {
@@ -327,8 +398,9 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
           if (widget.rxBoolAuth?.auth.value == false) {
             return widget.rxBoolAuth!.authFalseWidget();
           }
+
           return widget.obxListBuilder(context, _controller.listSearch.toList(),
-              _controller.isModSearch);
+              _controller.isModSearch, _controller.highLightIndex.value);
         }),
         floatingActionButton: widget.searchPageFloatingActionButton,
         floatingActionButtonLocation:

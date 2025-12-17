@@ -119,7 +119,10 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
             widget.onSubmit?.call(
                 value,
                 (widget.controller as SearcherPageController).listSearch
-                    as List<T>);
+                    as List<T>,
+                (widget.controller as SearcherPageController)
+                    .highLightIndex
+                    .value);
             widget.onCancelSearch();
           }
         });

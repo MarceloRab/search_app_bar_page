@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.0.0-release.0]
+
+- We have an excellent update aimed at practicality in large screen mode (web).
+- We created [onEnter] so that when you click the enter key, you can select the item at highLightIndex.
+- The up and down arrows change the highLightIndex according to the size of the complete or filtered list.
+- Now the methods [obxListBuilder], [onSubmit], [onEnter] return the highLightIndex.
+- You need to use it to modify your Scroll of the filtered list and generate a better experience for the user.
+
 ## [3.0.2-release.18]
 
 - fix for search entry and exit for query cleanup.

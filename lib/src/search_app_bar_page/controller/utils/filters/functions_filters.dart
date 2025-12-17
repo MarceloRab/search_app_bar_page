@@ -11,10 +11,13 @@ typedef SortList<T> = int Function(T a, T b);
 //typedef WidgetsListBuilder<T> = Widget Function(
 //BuildContext context, RxList<T> list, bool isModSearch);
 
-typedef OnSubmitted<T> = Function(String query, List<T> listFiltered);
+typedef OnSubmitted<T> = Function(
+    String query, List<T> listFiltered, int highLightIndex);
+
+typedef OnEnter<T> = Function(List<T> listFull, int highLightIndex);
 
 typedef WidgetsListBuilder<T> = Widget Function(
-    BuildContext context, List<T> list, bool isModSearch);
+    BuildContext context, List<T> list, bool isModSearch, int highLightIndex);
 
 typedef WidgetsErrorBuilder<T> = Widget Function(Object? error);
 

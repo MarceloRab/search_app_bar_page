@@ -360,7 +360,7 @@ class _SearchAppBarPageRefreshState<T>
 
       //final isListFull = widget.searcher.rxSearch.value.isEmpty;
       return widget.obxListBuilder(
-          context, _controller.snapshot.data!, _controller.isModSearch);
+          context, _controller.snapshot.data!, _controller.isModSearch, 0);
     });
   }
 

@@ -162,6 +162,21 @@ class SearcherPageController<T> extends SearcherBase<T> {
 
     //sortCompareList(list);
     onSearchList(list);
+    highLightIndex.value = 0;
+  }
+
+  final RxInt highLightIndex = 0.obs;
+
+  void incrementSelection() {
+    if (highLightIndex.value < listSearch.length - 1) {
+      highLightIndex.value++;
+    }
+  }
+
+  void decrementSelection() {
+    if (highLightIndex.value > 0) {
+      highLightIndex.value--;
+    }
   }
 
   @override

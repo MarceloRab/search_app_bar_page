@@ -12,6 +12,6 @@ class RxListWidget<T> extends StatelessWidget {
       {super.key, required this.controller, required this.obxListBuilder});
 
   @override
-  Widget build(BuildContext context) => Obx(() =>
-      obxListBuilder(context, controller.listSearch, controller.isModSearch));
+  Widget build(BuildContext context) => Obx(() => obxListBuilder(
+      context, controller.listSearch, controller.isModSearch, 0));
 }
