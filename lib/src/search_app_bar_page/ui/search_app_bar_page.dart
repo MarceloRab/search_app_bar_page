@@ -220,6 +220,7 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
 
   void initShowSearch() {
     _controller.initShowSearch?.call(null);
+    _controller.rxSearch.value = '';
   }
 
   bool get isModSearch => _controller.isModSearch;

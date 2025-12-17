@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.0.2-release.18]
+
+- fix for search entry and exit for query cleanup.
+
 ## [3.0.2-release.17]
 
 - use the Esc key on the keyboard in web mode to enter and exit Search mode.

@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.5.10]
+
+- fix for search entry and exit for query cleanup.
+
 ## [2.5.9]
 
 - use the Esc key on the keyboard in web mode to enter and exit Search mode.

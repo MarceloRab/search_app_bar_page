@@ -135,7 +135,12 @@ class SearcherPageController<T> extends SearcherBase<T> {
 
     if (whereFilter != null) {
       //list = listFull.where(whereFunction!).toList();
-      list = listFull.where((element) => whereFilter!(element, value)).toList();
+      if (value != null && value.isEmpty) {
+        list = listFull;
+      } else {
+        list =
+            listFull.where((element) => whereFilter!(element, value)).toList();
+      }
     } else {
       if (stringFilter != null || T == String) {
         list = listFull
