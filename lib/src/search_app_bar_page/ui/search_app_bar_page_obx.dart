@@ -211,7 +211,7 @@ class _SearchAppBarPageObxState<T> extends State<SearchAppBarPageObx<T>> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final listFull = widget.listRx;
+      final listFull = widget.listRx.value;
       return SearchAppBarPage<T>(
         listFull: listFull,
         obxListBuilder: widget.obxListBuilder,

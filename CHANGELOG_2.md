@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.1.0-release.0]
+
+- Minimal fix
+
+## [4.0.2-release.0]
+
+- Add SearchAppBarPageObx!. Now just insert your [listRx] and you have your reactivity.
+
 ## [4.0.1-release.0]
 
 - Minimal fix - reset highLightIndex when cancelSearch
