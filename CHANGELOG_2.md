@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.1.1-release.0]
+
+- Updated README.md to better understand `SearchAppBarPageObx`. Also how to use the parameters [highLightIndex], [onSubmit] and [onEnter].
+
 ## [4.1.0-release.0]
 
 - Minimal fix

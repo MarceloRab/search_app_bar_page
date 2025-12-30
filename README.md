@@ -25,7 +25,7 @@ package for more than 01 year and has not responded to my request for changes by
 
 ## Required parameters
 
-We have four pages: <blockquote> SearchAppBarPage, SearchAppBarPageStream, SearchAppBarPagination
+We have four pages: <blockquote> SearchAppBarPageObx, SearchAppBarPage, SearchAppBarPageStream, SearchAppBarPagination
 and SimpleAppBarPage</blockquote>
 
 🔎 <span> </span> `SearchAppBarPage` needs a list that is the complete list to be filtered and a
@@ -55,6 +55,60 @@ The function `[obxListBuilder]` is inside an Obx. Place reactive verables into i
 in SearchAppBarPage.
 
 ---
+
+- We just added `SearchAppBarPageObx`. If you have an `RxBool isLoading`, you can pass it inside the `obxListBuilder` function and it will control the loading while the list is being loaded. Unlike SearchAppBarPage where it was necessary to insert an Obx previously because the complete list is static.
+- Use now `SearchAppBarPageObx`!
+
+---
+
+```dart
+class SearchAppBarPageObx<T> extends StatefulWidget {
+  //...
+
+  SearchAppBarPageObx( //...
+      /// Parameters for the SearcherGetController
+      /// final RxList<T> listRx;
+      @required this.listRx,
+
+      /// [obxListBuilder] Function applied when it is filtering in search.
+      @required this.obxListBuilder,
+
+      /// [stringFilter] Required if you type.'
+      ///You should at least type with String.
+      this.stringFilter
+      // or → (not both together)
+      /// [whereFilter] Required if you type.
+      /// Create your own function that returns a bool.
+      this.whereFilter,
+      //...
+      )
+
+///...
+// Example:
+
+        obxListBuilder:
+          (
+            BuildContext context,
+            List<Model> list,
+            bool isModSearch,
+            int highLightIndex,
+            /// Use highLightIndex to manipulate from the keyboard and select the item using [onEnter] or [onSubmit].
+            /// There is a need to modify the list widget to move the scroll to the selected item, changing the background of the selected item.
+            ///👉 highLightIndex goes from item 0 to item list.length - 1.
+          ) {
+            if (controller.isLoading.value) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (list.isEmpty) {
+              return const Center(child: Text('Nothing was found'));
+            }
+
+            //...;
+
+///...
+
+}
+```
 
 ```dart
 class SearchAppBarPage<T> extends StatefulWidget {
