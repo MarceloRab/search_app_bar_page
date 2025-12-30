@@ -183,7 +183,8 @@ class _SearchPageState extends State<SearchPage> {
                     listFull: dataListPerson2,
                     stringFilter: (Person person) => person.name,
                     filtersType: FiltersTypes.contains,
-                    obxListBuilder: (context, list, isModSearch) {
+                    obxListBuilder:
+                        (context, list, isModSearch, highLightIndex) {
                       if (list.isEmpty) {
                         return const Center(
                           child: Text('NOTHING FOUND'),
@@ -224,7 +225,7 @@ class _SearchPageState extends State<SearchPage> {
       ),
 
       ///
-      onSubmit: (query, listFiltered) {
+      onSubmit: (query, listFiltered, highLightIndex) {
         debugPrint('🚀 main.dart - query - $query');
         debugPrint('🚀 main.dart - listFiltered - $listFiltered');
       },
@@ -264,7 +265,7 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               )),
       filtersType: FiltersTypes.contains,
-      obxListBuilder: (context, list, isModSearch) {
+      obxListBuilder: (context, list, isModSearch, highLightIndex) {
         // ☑️ This function is inside an Obx.
         // Place other reactive variables into it.
 
@@ -360,7 +361,7 @@ class _SearchAppBarStreamState extends State<SearchAppBarStream> {
       /// sort default compare by stringFilter return.
       sortFunction: (Person a, Person b) => a.age.compareTo(b.age),
       filtersType: FiltersTypes.contains,
-      obxListBuilder: (context, list, isModSearch) {
+      obxListBuilder: (context, list, isModSearch, highLightIndex) {
         // ☑️ This function is inside an Obx.
         // Place other reactive variables into it.
         if (list.isEmpty) {
@@ -604,7 +605,7 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
       /// -------------------------------------
       body: RxListWidget<Person>(
         controller: _controller,
-        obxListBuilder: (context, list, isModSearch) {
+        obxListBuilder: (context, list, isModSearch, highLightIndex) {
           // ☑️ This function is inside an Obx.
           // Place other reactive verables into it.
 

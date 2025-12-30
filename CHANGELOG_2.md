@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.0.1-release.0]
+
+- Minimal fix - reset highLightIndex when cancelSearch
+
 ## [4.0.0-release.0]
 
 - We have an excellent update aimed at practicality in large screen mode (web).

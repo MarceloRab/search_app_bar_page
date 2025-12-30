@@ -26,8 +26,20 @@ class SearchAppBarPage<T> extends StatefulWidget
   final double searchAppBarElevation;
   final TextInputType? searchAppBarKeyboardType;
   final Color? magnifyGlassColor;
+
+  /// [magnifyInGlassColor] Changes the color of the magnifying glass.
+  /// Keeps IconTheme color by default.
+  final Color? magnifyInGlassColor;
+
   final Color? searchTextColor;
   final double searchTextSize;
+
+  /// Start showing [widgetWaiting] until it shows the first data
+  final Widget? widgetWaiting;
+
+  /// [widgetErrorBuilder] Widget built by the Object error returned by the
+  /// [listStream] error.
+  final WidgetsErrorBuilder? widgetErrorBuilder;
 
   /// Parameters Scaffold
   @override
@@ -158,8 +170,11 @@ class SearchAppBarPage<T> extends StatefulWidget
       this.searchAppBarElevation = 4.0,
       this.searchAppBarKeyboardType,
       this.magnifyGlassColor,
+      this.magnifyInGlassColor,
       this.searchTextColor,
       this.searchTextSize = 18.0,
+      this.widgetWaiting,
+      this.widgetErrorBuilder,
 
       /// Parameters para o Scaffold
 
@@ -222,13 +237,8 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
     final isInteractiveWidget = primaryFocus != null &&
         primaryFocus is! FocusScopeNode &&
         !_controller.focusSearch.hasFocus;
-    debugPrint(
-        '🚀 primaryFocus: ${primaryFocus.runtimeType} - ${primaryFocus?.debugLabel}');
-    debugPrint('🚀 isInteractiveWidget: $isInteractiveWidget');
 
     if (!isInteractiveWidget) {
-      debugPrint(
-          '🚀 _controller.focusSearch.hasFocus: ${_controller.focusSearch.hasFocus}');
       if (event.logicalKey == LogicalKeyboardKey.enter ||
           event.logicalKey == LogicalKeyboardKey.numpadEnter) {
         // Se existe foco em widget interativo (não focusSearch), não processa o Enter
@@ -275,6 +285,7 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
 
   void clearSearch() {
     _controller.onCancelSearch?.call();
+    _controller.highLightIndex.value = 0;
   }
 
   void initShowSearch() {
@@ -393,10 +404,17 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
             searchTextSize: widget.searchTextSize,
             searchTextColor: widget.searchTextColor,
             autoFocus: widget.autoFocus,
-            magnifyGlassColor: widget.magnifyGlassColor),
+            magnifyGlassColor:
+                widget.magnifyGlassColor ?? widget.magnifyInGlassColor),
         body: Obx(() {
           if (widget.rxBoolAuth?.auth.value == false) {
             return widget.rxBoolAuth!.authFalseWidget();
+          }
+
+          if (_controller.listSearch.isEmpty &&
+              _controller.rxSearch.value.isEmpty &&
+              widget.widgetWaiting != null) {
+            return widget.widgetWaiting!;
           }
 
           return widget.obxListBuilder(context, _controller.listSearch.toList(),

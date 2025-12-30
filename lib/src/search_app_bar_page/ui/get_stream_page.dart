@@ -28,6 +28,9 @@ class GetStreamPage<T> extends StatefulWidget {
   /// the context, the streamObject which is snapshot.data.
   final GetWidgetBuilder<T> obxWidgetBuilder;
 
+  /// Start showing [widgetWaiting] until it shows the first data
+  final Widget? widgetWaiting;
+
   /// [floatingActionButton] , [pageDrawer] ,
   /// [floatingActionButtonLocation] ,
   /// [floatingActionButtonAnimator]  ...
@@ -109,7 +112,8 @@ class GetStreamPage<T> extends StatefulWidget {
       this.actions = const <Widget>[],
       this.iconTheme,
       this.iconConnectyOffAppBar,
-      this.iconConnectyOffAppBarColor});
+      this.iconConnectyOffAppBarColor,
+      this.widgetWaiting});
 
   @override
   _GetStreamPageState<T> createState() => _GetStreamPageState<T>();
@@ -142,6 +146,7 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
       _controller.initial(widget.initialData!);
     }
     _subscribeStream();
+    _buildWidgetsDefault();
   }
 
   @override
@@ -296,5 +301,44 @@ class _GetStreamPageState<T> extends State<GetStreamPage<T>> {
     } else {
       return widget.widgetErrorBuilder!(error);
     }
+  }
+
+  void _buildWidgetsDefault() {
+    if (widget.widgetWaiting == null) {
+      _widgetWaiting = const Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 60,
+              height: 60,
+              child: CircularProgressIndicator(),
+            ),
+          ],
+        ),
+      );
+    } else {
+      _widgetWaiting = widget.widgetWaiting;
+    }
+
+    _widgetConnect = const Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 60,
+            height: 60,
+            child: CircularProgressIndicator(),
+          ),
+          SizedBox(height: 20),
+          Text(
+            'Waiting for connection...',
+            style: TextStyle(fontSize: 18),
+          )
+        ],
+      ),
+    );
   }
 }
