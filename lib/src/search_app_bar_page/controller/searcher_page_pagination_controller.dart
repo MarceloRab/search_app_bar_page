@@ -49,6 +49,9 @@ class SearcherPagePaginationController<T>
   @override
   bool get bancoInitValue => bancoInit.value;
 
+  @override
+  Duration? timeDebounce;
+
   bool finishPage = false;
 
   final Rx<AsyncSnapshotScrollPage<T>> _snapshotScroolPage =

@@ -62,6 +62,9 @@ class SimpleAppBarController<T> implements SearcherBase<T> {
   final RxBool bancoInit = false.obs;
 
   @override
+  Duration? timeDebounce;
+
+  @override
   bool get bancoInitValue => bancoInit.value;
 
   @override

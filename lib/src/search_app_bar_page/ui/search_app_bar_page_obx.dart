@@ -143,6 +143,9 @@ class SearchAppBarPageObx<T> extends StatefulWidget
   /// [widthLargeScreenThreshold] Width threshold to consider a large screen layout.
   final double widthLargeScreenThreshold;
 
+  /// [timeDebounce] Time in milliseconds for debounce.
+  final Duration? timeDebounce;
+
   final bool autoFocus;
 
   const SearchAppBarPageObx({
@@ -158,6 +161,7 @@ class SearchAppBarPageObx<T> extends StatefulWidget
     this.filter,
     this.sortFunction,
     this.widthLargeScreenThreshold = 1100.0,
+    this.timeDebounce,
     //this.compareSort,
     this.autoFocus = true,
     this.sortCompare = true,
@@ -225,6 +229,7 @@ class _SearchAppBarPageObxState<T> extends State<SearchAppBarPageObx<T>> {
         whereFilter: widget.whereFilter,
         rxBoolAuth: widget.rxBoolAuth,
         autoFocus: widget.autoFocus,
+        timeDebounce: widget.timeDebounce,
         widthLargeScreenThreshold: widget.widthLargeScreenThreshold,
         searchAppBarTitle: widget.searchAppBarTitle,
         searchAppBarCenterTitle: widget.searchAppBarCenterTitle,

@@ -39,6 +39,9 @@ class SearcherPageController<T> extends SearcherBase<T> {
   @override
   final RxBool bancoInit = true.obs;
 
+  @override
+  Duration? timeDebounce;
+
   final listSearch = <T>[].obs;
 
   /// [listFull] More complete initial list to be filtered
@@ -125,9 +128,15 @@ class SearcherPageController<T> extends SearcherBase<T> {
   }
 
   void onReady() {
-    _worker = ever(rxSearch, (String? value) {
-      refreshSearchList(value);
-    });
+    if (timeDebounce != null) {
+      _worker = debounce(rxSearch, (String? value) {
+        refreshSearchList(value);
+      }, time: timeDebounce);
+    } else {
+      _worker = ever(rxSearch, (String? value) {
+        refreshSearchList(value);
+      });
+    }
   }
 
   void refreshSearchList(String? value) {
@@ -196,7 +205,6 @@ class SearcherPageController<T> extends SearcherBase<T> {
     //_isModSearch.close();
     //rxSearch.close();
     //listSearch.close();
-    //TODO:retirado aqui
     // bancoInit.close();
   }
 }

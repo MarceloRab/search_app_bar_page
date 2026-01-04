@@ -32,4 +32,6 @@ abstract class SearcherBase<T> {
   void sortCompareList(List<T> list);
 
   bool? sortCompare = true;
+
+  Duration? timeDebounce;
 }

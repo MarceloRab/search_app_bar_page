@@ -34,6 +34,9 @@ class SearchAppBarPage<T> extends StatefulWidget
   final Color? searchTextColor;
   final double searchTextSize;
 
+  /// [timeDebounce] Time in milliseconds for debounce.
+  final Duration? timeDebounce;
+
   /// Start showing [widgetWaiting] until it shows the first data
   final Widget? widgetWaiting;
 
@@ -155,6 +158,7 @@ class SearchAppBarPage<T> extends StatefulWidget
       this.rxBoolAuth,
       this.autoFocus = true,
       this.widthLargeScreenThreshold = 1100.0,
+      this.timeDebounce,
 
       /// Parameters do SearchAppBar
       this.searchAppBarTitle,
