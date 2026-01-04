@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 
 abstract class SearcherBase<T> {
   VoidCallback? onCancelSearch;
@@ -33,5 +34,9 @@ abstract class SearcherBase<T> {
 
   bool? sortCompare = true;
 
-  Duration? timeDebounce;
+  bool isAsync = false;
+
+  ListAsync<T>? listAsync;
+
+  //FutureOr<List<T>> Function(Object error)? onAsyncError;
 }

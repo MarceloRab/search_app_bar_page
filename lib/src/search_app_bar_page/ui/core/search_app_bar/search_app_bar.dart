@@ -247,9 +247,11 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
               opacity: fadeOut,
               child: AppBar(
                 backgroundColor: widget.backgroundColor ??
-                    Theme.of(context).appBarTheme.foregroundColor,
-                iconTheme:
-                    widget.iconTheme ?? Theme.of(context).appBarTheme.iconTheme,
+                    Theme.of(context).appBarTheme.backgroundColor ??
+                    Theme.of(context).colorScheme.primary,
+                iconTheme: widget.iconTheme ??
+                    Theme.of(context).appBarTheme.iconTheme ??
+                    Theme.of(context).iconTheme,
                 title: widget.title,
                 elevation: _elevation,
                 centerTitle: widget.centerTitle,
@@ -303,7 +305,11 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
       onPressed: null,
       icon: Icon(
         Icons.search,
-        color: widget.magnifyGlassColor ?? Theme.of(context).iconTheme.color,
+        color: widget.magnifyGlassColor ??
+            widget.iconTheme?.color ??
+            Theme.of(context).appBarTheme.iconTheme?.color ??
+            Theme.of(context).iconTheme.color ??
+            Colors.white,
       ),
     );
   }
@@ -324,7 +330,8 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
             // grow up to ~112% of the container width to emphasize the sweep
             radius: _animation.value * containerWidth * 1.12,
             context: context,
-            color: widget.searchBackgroundColor ?? Colors.white,
+            color: widget.searchBackgroundColor ??
+                Theme.of(context).scaffoldBackgroundColor,
           ),
         );
       },
@@ -337,14 +344,16 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
             //searcher: widget.searcher,
             controller: widget.controller,
             onSubmit: widget.onSubmit,
-            color: widget.searchElementsColor ?? Theme.of(context).primaryColor,
+            color: widget.searchElementsColor ??
+                Theme.of(context).iconTheme.color ??
+                Theme.of(context).colorScheme.onSurface,
             onCancelSearch: cancelSearch,
             textCapitalization: widget.capitalization,
             hintText: widget.hintText,
             keyboardType: widget.keyboardType,
             searchTextColor: widget.searchTextColor ??
-                widget.searchElementsColor ??
-                Theme.of(context).primaryColor,
+                Theme.of(context).textTheme.titleLarge?.color ??
+                Theme.of(context).colorScheme.onSurface,
             searchTextSize: widget.searchTextSize,
             autoFocus: widget.autoFocus,
           )

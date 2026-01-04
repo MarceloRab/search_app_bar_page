@@ -112,7 +112,9 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
             widget.textCapitalization ?? TextCapitalization.none,
         style: TextStyle(
             fontSize: widget.searchTextSize,
-            color: widget.searchTextColor ?? Theme.of(context).primaryColor),
+            color: widget.searchTextColor ??
+                Theme.of(context).textTheme.titleLarge?.color ??
+                Theme.of(context).colorScheme.onSurface),
         onChanged: widget.controller.rxSearch.call,
         onSubmitted: (value) {
           if (widget.controller is SearcherPageController<T>) {

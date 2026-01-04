@@ -39,13 +39,21 @@ class SearcherPageController<T> extends SearcherBase<T> {
   @override
   final RxBool bancoInit = true.obs;
 
-  @override
-  Duration? timeDebounce;
-
   final listSearch = <T>[].obs;
+  final Rx<Object?> rxError = Rx<Object?>(null);
 
   /// [listFull] More complete initial list to be filtered
   final List<T> listFull;
+
+  final RxBool _isLoadingListAsync = false.obs;
+  bool get isLoadingListAsync => _isLoadingListAsync.value;
+  set isLoadingListAsync(bool value) => _isLoadingListAsync.value = value;
+
+  @override
+  bool isAsync;
+
+  @override
+  ListAsync<T>? listAsync;
 
   Function(Iterable<T>) get onSearchList => listSearch.assignAll;
 
@@ -66,6 +74,8 @@ class SearcherPageController<T> extends SearcherBase<T> {
 
   SearcherPageController({
     required this.listFull,
+    this.isAsync = false,
+    this.listAsync,
     this.whereFilter,
     this.stringFilter,
     this.sortCompare,
@@ -128,10 +138,38 @@ class SearcherPageController<T> extends SearcherBase<T> {
   }
 
   void onReady() {
-    if (timeDebounce != null) {
-      _worker = debounce(rxSearch, (String? value) {
-        refreshSearchList(value);
-      }, time: timeDebounce);
+    if (isAsync) {
+      /* _worker = debounce(rxSearch, (String? value) async {
+        final list = await callListAsync();
+        refreshAsyncSearchList(value, list);
+      }, time: timeDebounce); */
+
+      _worker = ever(rxSearch, (String? value) async {
+        rxError.value = null;
+        if (value != null && value.isEmpty) {
+          //
+          onSearchList([]);
+          rxSearch.value = '';
+          highLightIndex.value = 0;
+          //TODO: testar aqui
+
+          //refreshAsyncSearchList('', []);
+          //refreshSearchList('');
+        } else {
+          isLoadingListAsync = true;
+          callListAsync().then((list) {
+            isLoadingListAsync = false;
+            onSearchList(list);
+            //refreshAsyncSearchList(value, list);
+          }).catchError((Object err) async {
+            isLoadingListAsync = false;
+            rxError.value = err;
+
+            onCancelSearch?.call();
+            highLightIndex.value = 0;
+          });
+        }
+      });
     } else {
       _worker = ever(rxSearch, (String? value) {
         refreshSearchList(value);
@@ -174,6 +212,29 @@ class SearcherPageController<T> extends SearcherBase<T> {
     highLightIndex.value = 0;
   }
 
+  void refreshAsyncSearchList(String? value, List<T> list) {
+    if (whereFilter != null) {
+      onSearchList(
+          list.where((element) => whereFilter!(element, value)).toList());
+      // list.assignAll(listFull.where((element) => whereFilter!(element, value)).toList());
+    } else {
+      if (stringFilter != null || T == String) {
+        onSearchList(list
+            .where((element) => _filters(stringFilter!(element), value))
+            .toList());
+        /* list.assignAll(listFull
+            .where(
+              (element) => _filters(stringFilter!(element), value),
+            )
+            .toList()); */
+      } else {
+        onSearchList(list.where((element) => filter!(element, value)).toList());
+        // list.assignAll(listFull.where((element) => filter!(element, value)).toList());
+      }
+    }
+    highLightIndex.value = 0;
+  }
+
   final RxInt highLightIndex = 0.obs;
 
   void incrementSelection() {
@@ -197,6 +258,14 @@ class SearcherPageController<T> extends SearcherBase<T> {
         list.sort((a, b) => stringFilter!(a)!.compareTo(stringFilter!(b)!));
       }
     }
+  }
+
+  Future<List<T>> callListAsync() {
+    if (listAsync != null) {
+      return listAsync!.call(rxSearch.value);
+    }
+
+    throw Exception('ListAsync is null');
   }
 
   FutureOr onClose() {

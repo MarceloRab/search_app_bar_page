@@ -34,14 +34,12 @@ class SearchAppBarPage<T> extends StatefulWidget
   final Color? searchTextColor;
   final double searchTextSize;
 
-  /// [timeDebounce] Time in milliseconds for debounce.
-  final Duration? timeDebounce;
-
-  /// Start showing [widgetWaiting] until it shows the first data
+  /// [widgetWaiting] Widget built by the Object error returned by the
+  /// [listAsync].
   final Widget? widgetWaiting;
 
   /// [widgetErrorBuilder] Widget built by the Object error returned by the
-  /// [listStream] error.
+  /// [listAsync] or [onAsyncError].
   final WidgetsErrorBuilder? widgetErrorBuilder;
 
   /// Parameters Scaffold
@@ -86,6 +84,8 @@ class SearchAppBarPage<T> extends StatefulWidget
 
   /// Parameters para o SearcherGetController
 
+//TODO: modificar nome para explicar que é uma lista filtrada - na teoria não há necessidade de listFull
+//TODO: quando isAsync = true, listFull não é usada
   /// [listFull] List to be filtered by Search.
   final List<T> listFull;
 
@@ -118,6 +118,13 @@ class SearchAppBarPage<T> extends StatefulWidget
 
   /// [sortFunction] Manually add your sort function.
   final SortList<T>? sortFunction;
+//TODO: trocar para listFilteredAsync
+
+  /// [listAsync] Function to fetch list items asynchronously.
+  final ListAsync<T>? listAsync;
+
+  /// [isAsync] Set to true if you are using [listAsync].
+  final bool isAsync;
 
   ///[sortCompare] Your list will be ordered by the same function
   ///[stringFilter]. True by default.
@@ -158,7 +165,8 @@ class SearchAppBarPage<T> extends StatefulWidget
       this.rxBoolAuth,
       this.autoFocus = true,
       this.widthLargeScreenThreshold = 1100.0,
-      this.timeDebounce,
+      this.isAsync = false,
+      this.listAsync,
 
       /// Parameters do SearchAppBar
       this.searchAppBarTitle,
@@ -200,7 +208,9 @@ class SearchAppBarPage<T> extends StatefulWidget
       this.drawerEdgeDragWidth,
       this.drawerEnableOpenDragGesture = true,
       this.endDrawerEnableOpenDragGesture = true,
-      this.restorationId});
+      this.restorationId})
+      : assert(!isAsync || listAsync != null,
+            'listAsync must not be null if isAsync is true');
 
   @override
   SearchAppBarPageState<T> createState() => SearchAppBarPageState<T>();
@@ -223,19 +233,7 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
         _controller.decrementSelection();
       }
       return true;
-    } /* else if (event.logicalKey == LogicalKeyboardKey.enter ||
-        event.logicalKey == LogicalKeyboardKey.numpadEnter) {
-      if (event is KeyDownEvent) {
-        if (!isModSearch) {
-          widget.onEnter?.call(_controller.listFull, _controller.highLightIndex.value);
-        } else {
-          widget.onSubmit?.call(
-              _controller.rxSearch.value, _controller.listSearch, _controller.highLightIndex.value);
-        }
-      }
-      return true;
-    } */
-
+    }
     final primaryFocus = FocusManager.instance.primaryFocus;
     // Ignora FocusScopeNode - só bloqueia se for um FocusNode de widget interativo (TextField, etc)
     final isInteractiveWidget = primaryFocus != null &&
@@ -249,11 +247,15 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
 
         if (event is KeyDownEvent) {
           if (!isModSearch) {
-            widget.onEnter
-                ?.call(_controller.listFull, _controller.highLightIndex.value);
+            final list = widget.isAsync
+                ? _controller.listSearch.toList()
+                : _controller.listFull;
+            widget.onEnter?.call(list, _controller.highLightIndex.value);
           } else {
-            widget.onSubmit?.call(_controller.rxSearch.value,
-                _controller.listSearch, _controller.highLightIndex.value);
+            widget.onSubmit?.call(
+                _controller.rxSearch.value,
+                _controller.listSearch.toList(),
+                _controller.highLightIndex.value);
           }
         }
         return true;
@@ -294,7 +296,12 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
 
   void initShowSearch() {
     _controller.initShowSearch?.call(null);
+    if (widget.isAsync) {
+      _controller.onSearchList([]);
+      //refreshSearchList('');
+    }
     _controller.rxSearch.value = '';
+    _controller.highLightIndex.value = 0;
   }
 
   bool get isModSearch => _controller.isModSearch;
@@ -329,6 +336,8 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
         stringFilter: widget.stringFilter,
         whereFilter: widget.whereFilter,
         //compareSort: widget.compareSort,
+        isAsync: widget.isAsync,
+        listAsync: widget.listAsync,
         filter: widget.filter,
         sortFunction: widget.sortFunction,
         sortCompare: widget.sortCompare,
@@ -411,6 +420,26 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
             magnifyGlassColor:
                 widget.magnifyGlassColor ?? widget.magnifyInGlassColor),
         body: Obx(() {
+          if (_controller.isLoadingListAsync) {
+            return widget.widgetWaiting ??
+                const Center(
+                  child: CircularProgressIndicator(),
+                );
+          }
+
+          if (_controller.rxError.value != null) {
+            if (widget.widgetErrorBuilder != null) {
+              return widget.widgetErrorBuilder!(_controller.rxError.value);
+            }
+
+            return Center(
+              child: Text(
+                'Error: ${_controller.rxError.value}',
+                style: const TextStyle(color: Colors.red),
+              ),
+            );
+          }
+
           if (widget.rxBoolAuth?.auth.value == false) {
             return widget.rxBoolAuth!.authFalseWidget();
           }

@@ -6,7 +6,7 @@ import 'package:search_app_bar_page/search_app_bar_page.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/seacher_widget_page_base.dart';
 
-class SearchAppBarPageObx<T> extends StatefulWidget
+class SearchAppBarPageObx<T> extends StatelessWidget
     implements SearcherScaffoldBase {
   /// Parameters do SearchAppBar
 
@@ -143,13 +143,18 @@ class SearchAppBarPageObx<T> extends StatefulWidget
   /// [widthLargeScreenThreshold] Width threshold to consider a large screen layout.
   final double widthLargeScreenThreshold;
 
-  /// [timeDebounce] Time in milliseconds for debounce.
-  final Duration? timeDebounce;
+  /// [listAsync] Function to fetch list items asynchronously.
+  final ListAsync<T>? listAsync;
+
+  /// [isAsync] Set to true if you are using [listAsync].
+  final bool isAsync;
 
   final bool autoFocus;
 
+  final GlobalKey? globalKey;
+
   const SearchAppBarPageObx({
-    super.key,
+    this.globalKey,
     required this.listRx,
     required this.obxListBuilder,
     //this.onSubmit,
@@ -161,7 +166,8 @@ class SearchAppBarPageObx<T> extends StatefulWidget
     this.filter,
     this.sortFunction,
     this.widthLargeScreenThreshold = 1100.0,
-    this.timeDebounce,
+    this.isAsync = false,
+    this.listAsync,
     //this.compareSort,
     this.autoFocus = true,
     this.sortCompare = true,
@@ -203,75 +209,71 @@ class SearchAppBarPageObx<T> extends StatefulWidget
     this.endDrawerEnableOpenDragGesture = true,
     this.widgetWaiting,
     this.magnifyGlassColor,
-  });
+  }) : assert(!isAsync || listAsync != null,
+            'listAsync must not be null if isAsync is true');
 
-  @override
-  // ignore: lines_longer_than_80_chars
-  State<SearchAppBarPageObx<T>> createState() => _SearchAppBarPageObxState<T>();
-}
-
-/// State for [StreamBuilderBase].
-class _SearchAppBarPageObxState<T> extends State<SearchAppBarPageObx<T>> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final listFull = widget.listRx.value;
+      final listFull = listRx.toList();
+
       return SearchAppBarPage<T>(
+        key: globalKey,
         listFull: listFull,
-        obxListBuilder: widget.obxListBuilder,
-        onSubmit: widget.onSubmit,
-        onEnter: widget.onEnter,
-        sortCompare: widget.sortCompare,
-        filtersType: widget.filtersType,
-        filter: widget.filter,
-        sortFunction: widget.sortFunction,
-        stringFilter: widget.stringFilter,
-        whereFilter: widget.whereFilter,
-        rxBoolAuth: widget.rxBoolAuth,
-        autoFocus: widget.autoFocus,
-        timeDebounce: widget.timeDebounce,
-        widthLargeScreenThreshold: widget.widthLargeScreenThreshold,
-        searchAppBarTitle: widget.searchAppBarTitle,
-        searchAppBarCenterTitle: widget.searchAppBarCenterTitle,
-        searchAppBarIconTheme: widget.searchAppBarIconTheme,
-        searchAppBarBackgroundColor: widget.searchAppBarBackgroundColor,
+        obxListBuilder: obxListBuilder,
+        onSubmit: onSubmit,
+        onEnter: onEnter,
+        sortCompare: sortCompare,
+        filtersType: filtersType,
+        filter: filter,
+        sortFunction: sortFunction,
+        stringFilter: stringFilter,
+        whereFilter: whereFilter,
+        rxBoolAuth: rxBoolAuth,
+        autoFocus: autoFocus,
+        isAsync: isAsync,
+        listAsync: listAsync,
+        widthLargeScreenThreshold: widthLargeScreenThreshold,
+        searchAppBarTitle: searchAppBarTitle,
+        searchAppBarCenterTitle: searchAppBarCenterTitle,
+        searchAppBarIconTheme: searchAppBarIconTheme,
+        searchAppBarBackgroundColor: searchAppBarBackgroundColor,
         searchAppBarModeSearchBackgroundColor:
-            widget.searchAppBarModeSearchBackgroundColor,
-        searchAppBarElementsColor: widget.searchAppBarElementsColor,
-        searchAppBarHintText: widget.searchAppBarHintText,
-        searchAppBarflattenOnSearch: widget.searchAppBarflattenOnSearch,
-        searchAppBarCapitalization: widget.searchAppBarCapitalization,
-        searchAppBarActions: widget.searchAppBarActions,
-        searchAppBarElevation: widget.searchAppBarElevation,
-        searchAppBarKeyboardType: widget.searchAppBarKeyboardType,
-        magnifyGlassColor: widget.magnifyGlassColor,
-        magnifyInGlassColor: widget.magnifyInGlassColor,
-        searchTextColor: widget.searchTextColor,
-        searchTextSize: widget.searchTextSize,
-        searchPageFloatingActionButton: widget.searchPageFloatingActionButton,
+            searchAppBarModeSearchBackgroundColor,
+        searchAppBarElementsColor: searchAppBarElementsColor,
+        searchAppBarHintText: searchAppBarHintText,
+        searchAppBarflattenOnSearch: searchAppBarflattenOnSearch,
+        searchAppBarCapitalization: searchAppBarCapitalization,
+        searchAppBarActions: searchAppBarActions,
+        searchAppBarElevation: searchAppBarElevation,
+        searchAppBarKeyboardType: searchAppBarKeyboardType,
+        magnifyGlassColor: magnifyGlassColor,
+        magnifyInGlassColor: magnifyInGlassColor,
+        searchTextColor: searchTextColor,
+        searchTextSize: searchTextSize,
+        searchPageFloatingActionButton: searchPageFloatingActionButton,
         searchPageFloatingActionButtonLocation:
-            widget.searchPageFloatingActionButtonLocation,
+            searchPageFloatingActionButtonLocation,
         searchPageFloatingActionButtonAnimator:
-            widget.searchPageFloatingActionButtonAnimator,
-        searchPagePersistentFooterButtons:
-            widget.searchPagePersistentFooterButtons,
-        searchPageDrawer: widget.searchPageDrawer,
-        searchPageEndDrawer: widget.searchPageEndDrawer,
-        searchPageBottomNavigationBar: widget.searchPageBottomNavigationBar,
-        searchPageBottomSheet: widget.searchPageBottomSheet,
-        searchPageBackgroundColor: widget.searchPageBackgroundColor,
-        restorationId: widget.restorationId,
-        resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
-        primary: widget.primary,
-        drawerDragStartBehavior: widget.drawerDragStartBehavior,
-        extendBody: widget.extendBody,
-        extendBodyBehindAppBar: widget.extendBodyBehindAppBar,
-        drawerScrimColor: widget.drawerScrimColor,
-        drawerEdgeDragWidth: widget.drawerEdgeDragWidth,
-        drawerEnableOpenDragGesture: widget.drawerEnableOpenDragGesture,
-        endDrawerEnableOpenDragGesture: widget.endDrawerEnableOpenDragGesture,
-        widgetWaiting: widget.widgetWaiting,
-        widgetErrorBuilder: widget.widgetErrorBuilder,
+            searchPageFloatingActionButtonAnimator,
+        searchPagePersistentFooterButtons: searchPagePersistentFooterButtons,
+        searchPageDrawer: searchPageDrawer,
+        searchPageEndDrawer: searchPageEndDrawer,
+        searchPageBottomNavigationBar: searchPageBottomNavigationBar,
+        searchPageBottomSheet: searchPageBottomSheet,
+        searchPageBackgroundColor: searchPageBackgroundColor,
+        restorationId: restorationId,
+        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+        primary: primary,
+        drawerDragStartBehavior: drawerDragStartBehavior,
+        extendBody: extendBody,
+        extendBodyBehindAppBar: extendBodyBehindAppBar,
+        drawerScrimColor: drawerScrimColor,
+        drawerEdgeDragWidth: drawerEdgeDragWidth,
+        drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
+        endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
+        widgetWaiting: widgetWaiting,
+        widgetErrorBuilder: widgetErrorBuilder,
       );
     });
   }
