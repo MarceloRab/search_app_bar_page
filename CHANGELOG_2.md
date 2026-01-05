@@ -1,6 +1,6 @@
 # Changelog
 
-## [4.2.1-release.0]
+## [5.0.0-rc.1]
 
 - Added `onChangedQuery` parameter to always return the current search query text.
 - Added **AI Implementation Guidelines**: You can now ask an AI agent "Create a search page using search_app_bar_page" and it will follow the embedded instructions in the package to generate the correct code.
