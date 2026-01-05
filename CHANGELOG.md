@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.2.0-release.0]
+
+- Added `SearchAppBarPageVariableList`. This widget is designed for scenarios where the list is not static and changes based on the search query. Key parameter: [listVariableFunction], which returns a `FutureOr<List<T>>` and is triggered whenever the search term updates. It is useful for searching in an API or a database. Return a list of items from a query. Filter however you want.
+
 ## [4.1.1-release.0]
 
 - Updated README.md to better understand `SearchAppBarPageObx`. Also how to use the parameters [highLightIndex], [onSubmit] and [onEnter].
@@ -98,6 +102,10 @@
 ## [3.0.0-release.1]
 
 - Adapting to get package 5.0.0
+
+## [3.2.0]
+
+- Added `SearchAppBarPageVariableList`. This widget is designed for scenarios where the list is not static and changes based on the search query. Key parameter: [listVariableFunction], which returns a `FutureOr<List<T>>` and is triggered whenever the search term updates. It is useful for searching in an API or a database. Return a list of items from a query. Filter however you want.
 
 ## [3.1.1]
 

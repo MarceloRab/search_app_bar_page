@@ -1,10 +1,11 @@
+import 'dart:async';
+
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
 
 typedef Filter<T> = bool Function(T test, String? query);
 typedef SortList<T> = int Function(T a, T b);
-//TODO: trocar por FutureOr<List<T>>
-typedef ListAsync<T> = Future<List<T>> Function(String? query);
+typedef ListVariableFunction<T> = FutureOr<List<T>> Function(String? query);
 
 //typedef StringFilter<T> = String Function(T test);
 

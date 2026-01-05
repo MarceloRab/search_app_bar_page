@@ -143,12 +143,6 @@ class SearchAppBarPageObx<T> extends StatelessWidget
   /// [widthLargeScreenThreshold] Width threshold to consider a large screen layout.
   final double widthLargeScreenThreshold;
 
-  /// [listAsync] Function to fetch list items asynchronously.
-  final ListAsync<T>? listAsync;
-
-  /// [isAsync] Set to true if you are using [listAsync].
-  final bool isAsync;
-
   final bool autoFocus;
 
   final GlobalKey? globalKey;
@@ -166,8 +160,6 @@ class SearchAppBarPageObx<T> extends StatelessWidget
     this.filter,
     this.sortFunction,
     this.widthLargeScreenThreshold = 1100.0,
-    this.isAsync = false,
-    this.listAsync,
     //this.compareSort,
     this.autoFocus = true,
     this.sortCompare = true,
@@ -209,8 +201,7 @@ class SearchAppBarPageObx<T> extends StatelessWidget
     this.endDrawerEnableOpenDragGesture = true,
     this.widgetWaiting,
     this.magnifyGlassColor,
-  }) : assert(!isAsync || listAsync != null,
-            'listAsync must not be null if isAsync is true');
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -231,8 +222,6 @@ class SearchAppBarPageObx<T> extends StatelessWidget
         whereFilter: whereFilter,
         rxBoolAuth: rxBoolAuth,
         autoFocus: autoFocus,
-        isAsync: isAsync,
-        listAsync: listAsync,
         widthLargeScreenThreshold: widthLargeScreenThreshold,
         searchAppBarTitle: searchAppBarTitle,
         searchAppBarCenterTitle: searchAppBarCenterTitle,

@@ -2,14 +2,15 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_page_controller.dart';
-import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/filters_type.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_page_controller_variable.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/core/search_app_bar/search_app_bar.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/infra/rx_get_type.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/seacher_widget_page_base.dart';
 
-class SearchAppBarPage<T> extends StatefulWidget
+/// Use this class when you cannot use a full list. List with varied sizes.
+
+class SearchAppBarPageVariableList<T> extends StatefulWidget
     implements SearcherScaffoldBase {
   /// Parameters of SearchAppBar
 
@@ -35,11 +36,11 @@ class SearchAppBarPage<T> extends StatefulWidget
   final double searchTextSize;
 
   /// [widgetWaiting] Widget built by the Object error returned by the
-  /// [listAsync].
+  /// [listVariableFunction].
   final Widget? widgetWaiting;
 
   /// [widgetErrorBuilder] Widget built by the Object error returned by the
-  /// [listAsync] or [onAsyncError].
+  /// [listVariableFunction] or [onAsyncError].
   final WidgetsErrorBuilder? widgetErrorBuilder;
 
   /// Parameters Scaffold
@@ -84,46 +85,13 @@ class SearchAppBarPage<T> extends StatefulWidget
 
   /// Parameters para o SearcherGetController
 
-//TODO: modificar nome para explicar que é uma lista filtrada - na teoria não há necessidade de listFull
-//TODO: quando isAsync = true, listFull não é usada
-  /// [listFull] List to be filtered by Search.
-  final List<T> listFull;
-
-  /// [filtersType] These are the filters that the Controller uses to
-  /// filter the list. Divide the filters into three types:
-  ///  enum FiltersTypes { startsWith, equals, contains }
-  /// Default = FiltersTypes.contains;
-  final FiltersTypes? filtersType;
-
   /// [obxListBuilder] Function applied when it is filtered.
   final WidgetsListBuilder<T> obxListBuilder;
 
-  /// [stringFilter] Required if you type.
-  ///If not, it is understood that the type will be String.
-  /// ex.: stringFilter: (Person person) => person.name,
-  /// The list will be filtered by the person.name contains (default) a query.
-  final StringFilter<T>? stringFilter;
+  /// [listVariableFunction] Function to fetch list items asynchronously or no.
+  /// Return a list of items from a query. Filter however you want.
 
-  /// [whereFilter] Required if you want to make your own function to delete
-  /// components from your list.
-  ///If you don't want to use a String from your
-  /// Object, pass it directly to a function to delete an item from your list.
-  /// ex.: whereFilter: (Person person) => bool return - used to filter dates by the largest String,
-  final WhereFilter<T>? whereFilter;
-
-  /// [filter] Add function to do filtering manually.
-  /// If you leave this parameter not null the parameter [stringFilter]
-  /// must be null
-  final Filter<T>? filter;
-
-  /// [sortFunction] Manually add your sort function.
-  final SortList<T>? sortFunction;
-//TODO: trocar para listFilteredAsync
-
-  ///[sortCompare] Your list will be ordered by the same function
-  ///[stringFilter]. True by default.
-  /// sort default compare by stringFilter return.
-  final bool sortCompare;
+  final ListVariableFunction<T>? listVariableFunction;
 
   ///  [rxBoolAuth] Insert your RxBool here that changes with the auth
   /// status to have reactivity.
@@ -142,20 +110,15 @@ class SearchAppBarPage<T> extends StatefulWidget
   /// [widthLargeScreenThreshold] Width threshold to consider a large screen layout.
   final double widthLargeScreenThreshold;
 
-  const SearchAppBarPage(
+  const SearchAppBarPageVariableList(
       {super.key,
 
       /// Parameters para o SearcherGetController
-      required this.listFull,
+
       required this.obxListBuilder,
+      required this.listVariableFunction,
       this.onSubmit,
       this.onEnter,
-      this.sortCompare = true,
-      this.filtersType,
-      this.filter,
-      this.sortFunction,
-      this.stringFilter,
-      this.whereFilter,
       this.rxBoolAuth,
       this.autoFocus = true,
       this.widthLargeScreenThreshold = 1100.0,
@@ -203,11 +166,25 @@ class SearchAppBarPage<T> extends StatefulWidget
       this.restorationId});
 
   @override
-  SearchAppBarPageState<T> createState() => SearchAppBarPageState<T>();
+  SearchAppBarPageStateVariableList<T> createState() =>
+      SearchAppBarPageStateVariableList<T>();
 }
 
-class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
-  late SearcherPageController<T> _controller;
+class SearchAppBarPageStateVariableList<T>
+    extends State<SearchAppBarPageVariableList<T>> {
+  late final SearcherPageControllerVariable<T> _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = SearcherPageControllerVariable<T>(
+      listAsync: widget.listVariableFunction,
+    )..onReady();
+
+    _keyboardHandler = _handleGlobalKeyEvent;
+    HardwareKeyboard.instance.addHandler(_keyboardHandler);
+  }
 
   late final bool Function(KeyEvent) _keyboardHandler;
   bool _escapeKeyHeldDown = false;
@@ -237,8 +214,8 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
 
         if (event is KeyDownEvent) {
           if (!isModSearch) {
-            widget.onEnter
-                ?.call(_controller.listFull, _controller.highLightIndex.value);
+            widget.onEnter?.call(_controller.listSearch.toList(),
+                _controller.highLightIndex.value);
           } else {
             widget.onSubmit?.call(
                 _controller.rxSearch.value,
@@ -275,17 +252,21 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
     return false;
   }
 
-  SearchAppBarPageState();
-
   void clearSearch() {
     _controller.onCancelSearch?.call();
+    _controller.onSearchList([]);
     _controller.highLightIndex.value = 0;
   }
 
   void initShowSearch() {
     _controller.initShowSearch?.call(null);
+    _controller.onSearchList([]);
     _controller.rxSearch.value = '';
     _controller.highLightIndex.value = 0;
+  }
+
+  void onSearchList(List<T> list) {
+    _controller.onSearchList(list);
   }
 
   bool get isModSearch => _controller.isModSearch;
@@ -298,74 +279,8 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
     } */
 
     if (widget.onEnter != null && !_controller.isModSearch) {
-      widget.onEnter!(_controller.listFull, _controller.highLightIndex.value);
-    }
-  }
-
-  @override
-  void initState() {
-    //_escapeAction = KCallbackAction<EscapeIntent>(onInvoke: _handleUnFocusKeyPress);
-    super.initState();
-    /*_controller = Get.put(SearcherPageController<T>(
-        listFull: widget.listFull,
-        stringFilter: widget.stringFilter,
-        //compareSort: widget.compareSort,
-        sortCompare: widget.sortCompare,
-        filtersType: widget.filtersType)
-      ..initFilters()
-      ..onReady())!;*/
-
-    _controller = SearcherPageController<T>(
-        listFull: widget.listFull,
-        stringFilter: widget.stringFilter,
-        whereFilter: widget.whereFilter,
-        //compareSort: widget.compareSort,
-
-        filter: widget.filter,
-        sortFunction: widget.sortFunction,
-        sortCompare: widget.sortCompare,
-        filtersType: widget.filtersType)
-      ..initFilters()
-      ..onReady();
-
-    _keyboardHandler = _handleGlobalKeyEvent;
-    HardwareKeyboard.instance.addHandler(_keyboardHandler);
-  }
-
-  @override
-  void didUpdateWidget(SearchAppBarPage<T> oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    _controller.stringFilter = widget.stringFilter;
-    //_controller.compareSort = widget.compareSort;
-    _controller.sortCompare = widget.sortCompare;
-    _controller.filtersType = widget.filtersType;
-    _controller.sortFunction = widget.sortFunction;
-    _controller.filter = widget.filter;
-
-    _controller.initFilters();
-
-    if (oldWidget.listFull != widget.listFull) {
-      _controller.listFull.clear();
-      _controller.listFull.addAll(widget.listFull);
-      _controller.sortCompareList(widget.listFull);
-
-      if (_controller.rxSearch.value.isNotEmpty) {
-        //if (oldWidget.sortFunction != widget.sortFunction) {
-        _controller.refreshSearchList(_controller.rxSearch.value);
-      } else {
-        //if (oldWidget.sortFunction != widget.sortFunction) {
-        _controller.onSearchList(widget.listFull);
-      }
-    } else {
-      if (widget.listFull.isNotEmpty) {
-        _controller.sortCompareList(widget.listFull);
-        _controller.onSearchList(widget.listFull);
-
-        if (_controller.rxSearch.value.isNotEmpty) {
-          _controller.refreshSearchList(_controller.rxSearch.value);
-        }
-      }
+      widget.onEnter!(
+          _controller.listSearch.toList(), _controller.highLightIndex.value);
     }
   }
 
@@ -460,12 +375,12 @@ class SearchAppBarPageState<T> extends State<SearchAppBarPage<T>> {
   }
 }
 
-class KCallbackAction<T extends Intent> extends CallbackAction<T> {
+class KCallbackActionVariable<T extends Intent> extends CallbackAction<T> {
   // ignore: use_super_parameters
-  KCallbackAction({required void Function(T) onInvoke})
+  KCallbackActionVariable({required void Function(T) onInvoke})
       : super(onInvoke: onInvoke);
 }
 
-class EscapeIntent extends Intent {
-  const EscapeIntent();
+class EscapeIntentVariable extends Intent {
+  const EscapeIntentVariable();
 }

@@ -62,12 +62,6 @@ class SimpleAppBarController<T> implements SearcherBase<T> {
   final RxBool bancoInit = false.obs;
 
   @override
-  bool isAsync = false;
-
-  @override
-  ListAsync<T>? listAsync;
-
-  @override
   bool get bancoInitValue => bancoInit.value;
 
   @override

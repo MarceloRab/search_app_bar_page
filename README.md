@@ -110,6 +110,28 @@ class SearchAppBarPageObx<T> extends StatefulWidget {
 }
 ```
 
+- We added `SearchAppBarPageVariableList`. Use it when you need to search for a value in a list that is not static. It receives a `listVariableFunction` function that returns a `FutureOr<List<T>>`. This function is called every time the search query changes. It is useful for searching in an API or a database. Return a list of items from a query. Filter however you want.
+
+```dart
+class SearchAppBarPageVariableList <T> extends StatefulWidget {
+  //...
+
+  SearchAppBarPageVariableList ( //...
+      /// Parameters para o SearcherGetController
+      /// final ListVariableFunction<T>? listVariableFunction;
+
+      /// [listVariableFunction] Function to fetch list items asynchronously or no.
+      @required this.listVariableFunction,
+
+      /// [obxListBuilder] Function applied when it is filtering in search.
+      @required this.obxListBuilder,
+
+      )
+}
+```
+
+- We added `SearchAppBarPage`. Use it when you need to search for a value in a list that is static. It receives a `listFull` function that returns a `List<T>`. This function is called every time the search query changes. It is useful for searching in an API or a database. Return a list of items from a query. Filter however you want.
+
 ```dart
 class SearchAppBarPage<T> extends StatefulWidget {
   //...

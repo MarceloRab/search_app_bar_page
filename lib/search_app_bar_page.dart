@@ -9,5 +9,6 @@ export 'src/search_app_bar_page/ui/search_app_bar_page.dart';
 export 'src/search_app_bar_page/ui/search_app_bar_page_obx.dart';
 export 'src/search_app_bar_page/ui/search_app_bar_page_refresh.dart';
 export 'src/search_app_bar_page/ui/search_app_bar_page_stream.dart';
+export 'src/search_app_bar_page/ui/search_app_bar_page_variable_list.dart';
 export 'src/search_app_bar_page/ui/search_app_bar_pagination.dart';
 export 'src/search_app_bar_page/ui/widgets/rx_list_builder.dart';

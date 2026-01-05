@@ -49,11 +49,6 @@ class SearcherPagePaginationController<T>
   @override
   bool get bancoInitValue => bancoInit.value;
 
-  @override
-  bool isAsync = false;
-
-  @override
-  ListAsync<T>? listAsync;
   bool finishPage = false;
 
   final Rx<AsyncSnapshotScrollPage<T>> _snapshotScroolPage =
