@@ -93,6 +93,9 @@ class SearchAppBarPageVariableList<T> extends StatefulWidget
 
   final ListVariableFunction<T>? listVariableFunction;
 
+  /// [onChanged] Function called when the search text changes.
+  final ValueChanged<String>? onChangedQuery;
+
   ///  [rxBoolAuth] Insert your RxBool here that changes with the auth
   /// status to have reactivity.
   final RxBoolAuth? rxBoolAuth;
@@ -117,6 +120,7 @@ class SearchAppBarPageVariableList<T> extends StatefulWidget
 
       required this.obxListBuilder,
       required this.listVariableFunction,
+      this.onChangedQuery,
       this.onSubmit,
       this.onEnter,
       this.rxBoolAuth,
@@ -180,6 +184,7 @@ class SearchAppBarPageStateVariableList<T>
 
     _controller = SearcherPageControllerVariable<T>(
       listAsync: widget.listVariableFunction,
+      onChangedQuery: widget.onChangedQuery,
     )..onReady();
 
     _keyboardHandler = _handleGlobalKeyEvent;
@@ -254,12 +259,14 @@ class SearchAppBarPageStateVariableList<T>
 
   void clearSearch() {
     _controller.onCancelSearch?.call();
+    _controller.onChangedQuery?.call('');
     _controller.onSearchList([]);
     _controller.highLightIndex.value = 0;
   }
 
   void initShowSearch() {
     _controller.initShowSearch?.call(null);
+    _controller.onChangedQuery?.call('');
     _controller.onSearchList([]);
     _controller.rxSearch.value = '';
     _controller.highLightIndex.value = 0;

@@ -47,6 +47,8 @@ class SearcherPageControllerVariable<T> extends SearcherBase<T> {
 
   ListVariableFunction<T>? listAsync;
 
+  final ValueChanged<String>? onChangedQuery;
+
   Function(Iterable<T>) get onSearchList => listSearch.assignAll;
 
   //Compare<T> compareSort;
@@ -59,6 +61,7 @@ class SearcherPageControllerVariable<T> extends SearcherBase<T> {
 
   SearcherPageControllerVariable({
     required this.listAsync,
+    this.onChangedQuery,
   });
 
   void onReady() {
@@ -66,12 +69,14 @@ class SearcherPageControllerVariable<T> extends SearcherBase<T> {
       rxError.value = null;
 
       if (value == null || value.isEmpty) {
+        onChangedQuery?.call('');
         onSearchList([]);
         return;
       }
 
       isLoadingListAsync = true;
       try {
+        onChangedQuery?.call(value);
         final list = await listAsync!.call(rxSearch.value);
         isLoadingListAsync = false;
         onSearchList(list);

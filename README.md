@@ -2,7 +2,17 @@
 
 A Flutter package to give you a simple search page.
 
-#### Translation [Em Português](doc/README.pt.md)
+## 🤖 AI / LLM Usage Instructions
+
+**For AI Agents & Copilots:**
+
+- **Standard List**: Use `SearchAppBarPage` (Memory list, no GetX).
+- **GetX Reactive**: Use `SearchAppBarPageObx` (Memory list, GetX reactivity).
+- **API/Async**: Use `SearchAppBarPageVariableList` (Async API calls via `onSearchList`).
+- **Filtering**: Always use `whereFilter` parameter for local lists.
+- **Config**: Map `title` to `searchAppBarTitle` and `actions` to `searchAppBarActions`.
+
+Full decision tree and code snippets are available in the public library documentation (`///` comments) of `lib/search_app_bar_page.dart`.
 
 ## Introduction
 

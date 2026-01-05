@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.2.1-release.0]
+
+- Added `onChangedQuery` parameter to always return the current search query text.
+- Added **AI Implementation Guidelines**: You can now ask an AI agent "Create a search page using search_app_bar_page" and it will follow the embedded instructions in the package to generate the correct code.
+- Exposed `onSearchList` to allow manual manipulation of the search results list.
+
+## [4.2.0-release.0]
+
+- Added `SearchAppBarPageVariableList`. This widget is designed for scenarios where the list is not static and changes based on the search query. Key parameter: [listVariableFunction], which returns a `FutureOr<List<T>>` and is triggered whenever the search term updates. It is useful for searching in an API or a database. Return a list of items from a query. Filter however you want.
+
 ## [4.1.1-release.0]
 
 - Updated README.md to better understand `SearchAppBarPageObx`. Also how to use the parameters [highLightIndex], [onSubmit] and [onEnter].
@@ -98,6 +108,76 @@
 ## [3.0.0-release.1]
 
 - Adapting to get package 5.0.0
+
+## [3.2.1]
+
+- Added `onChangedQuery` parameter to always return the current search query text.
+- Added **AI Implementation Guidelines**: You can now ask an AI agent "Create a search page using search_app_bar_page" and it will follow the embedded instructions in the package to generate the correct code.
+- Exposed `onSearchList` to allow manual manipulation of the search results list.
+
+## [3.2.0]
+
+- Added `SearchAppBarPageVariableList`. This widget is designed for scenarios where the list is not static and changes based on the search query. Key parameter: [listVariableFunction], which returns a `FutureOr<List<T>>` and is triggered whenever the search term updates. It is useful for searching in an API or a database. Return a list of items from a query. Filter however you want.
+
+## [3.1.1]
+
+- Updated README.md to better understand `SearchAppBarPageObx`. Also how to use the parameters [highLightIndex], [onSubmit] and [onEnter].
+
+## [3.1.0]
+
+- Minimal fix
+
+## [3.0.2]
+
+- Add SearchAppBarPageObx!. Now just insert your [listRx] and you have your reactivity.
+
+## [3.0.1]
+
+- Minimal fix - reset highLightIndex when cancelSearch
+
+## [3.0.0]
+
+- We have an excellent update aimed at practicality in large screen mode (web).
+- We created [onEnter] so that when you click the enter key, you can select the item at highLightIndex.
+- The up and down arrows change the highLightIndex according to the size of the complete or filtered list.
+- Now the methods [obxListBuilder], [onSubmit], [onEnter] return the highLightIndex.
+- You need to use it to modify your Scroll of the filtered list and generate a better experience for the user.
+
+## [2.5.10]
+
+- fix for search entry and exit for query cleanup.
+
+## [2.5.9]
+
+- use the Esc key on the keyboard in web mode to enter and exit Search mode.
+- use `searchAppBarKey.currentState!.initShowSearch()` to open the search
+- use `searchAppBarKey.currentState!.isModoSearch` even without filtering anything
+- use [widthLargeScreenThreshold] for using the escape key to enter and exit isModoSearch
+- Fix refresh screen when returning to Search. Tip: use [onSubmit] for the enter key on desktop or keyboard on mobile.
+
+## [2.5.8]
+
+- minimal fix
+
+## [2.5.7]
+
+- minimal fix
+
+## [2.5.6]
+
+- add auto focus to search field.
+
+## [2.5.5]
+
+- add auto focus to search field.
+
+## [2.5.4]
+
+- Fix: Clear search when navigating to a different page. Search is reactivated when returning to the page. Use `searchAppBarKey.currentState!.clearSearch();` to clear the search, leveraging `final GlobalKey<SearchAppBarPageState<Person>> searchAppBarKey = GlobalKey();`.
+
+## [2.5.3]
+
+- Add the command to clear the Search text field. GlobalKey< SearchAppBarPageState< Person>> searchAppBarKey = GlobalKey(); Use searchAppBarKey.currentState!.clearSearch(); when desired.
 
 ## [2.5.2]
 

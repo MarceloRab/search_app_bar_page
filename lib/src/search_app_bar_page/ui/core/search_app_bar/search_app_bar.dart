@@ -160,6 +160,9 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
     widget.controller.isModSearch = false;
     if (widget.controller is SearcherPageControllerVariable<T>) {
       (widget.controller as SearcherPageControllerVariable<T>).onSearchList([]);
+      (widget.controller as SearcherPageControllerVariable<T>)
+          .onChangedQuery
+          ?.call('');
     }
     widget.controller.rxSearch.value = '';
     _elevation = widget.elevation;
