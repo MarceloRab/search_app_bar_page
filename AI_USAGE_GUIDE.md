@@ -4,14 +4,14 @@ This document provides instructions for AI agents on how to correctly implement 
 
 ## Decision Tree: Which Widget to Use?
 
-1.  **Are you filtering data from an API or Database asynchronously?**
+1. **Are you filtering data from an API or Database asynchronously?**
 
-    - **YES** -> Use `SearchAppBarPageVariableList`.
-    - **NO** (You have the full list in memory) -> Go to step 2.
+   - **YES** -> Use `SearchAppBarPageVariableList`.
+   - **NO** (You have the full list in memory) -> Go to step 2.
 
-2.  **Are you using GetX for State Management?**
-    - **YES** -> Use `SearchAppBarPageObx`.
-    - **NO** -> Use `SearchAppBarPage`.
+2. **Are you using GetX for State Management?**
+   - **YES** -> Use `SearchAppBarPageObx`.
+   - **NO** -> Use `SearchAppBarPage`.
 
 ---
 
@@ -77,8 +77,8 @@ _Note: You can also use `obxListBuilder` method if you need more granular contro
 
 ```dart
 SearchAppBarPageVariableList<Person>(
-  // 1. Implement onSearchList (Returns Future<List<T>>)
-  onSearchList: (query) async {
+  // 1. Implement listVariableFunction (Returns Future<List<T>>)
+  listVariableFunction: (query, start, end) async {
     return await MyApiService.searchPersons(query);
   },
 
@@ -86,9 +86,9 @@ SearchAppBarPageVariableList<Person>(
   searchAppBarTitle: Text("API Search"),
 
   // 3. Builder
-  body: (context, foundList, index) {
-     final person = foundList[index];
-     return ListTile(title: Text(person.name));
+  obxListBuilder: (context, foundList, isModSearch, index) {
+    final person = foundList[index];
+    return ListTile(title: Text(person.name));
   },
 
   // 4. Optional: Handle empty states
@@ -98,10 +98,11 @@ SearchAppBarPageVariableList<Person>(
 
 ## Configuration Cheat Sheet
 
-| Parameter                 | Function        | Implication                                          |
-| :------------------------ | :-------------- | :--------------------------------------------------- |
-| **`whereFilter`**         | Filtering logic | **Mandatory** for local lists. Avoid `stringFilter`. |
-| **`onSearchList`**        | API Search Call | **Mandatory** for `VariableList` widget.             |
-| **`searchAppBarTitle`**   | AppBar Title    | Replaces standard `title`.                           |
-| **`searchAppBarActions`** | AppBar Actions  | Replaces standard `actions`.                         |
-| **`onEnter`**             | Callback        | Triggered when search mode opens.                    |
+| Parameter                  | Function        | Implication                                                                |
+| :------------------------- | :-------------- | :------------------------------------------------------------------------- |
+| **`whereFilter`**          | Filtering logic | **Mandatory** for local lists. Avoid `stringFilter`.                       |
+| **`listVariableFunction`** | API Search Call | **Mandatory** for `VariableList` widget. Params: (query, start, end).      |
+| **`onChangedQuery`**       | Query Listener  | Optional. Used to react to query changes without replacing the list logic. |
+| **`searchAppBarTitle`**    | AppBar Title    | Replaces standard `title`.                                                 |
+| **`searchAppBarActions`**  | AppBar Actions  | Replaces standard `actions`.                                               |
+| **`onEnter`**              | Callback        | Triggered when search mode opens.                                          |

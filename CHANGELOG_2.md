@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.4.0]
+
+- Added `queryTransformer` parameter to transform the search query programmatically as the user types.
+
 ## [4.3.0]
 
 - Added `onChangedQuery` parameter to always return the current search query text.

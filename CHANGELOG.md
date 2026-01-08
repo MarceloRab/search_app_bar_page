@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.1.0-rc.1]
+
+- Added `queryTransformer` parameter to transform the search query programmatically as the user types.
+- Added `onChangedQuery` parameter to always return the current search query text.
+- Added `textController` parameter to provide an external `TextEditingController`.
+
 ## [5.0.1-rc.1]
 
 - Fixed debounce time to 600ms to fetch the item list in `SearchAppBarPageVariableList` if `listAsync` is `Future<List<T>> Function(String?)` or zero ms if `listAsync` is `List<T> Function(String?)`.
@@ -112,6 +118,10 @@
 ## [3.0.0-release.1]
 
 - Adapting to get package 5.0.0
+
+## [4.4.0]
+
+- Added `queryTransformer` parameter to transform the search query programmatically as the user types.
 
 ## [4.3.1]
 

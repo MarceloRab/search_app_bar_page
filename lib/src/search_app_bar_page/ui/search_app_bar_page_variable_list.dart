@@ -26,6 +26,7 @@ class SearchAppBarPageVariableList<T> extends StatefulWidget
   final List<Widget> searchAppBarActions;
   final double searchAppBarElevation;
   final TextInputType? searchAppBarKeyboardType;
+
   final Color? magnifyGlassColor;
 
   /// [magnifyInGlassColor] Changes the color of the magnifying glass.
@@ -88,12 +89,14 @@ class SearchAppBarPageVariableList<T> extends StatefulWidget
   /// [obxListBuilder] Function applied when it is filtered.
   final WidgetsListBuilder<T> obxListBuilder;
 
-  /// [listVariableFunction] Function to fetch list items asynchronously or no.
+  /// [listVariableFunction] Function to fetch list items asynchronously or synchronously.
   /// Return a list of items from a query. Filter however you want.
-
+  /// It is critical for the functioning of the widget, as it is the source of the data.
   final ListVariableFunction<T>? listVariableFunction;
 
-  /// [onChanged] Function called when the search text changes.
+  /// [onChangedQuery] Function called when the search text changes.
+  /// It allows you to react to the search query, but does not replace the `listVariableFunction`
+  /// which is responsible for returning the filtered list.
   final ValueChanged<String>? onChangedQuery;
 
   ///  [rxBoolAuth] Insert your RxBool here that changes with the auth
@@ -107,11 +110,16 @@ class SearchAppBarPageVariableList<T> extends StatefulWidget
   /// [onEnter] Triggers highlightIndex when isModSearch is false.
   final OnEnter<T>? onEnter;
 
-  /// [autoFocus] Whether to focus the search field automatically when
+  /// [autoFocus] Whether to focus the search field automatically when the widget is built.
   final bool autoFocus;
 
   /// [widthLargeScreenThreshold] Width threshold to consider a large screen layout.
   final double widthLargeScreenThreshold;
+
+  /// [textController] Optional custom controller for the search field.
+  /// Allows external control of the search text, but for the search logic ensuring reactivity
+  /// and filtering, it works in conjunction with `listVariableFunction`.
+  final TextEditingController? textController;
 
   //final VoidCallback? onCancelSearch;
 
@@ -129,6 +137,7 @@ class SearchAppBarPageVariableList<T> extends StatefulWidget
       this.rxBoolAuth,
       this.autoFocus = true,
       this.widthLargeScreenThreshold = 1100.0,
+      this.textController,
 
       /// Parameters do SearchAppBar
       this.searchAppBarTitle,
@@ -279,6 +288,14 @@ class SearchAppBarPageStateVariableList<T>
     _controller.onSearchList(list);
   }
 
+  /* void onQueryTransformer(String queryTransformer) {
+    widget.queryTransformer?.call(queryTransformer);
+  } */
+
+  void setQuery(String query) {
+    _controller.rxSearch.value = query;
+  }
+
   bool get isModSearch => _controller.isModSearch;
 
   void onEnter() {
@@ -325,6 +342,7 @@ class SearchAppBarPageStateVariableList<T>
             searchTextSize: widget.searchTextSize,
             searchTextColor: widget.searchTextColor,
             autoFocus: widget.autoFocus,
+            textController: widget.textController,
             magnifyGlassColor:
                 widget.magnifyGlassColor ?? widget.magnifyInGlassColor),
         body: Obx(() {

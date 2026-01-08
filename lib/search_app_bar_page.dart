@@ -8,7 +8,7 @@
 ///
 /// *   **Scenario A: Asynchronous API/Database Filter**
 ///     *   Use `[SearchAppBarPageVariableList]`
-///     *   **Must** implement `onSearchList` parameter.
+///     *   **Must** implement `listVariableFunction` parameter.
 ///
 /// *   **Scenario B: Full List in Memory + GetX**
 ///     *   Use `[SearchAppBarPageObx]`
@@ -24,9 +24,10 @@
 /// ### API Search (Variable List)
 /// ```dart
 /// SearchAppBarPageVariableList<Person>(
-///   onSearchList: (query) => api.searchPersons(query),
+///   listVariableFunction: (query, start, end) => api.searchPersons(query),
 ///   searchAppBarTitle: Text("API Search"),
-///   body: (context, foundList, index) => ListTile(title: Text(foundList[index].name)),
+///   obxListBuilder: (context, foundList, isModSearch, index) =>
+///       ListTile(title: Text(foundList[index].name)),
 /// )
 /// ```
 ///

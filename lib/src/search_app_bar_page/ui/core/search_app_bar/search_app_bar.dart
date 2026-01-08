@@ -7,6 +7,7 @@ import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/core/search_app_bar/search_paint.dart';
 import 'package:search_app_bar_page/src/search_app_bar_page/ui/core/search_app_bar/search_widget.dart';
+import 'package:search_app_bar_page/src/search_app_bar_page/ui/core/search_app_bar/search_widget_variable_list.dart';
 
 class SearchAppBar<T> extends StatefulWidget implements PreferredSizeWidget {
   //final Searcher searcher;
@@ -32,6 +33,8 @@ class SearchAppBar<T> extends StatefulWidget implements PreferredSizeWidget {
 
   final bool autoFocus;
 
+  final TextEditingController? textController;
+
   SearchAppBar({
     //@required this.searcher,
     super.key,
@@ -53,6 +56,7 @@ class SearchAppBar<T> extends StatefulWidget implements PreferredSizeWidget {
     int? searchButtonPosition,
     this.keyboardType,
     this.magnifyGlassColor,
+    this.textController,
     this.autoFocus = true,
   }) : _searchButtonPosition = (searchButtonPosition != null &&
                 (0 <= searchButtonPosition &&
@@ -270,42 +274,6 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
         );
       });
     });
-
-    /* return Obx(() {
-      if (widget.controller.bancoInitValue)
-        // if (widget.controller.listSearch != null)
-        return LayoutBuilder(builder: (context, constraints) {
-          maxWidthHeaderSearch = constraints.maxWidth;
-          return GestureDetector(
-            onTapUp: onSearchTapUp,
-            child: AppBar(
-              backgroundColor:
-                  //widget.backgroundColor ?? Theme.of(context).appBarTheme.color,
-                  widget.backgroundColor ?? Theme.of(context).appBarTheme.foregroundColor,
-              iconTheme: widget.iconTheme ?? Theme.of(context).appBarTheme.iconTheme,
-              title: widget.title,
-              elevation: _elevation,
-              centerTitle: widget.centerTitle,
-              actions: increasedActions,
-            ),
-          );
-        });
-      else {
-        return GestureDetector(
-          onTapUp: onSearchTapUp,
-          child: AppBar(
-            backgroundColor:
-                //widget.backgroundColor ?? Theme.of(context).appBarTheme.color,
-                widget.backgroundColor ?? Theme.of(context).appBarTheme.foregroundColor,
-            iconTheme: widget.iconTheme ?? Theme.of(context).appBarTheme.iconTheme,
-            title: widget.title,
-            elevation: _elevation,
-            centerTitle: widget.centerTitle,
-            actions: removeSearcher,
-          ),
-        );
-      }
-    }); */
   }
 
   Widget _buildSearchButton(BuildContext context) {
@@ -347,24 +315,41 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
   }
 
   Widget _buildSearchWidget(bool isInSearchMode, BuildContext context) {
-    return isInSearchMode
-        ? SearchWidget<T>(
-            //searcher: widget.searcher,
-            controller: widget.controller,
-            onSubmit: widget.onSubmit,
-            color: widget.searchElementsColor ??
-                Theme.of(context).iconTheme.color ??
-                Theme.of(context).colorScheme.onSurface,
-            onCancelSearch: cancelSearch,
-            textCapitalization: widget.capitalization,
-            hintText: widget.hintText,
-            keyboardType: widget.keyboardType,
-            searchTextColor: widget.searchTextColor ??
-                Theme.of(context).textTheme.titleLarge?.color ??
-                Theme.of(context).colorScheme.onSurface,
-            searchTextSize: widget.searchTextSize,
-            autoFocus: widget.autoFocus,
-          )
-        : const SizedBox.shrink();
+    if (!isInSearchMode) return const SizedBox.shrink();
+    if (widget.controller is SearcherPageControllerVariable<T>) {
+      return SearchWidgetVariableList<T>(
+        controller: widget.controller as SearcherPageControllerVariable<T>,
+        onSubmit: widget.onSubmit,
+        color: widget.searchElementsColor ??
+            Theme.of(context).iconTheme.color ??
+            Theme.of(context).colorScheme.onSurface,
+        onCancelSearch: cancelSearch,
+        textCapitalization: widget.capitalization,
+        hintText: widget.hintText,
+        keyboardType: widget.keyboardType,
+        searchTextColor: widget.searchTextColor ??
+            Theme.of(context).textTheme.titleLarge?.color ??
+            Theme.of(context).colorScheme.onSurface,
+        searchTextSize: widget.searchTextSize,
+        autoFocus: widget.autoFocus,
+        textController: widget.textController,
+      );
+    }
+    return SearchWidget<T>(
+      controller: widget.controller,
+      onSubmit: widget.onSubmit,
+      color: widget.searchElementsColor ??
+          Theme.of(context).iconTheme.color ??
+          Theme.of(context).colorScheme.onSurface,
+      onCancelSearch: cancelSearch,
+      textCapitalization: widget.capitalization,
+      hintText: widget.hintText,
+      keyboardType: widget.keyboardType,
+      searchTextColor: widget.searchTextColor ??
+          Theme.of(context).textTheme.titleLarge?.color ??
+          Theme.of(context).colorScheme.onSurface,
+      searchTextSize: widget.searchTextSize,
+      autoFocus: widget.autoFocus,
+    );
   }
 }

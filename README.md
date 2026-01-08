@@ -8,7 +8,7 @@ A Flutter package to give you a simple search page.
 
 - **Standard List**: Use `SearchAppBarPage` (Memory list, no GetX).
 - **GetX Reactive**: Use `SearchAppBarPageObx` (Memory list, GetX reactivity).
-- **API/Async**: Use `SearchAppBarPageVariableList` (Async API calls via `onSearchList`).
+- **API/Async**: Use `SearchAppBarPageVariableList` (Async API calls via `listVariableFunction`).
 - **Filtering**: Always use `whereFilter` parameter for local lists.
 - **Config**: Map `title` to `searchAppBarTitle` and `actions` to `searchAppBarActions`.
 
@@ -18,7 +18,7 @@ Full decision tree and code snippets are available in the public library documen
 
 This package was built to generate a complete and reactive search screen with the best possible
 facility. It is based on another package. Open here
-= > [search_app_bar](https://pub.dev/packages/search_app_bar) (by - rodolfoggp@gmail.com). There you
+= > [search_app_bar](https://pub.dev/packages/search_app_bar) (by - <rodolfoggp@gmail.com>). There you
 have the details of the search_app_bar functions. With the changes here, you do not need to extend
 the controller class, but just pass the base list to be filtered or insert the stream that returns
 your list to be filtered. In this case, there is already a StreamBuilder to do the background
@@ -27,7 +27,7 @@ package for more than 01 year and has not responded to my request for changes by
 
 ![example_video](https://user-images.githubusercontent.com/41010018/94386509-426cb800-011e-11eb-975d-05bd57707b16.gif)
 
-##### ✷ The page is divided between
+### ✷ The page is divided between
 
 - SEARCH_APP_BAR
 - CONTROLLER
@@ -35,8 +35,10 @@ package for more than 01 year and has not responded to my request for changes by
 
 ## Required parameters
 
-We have four pages: <blockquote> SearchAppBarPageVariableList, SearchAppBarPageObx, SearchAppBarPage, SearchAppBarPageStream, SearchAppBarPagination
-and SimpleAppBarPage</blockquote>
+We have four pages:
+
+> SearchAppBarPageVariableList, SearchAppBarPageObx, SearchAppBarPage, SearchAppBarPageStream, SearchAppBarPagination
+> and SimpleAppBarPage
 
 🔎 `SearchAppBarPage`, `SearchAppBarPageObx` and `SearchAppBarPageVariableList` work similarly regarding filtering parameters. They need a function to build the Widget (`obxListBuilder`) depending on the filtered list.
 If you use typed objects (Generic `<T>`), you need `[stringFilter]`. This is a function that receives the parameter T and returns the String to filter by.
@@ -46,11 +48,11 @@ Example: For a `Person` object, return `person.name`. This will be used to filte
 
 The function `[obxListBuilder]` is inside an Obx. Place reactive verables into it.
 
-##### ✳️ There are two ways to add reactive variables.
+### ✳️ There are two ways to add reactive variables
 
-- Boot your controller into a StatefulWidget. <p>
+- Boot your controller into a StatefulWidget.
 
-* Pass the reactive variable inside this function `[obxListBuilder]` in SearchAppBarPage and
+- Pass the reactive variable inside this function `[obxListBuilder]` in SearchAppBarPage and
   SearchAppBarPageStream.
 
 ---
@@ -710,7 +712,7 @@ class SearchAppBarPagination<T> extends StatefulWidget {
 }
 ```
 
-##### 😱 You can make a setState on your stream page and your pagination or a rot Reload without any problems. Even changing the value of initialData.
+### 😱 You can make a setState on your stream page and your pagination or a rot Reload without any problems. Even changing the value of initialData
 
 #### 🔎 SearchAppBarPagination
 
@@ -820,15 +822,15 @@ class Person {
 
 ![WhatsApp-Video-2020-10-05-at-23 33](https://user-images.githubusercontent.com/41010018/95152485-8cc7e780-0763-11eb-9c77-55b3fe84fd61.gif)
 
-### Example of server side function.
+### Example of server side function
 
-##### Attencion: The number of elements must be more than 14 `(numItemsPage > 14)`.
+#### Attencion: The number of elements must be more than 14 `(numItemsPage > 14)`
 
 Ex: If numItemsPage = 20 (total items on a page) and you send a list with a length less than 20 or
 send an empty list, = >>> means that the data is over. If you send null: if there is no data yet,
 return an Exception; if a data already exists, nothing happens.
 
-#### Return types for future FetchPageItems.
+#### Return types for future FetchPageItems
 
 - List equal to numItemsPage `(list.length == numItemsPage)` = continues to request new pages.
 - Empty list or list smaller than numItemsPage `(list.length < numItemsPage)` = ends the request
@@ -841,9 +843,9 @@ return an Exception; if a data already exists, nothing happens.
   exists, it returns the same data in the cache. For now the cahe is restarted when the screen
   receives dispose.
 
-##### ❕Tip: Build a cache of your requests for the API and setState your page without problems.
+##### ❕Tip: Build a cache of your requests for the API and setState your page without problems
 
-###### I had to spend a few hours testing it so there were no mistakes. Do tests and if you find an error, I would be happy to resolve them as soon as possible.
+###### I had to spend a few hours testing it so there were no mistakes. Do tests and if you find an error, I would be happy to resolve them as soon as possible
 
 ```dart
 Future<List<Person>> _futureListPerson(int page, String query) async {
@@ -1047,7 +1049,7 @@ class _SimpleAppPageState extends State<SimpleAppBarPage> {
 }
 ```
 
-#### Vide [Example full](https://pub.dev/packages/search_app_bar_page/example) for more details.
+#### Vide [Example full](https://pub.dev/packages/search_app_bar_page/example) for more details
 
 ## Filters
 
@@ -1060,12 +1062,12 @@ Default = FiltersTypes.contains;
 
 ## Search_app_bar parameters
 
-Here [search_app_bar parameters] (https://pub.dev/packages/search_app_bar#parameters), in the base
+Here [search_app_bar parameters] (<https://pub.dev/packages/search_app_bar#parameters>), in the base
 package, you can understand each component.
 
 <blockquote> NEW Components </blockquote>
 
-## Reactivity to the connection.
+## Reactivity to the connection
 
 `[iconConnectyOffAppBar]` Appears when the connection status is off. There is already a default
 icon. If you don't want to present a choice `[hideDefaultConnectyIconOffAppBar]` = true; If you want
@@ -1081,15 +1083,15 @@ receive the first data. Everyone already comes with They all come with default w
 ## Disclaimer
 
 The initial design of this package has an animation provided in a tutorial by Nishant Desai
-at: https://blog.usejournal.com/change-app-bar-in-flutter-with-animation-cfffb3413e8a
+at: <https://blog.usejournal.com/change-app-bar-in-flutter-with-animation-cfffb3413e8a>
 
-All merits for Rodolfo (rodolfoggp@gmail.com) and Nishant Desai.
+All merits for Rodolfo (<rodolfoggp@gmail.com>) and Nishant Desai.
 
 ---
 
 ## New Components
 
-#### ✷ GetStreamPage
+### ✷ GetStreamPage
 
 A reactive page on GetX in a super simple way from your stream without a search.
 
@@ -1225,7 +1227,7 @@ class Person {
 }
 ```
 
-#### ✷ GetStreamWidget without Scaffold parameters.
+#### ✷ GetStreamWidget without Scaffold parameters
 
 #### ✷ Rx extension in reactive Widgets
 
@@ -1299,4 +1301,4 @@ class TestStreamWidget extends StatelessWidget {
 
 ```
 
-#### Vide [Example full](https://pub.dev/packages/search_app_bar_page/example) for more details.
+**Vide** [Example full](https://pub.dev/packages/search_app_bar_page/example) for more details.
