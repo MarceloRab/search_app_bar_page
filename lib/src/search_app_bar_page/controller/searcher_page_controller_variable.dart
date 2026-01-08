@@ -65,7 +65,7 @@ class SearcherPageControllerVariable<T> extends SearcherBase<T> {
   });
 
   void onReady() {
-    _worker = ever(rxSearch, (String? value) async {
+    _worker = debounce(rxSearch, (String? value) async {
       rxError.value = null;
 
       if (value == null || value.isEmpty) {
@@ -88,7 +88,10 @@ class SearcherPageControllerVariable<T> extends SearcherBase<T> {
         onCancelSearch?.call();
         highLightIndex.value = 0;
       }
-    });
+    },
+        time: listAsync is Future<List<T>> Function(String?)
+            ? const Duration(milliseconds: 600)
+            : Duration.zero);
   }
 
   final RxInt highLightIndex = 0.obs;

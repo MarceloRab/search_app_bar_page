@@ -113,6 +113,8 @@ class SearchAppBarPageVariableList<T> extends StatefulWidget
   /// [widthLargeScreenThreshold] Width threshold to consider a large screen layout.
   final double widthLargeScreenThreshold;
 
+  //final VoidCallback? onCancelSearch;
+
   const SearchAppBarPageVariableList(
       {super.key,
 
@@ -123,6 +125,7 @@ class SearchAppBarPageVariableList<T> extends StatefulWidget
       this.onChangedQuery,
       this.onSubmit,
       this.onEnter,
+      //this.onCancelSearch,
       this.rxBoolAuth,
       this.autoFocus = true,
       this.widthLargeScreenThreshold = 1100.0,

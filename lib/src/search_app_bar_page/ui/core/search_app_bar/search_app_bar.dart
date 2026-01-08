@@ -166,6 +166,7 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
     }
     widget.controller.rxSearch.value = '';
     _elevation = widget.elevation;
+    //widget.onCancelSearch?.call();
     // Reset both animations to initial state (AppBar fully visible, no ripple)
     _controller.reset();
     _fadeController.reset();

@@ -1,5 +1,9 @@
 # Changelog
 
+## [5.0.1-rc.1]
+
+- Fixed debounce time to 600ms to fetch the item list in `SearchAppBarPageVariableList` if `listAsync` is `Future<List<T>> Function(String?)` or zero ms if `listAsync` is `List<T> Function(String?)`.
+
 ## [5.0.0-rc.1]
 
 - Added `onChangedQuery` parameter to always return the current search query text.
@@ -108,6 +112,16 @@
 ## [3.0.0-release.1]
 
 - Adapting to get package 5.0.0
+
+## [4.3.1]
+
+- Fixed debounce time to 600ms to fetch the item list in `SearchAppBarPageVariableList` if `listAsync` is `Future<List<T>> Function(String?)` or zero ms if `listAsync` is `List<T> Function(String?)`.
+
+## [4.3.0]
+
+- Added `onChangedQuery` parameter to always return the current search query text.
+- Added **AI Implementation Guidelines**: You can now ask an AI agent "Create a search page using search_app_bar_page" and it will follow the embedded instructions in the package to generate the correct code.
+- Exposed `onSearchList` to allow manual manipulation of the search results list.
 
 ## [3.2.0]
 

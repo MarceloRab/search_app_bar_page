@@ -35,14 +35,12 @@ package for more than 01 year and has not responded to my request for changes by
 
 ## Required parameters
 
-We have four pages: <blockquote> SearchAppBarPageObx, SearchAppBarPage, SearchAppBarPageStream, SearchAppBarPagination
+We have four pages: <blockquote> SearchAppBarPageVariableList, SearchAppBarPageObx, SearchAppBarPage, SearchAppBarPageStream, SearchAppBarPagination
 and SimpleAppBarPage</blockquote>
 
-🔎 <span> </span> `SearchAppBarPage` needs a list that is the complete list to be filtered and a
-function that is passed on to build the Widget depending on the filtered list. If you type the page,
-you need [stringFilter]. This is a function that receives the parameter T (type of list) and you
-choose it as the Return String from the object. As in the example below. It was typed as Person and
-returned person.name. This will be used to filter by the search query.
+🔎 `SearchAppBarPage`, `SearchAppBarPageObx` and `SearchAppBarPageVariableList` work similarly regarding filtering parameters. They need a function to build the Widget (`obxListBuilder`) depending on the filtered list.
+If you use typed objects (Generic `<T>`), you need `[stringFilter]`. This is a function that receives the parameter T and returns the String to filter by.
+Example: For a `Person` object, return `person.name`. This will be used to filter by the search query.
 
 ## Tips
 
