@@ -64,6 +64,7 @@ class SearcherPageController<T> extends SearcherBase<T> {
 
   //StringFilter<T> get _defaultFilter => (T value) => value as String;
 
+  @override
   final focusSearch = FocusNode();
 
   SearcherPageController({

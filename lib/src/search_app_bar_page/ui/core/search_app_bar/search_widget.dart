@@ -77,6 +77,7 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
         onPressed: () {
           widget.controller.rxSearch('');
           textController.clear();
+          widget.controller.focusSearch.requestFocus();
         },
       );
     });
@@ -96,9 +97,7 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
     return TextField(
         // key: UniqueKey(),
         controller: textController,
-        focusNode: widget.controller is SearcherPageController<T>
-            ? (widget.controller as SearcherPageController<T>).focusSearch
-            : null,
+        focusNode: widget.controller.focusSearch,
         //textAlign: TextAlign.left,
         //autocorrect: false,
         keyboardType: widget.keyboardType,

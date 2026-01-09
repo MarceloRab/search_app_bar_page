@@ -7,6 +7,8 @@ import 'package:search_app_bar_page/src/search_app_bar_page/controller/searcher_
 import 'package:search_app_bar_page/src/search_app_bar_page/controller/utils/filters/functions_filters.dart';
 
 class SimpleAppBarController<T> implements SearcherBase<T> {
+  @override
+  final focusSearch = FocusNode();
   final listSearch = <T>[].obs;
   final List<T> listFull;
 
@@ -123,6 +125,7 @@ class SimpleAppBarController<T> implements SearcherBase<T> {
 
   FutureOr onClose() {
     _worker?.dispose();
+    focusSearch.dispose();
     //_isModSearch.close();
     //rxSearch.close();
     //listSearch.close();

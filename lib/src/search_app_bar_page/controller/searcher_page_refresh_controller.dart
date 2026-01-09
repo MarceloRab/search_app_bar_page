@@ -9,6 +9,9 @@ import 'package:search_app_bar_page/src/search_app_bar_page/ui/infra/search_stre
 
 class SearcherPageRefreshController<T> extends SearcherBase<T>
     with StreamSearcherBase<T> {
+  @override
+  final focusSearch = FocusNode();
+
   final RxBool _isModSearch = false.obs;
 
   @override
@@ -114,6 +117,7 @@ class SearcherPageRefreshController<T> extends SearcherBase<T>
   }
 
   FutureOr onClose() {
+    focusSearch.dispose();
     //_worker?.dispose();
     // _isModSearch.close();
     // rxSearch.close();

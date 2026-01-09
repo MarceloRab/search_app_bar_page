@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
 
 abstract class SearcherBase<T> {
+  FocusNode get focusSearch;
   VoidCallback? onCancelSearch;
   ValueChanged<TapUpDetails?>? initShowSearch;
 

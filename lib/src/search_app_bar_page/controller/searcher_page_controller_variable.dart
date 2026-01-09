@@ -57,6 +57,7 @@ class SearcherPageControllerVariable<T> extends SearcherBase<T> {
 
   //StringFilter<T> get _defaultFilter => (T value) => value as String;
 
+  @override
   final focusSearch = FocusNode();
 
   SearcherPageControllerVariable({
@@ -79,6 +80,10 @@ class SearcherPageControllerVariable<T> extends SearcherBase<T> {
         onChangedQuery?.call(value);
         final list = await listAsync!.call(rxSearch.value);
         isLoadingListAsync = false;
+
+        // Discard result if the query changed while waiting for the response
+        if (rxSearch.value != value) return;
+
         onSearchList(list);
         //refreshAsyncSearchList(value, list);
       } catch (err) {
@@ -90,7 +95,7 @@ class SearcherPageControllerVariable<T> extends SearcherBase<T> {
       }
     },
         time: listAsync is Future<List<T>> Function(String?)
-            ? const Duration(milliseconds: 600)
+            ? const Duration(milliseconds: 300)
             : Duration.zero);
   }
 
@@ -111,6 +116,7 @@ class SearcherPageControllerVariable<T> extends SearcherBase<T> {
   FutureOr onClose() {
     _worker?.dispose();
     focusSearch.dispose();
+    //_isModSearch.close();
     //_isModSearch.close();
     //rxSearch.close();
     //listSearch.close();

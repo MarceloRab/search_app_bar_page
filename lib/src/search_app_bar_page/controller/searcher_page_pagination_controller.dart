@@ -14,6 +14,8 @@ typedef CallBackListData<T> = void Function(List<T> listData);
 class SearcherPagePaginationController<T>
     implements SearcherBase<T>, SearcherPaginationBase<T> {
   //
+  @override
+  final focusSearch = FocusNode();
 
   final RxBool _isModSearch = false.obs;
 
@@ -541,6 +543,7 @@ class SearcherPagePaginationController<T>
 
   FutureOr onClose() {
     _snapshotScroolPage.close();
+    focusSearch.dispose();
     //_isModSearch.close();
     //rxSearch.close();
     //TODO:retirado aqui

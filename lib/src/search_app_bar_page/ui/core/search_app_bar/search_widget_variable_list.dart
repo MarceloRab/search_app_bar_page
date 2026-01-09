@@ -120,6 +120,7 @@ class _SearchWidgetVariableListState<T>
         onPressed: () {
           // Apenas limpa o reactive. O listener 'ever' vai limpar o texto visualmente.
           widget.controller.rxSearch('');
+          widget.controller.focusSearch.requestFocus();
         },
       );
     });
@@ -136,9 +137,7 @@ class _SearchWidgetVariableListState<T>
   Widget _buildTextField() {
     return TextField(
         controller: textController,
-        focusNode: widget.controller is SearcherPageController<T>
-            ? (widget.controller as SearcherPageController<T>).focusSearch
-            : null,
+        focusNode: widget.controller.focusSearch,
         keyboardType: widget.keyboardType,
         autofocus: widget.autoFocus,
         decoration: InputDecoration(
