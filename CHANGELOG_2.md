@@ -1,5 +1,9 @@
 # Changelog
 
+## [5.1.1-rc.1]
+
+- Fixed debounce time to 300ms and improved typing detection speed.
+
 ## [5.1.0-rc.1]
 
 - Added `onChangedQuery` parameter to always return the current search query text.
