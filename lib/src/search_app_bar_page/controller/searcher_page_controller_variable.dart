@@ -78,7 +78,7 @@ class SearcherPageControllerVariable<T> extends SearcherBase<T> {
       isLoadingListAsync = true;
       try {
         onChangedQuery?.call(value);
-        final list = await listAsync!.call(rxSearch.value);
+        final list = await listAsync!.call(value);
         isLoadingListAsync = false;
 
         // Discard result if the query changed while waiting for the response
@@ -94,7 +94,7 @@ class SearcherPageControllerVariable<T> extends SearcherBase<T> {
         highLightIndex.value = 0;
       }
     },
-        time: listAsync is Future<List<T>> Function(String?)
+        time: listAsync is Future Function(String?)
             ? const Duration(milliseconds: 300)
             : Duration.zero);
   }
