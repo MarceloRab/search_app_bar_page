@@ -113,6 +113,10 @@ class SearcherPageControllerVariable<T> extends SearcherBase<T> {
     }
   }
 
+  void requestFocus() {
+    focusSearch.requestFocus();
+  }
+
   FutureOr onClose() {
     _worker?.dispose();
     focusSearch.dispose();

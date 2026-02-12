@@ -112,12 +112,68 @@ class SearchAppBarPageObx<T> extends StatefulWidget {
             if (list.isEmpty) {
               return const Center(child: Text('Nothing was found'));
             }
-
-            //...;
-
-///...
-
+            /// ...
 }
+```
+
+### 🎹 Keyboard Navigation & Selection (SearchAppBarPageObx)
+
+Use `highLightIndex`, `onEnter`, and `onSubmit` to create a keyboard-friendly experience.
+
+1.  **`highLightIndex`**: Provided in `obxListBuilder`. Use it to visually highlight the currently selected item in your list (e.g., change background color). The index updates automatically with Arrow Up/Down keys.
+2.  **`onEnter`**: Triggered when the user presses **Enter** while navigating the **full list** (search is NOT active).
+    - **Signature**: `(List<T> listFull, int highLightIndex)`
+    - **Usage**: Open the details of the item at `highLightIndex` in `listFull`.
+3.  **`onSubmit`**: Triggered when the user presses **Enter** inside the **search field**.
+    - **Signature**: `(String query, List<T> listFiltered, int highLightIndex)`
+    - **Usage**: Open the details of the item at `highLightIndex` in `listFiltered`, or perform a search action with `query`.
+
+#### Example Implementation:
+
+```dart
+SearchAppBarPageObx<PacienteModel>(
+  // ... other parameters
+  listRx: controller.pacientes,
+
+  // 1. Handle selection on full list
+  onEnter: (listFull, highLightIndex) {
+    if (highLightIndex >= 0 && highLightIndex < listFull.length) {
+      controller.abrirProntuario(listFull[highLightIndex]);
+    }
+  },
+
+  // 2. Handle selection on filtered list (Search)
+  onSubmit: (query, listFiltered, highLightIndex) {
+     if (highLightIndex >= 0 && highLightIndex < listFiltered.length) {
+       controller.abrirProntuario(listFiltered[highLightIndex]);
+     } else if (listFiltered.isNotEmpty) {
+       // Fallback: Open first item if no specific highlight
+       controller.abrirProntuario(listFiltered[0]);
+     }
+  },
+
+  obxListBuilder: (context, list, isModSearch, highLightIndex) {
+    // ... handling loading and empty states
+
+    return ListView.builder(
+      itemCount: list.length,
+      itemBuilder: (context, index) {
+        final item = list[index];
+        // 3. Visual Highlight
+        final isSelected = index == highLightIndex;
+
+        return Container(
+          // Change color to indicate selection
+          color: isSelected ? Colors.blue.withOpacity(0.1) : null,
+          child: ListTile(
+            title: Text(item.nome),
+            // ...
+          ),
+        );
+      },
+    );
+  },
+);
 ```
 
 - We added `SearchAppBarPageVariableList`. Use it when you need to search for a value in a list that is not static. It receives a `listVariableFunction` function that returns a `FutureOr<List<T>>`. This function is called every time the search query changes. It is useful for searching in an API or a database. Return a list of items from a query. Filter however you want.

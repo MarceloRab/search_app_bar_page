@@ -10,9 +10,10 @@
 ///     *   Use `[SearchAppBarPageVariableList]`
 ///     *   **Must** implement `listVariableFunction` parameter.
 ///
-/// *   **Scenario B: Full List in Memory + GetX**
+/// *   **Scenario B: Full List in Memory + GetX (Recommended for Interactivity)**
 ///     *   Use `[SearchAppBarPageObx]`
-///     *   Pass your `RxList` to the `list` parameter.
+///     *   Pass your `RxList` to the `listRx` parameter.
+///     *   Supports **Keyboard Navigation** (`highLightIndex`, `onEnter`, `onSubmit`).
 ///
 /// *   **Scenario C: Full List in Memory + Standard State**
 ///     *   Use `[SearchAppBarPage]`
@@ -31,13 +32,30 @@
 /// )
 /// ```
 ///
-/// ### GetX Reactive (Obx)
+/// ### GetX Reactive (Obx) with Keyboard Support
+///
+/// See `README.md` for a complete example of keyboard integration.
+///
 /// ```dart
 /// SearchAppBarPageObx<Person>(
-///   list: controller.rxList,
+///   listRx: controller.rxList,
 ///   whereFilter: (p, query) => p.name.contains(query),
 ///   searchAppBarTitle: Text("GetX Search"),
-///   itemBuilder: (context, index, person) => ListTile(title: Text(person.name)),
+///   onEnter: (listFull, highLightIndex) => openDetail(listFull[highLightIndex]),
+///   onSubmit: (query, listFiltered, highLightIndex) => openDetail(listFiltered[highLightIndex]),
+///   obxListBuilder: (context, list, isModSearch, highLightIndex) {
+///     // use highLightIndex to style the selected item
+///     return ListView.builder(
+///       itemCount: list.length,
+///       itemBuilder: (context, index) {
+///          final isSelected = index == highLightIndex;
+///          return Container(
+///            color: isSelected ? Colors.grey.withOpacity(0.2) : null,
+///            child: ListTile(title: Text(list[index].name)),
+///          );
+///       }
+///     );
+///   }
 /// )
 /// ```
 ///

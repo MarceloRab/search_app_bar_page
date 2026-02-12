@@ -10,8 +10,7 @@ import 'package:search_app_bar_page/src/search_app_bar_page/ui/seacher_widget_pa
 
 /// Use this class when you cannot use a full list. List with varied sizes.
 
-class SearchAppBarPageVariableList<T> extends StatefulWidget
-    implements SearcherScaffoldBase {
+class SearchAppBarPageVariableList<T> extends StatefulWidget implements SearcherScaffoldBase {
   /// Parameters of SearchAppBar
 
   final Widget? searchAppBarTitle;
@@ -182,12 +181,10 @@ class SearchAppBarPageVariableList<T> extends StatefulWidget
       this.restorationId});
 
   @override
-  SearchAppBarPageStateVariableList<T> createState() =>
-      SearchAppBarPageStateVariableList<T>();
+  SearchAppBarPageStateVariableList<T> createState() => SearchAppBarPageStateVariableList<T>();
 }
 
-class SearchAppBarPageStateVariableList<T>
-    extends State<SearchAppBarPageVariableList<T>> {
+class SearchAppBarPageStateVariableList<T> extends State<SearchAppBarPageVariableList<T>> {
   late final SearcherPageControllerVariable<T> _controller;
 
   @override
@@ -231,12 +228,9 @@ class SearchAppBarPageStateVariableList<T>
 
         if (event is KeyDownEvent) {
           if (!isModSearch) {
-            widget.onEnter?.call(_controller.listSearch.toList(),
-                _controller.highLightIndex.value);
+            widget.onEnter?.call(_controller.listSearch.toList(), _controller.highLightIndex.value);
           } else {
-            widget.onSubmit?.call(
-                _controller.rxSearch.value,
-                _controller.listSearch.toList(),
+            widget.onSubmit?.call(_controller.rxSearch.value, _controller.listSearch.toList(),
                 _controller.highLightIndex.value);
           }
         }
@@ -288,6 +282,24 @@ class SearchAppBarPageStateVariableList<T>
     _controller.onSearchList(list);
   }
 
+  /// Método público para solicitar foco no campo de busca.
+  /// Útil quando um Dialog rouba o foco e precisamos retomá-lo.
+  void requestFocus() {
+    _controller.requestFocus();
+  }
+
+  /// Restaura o modo de busca se estiver fechado e solicita o foco.
+  /// Não reseta os dados da pesquisa.
+  void restoreSearchMode() {
+    if (!isModSearch) {
+      initShowSearch();
+    }
+    // Aguarda um frame para garantir que a UI foi reconstruída se initShowSearch foi chamado
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.requestFocus();
+    });
+  }
+
   /* void onQueryTransformer(String queryTransformer) {
     widget.queryTransformer?.call(queryTransformer);
   } */
@@ -306,8 +318,7 @@ class SearchAppBarPageStateVariableList<T>
     } */
 
     if (widget.onEnter != null && !_controller.isModSearch) {
-      widget.onEnter!(
-          _controller.listSearch.toList(), _controller.highLightIndex.value);
+      widget.onEnter!(_controller.listSearch.toList(), _controller.highLightIndex.value);
     }
   }
 
@@ -343,8 +354,7 @@ class SearchAppBarPageStateVariableList<T>
             searchTextColor: widget.searchTextColor,
             autoFocus: widget.autoFocus,
             textController: widget.textController,
-            magnifyGlassColor:
-                widget.magnifyGlassColor ?? widget.magnifyInGlassColor),
+            magnifyGlassColor: widget.magnifyGlassColor ?? widget.magnifyInGlassColor),
         body: Obx(() {
           if (_controller.isLoadingListAsync) {
             return widget.widgetWaiting ??
@@ -380,10 +390,8 @@ class SearchAppBarPageStateVariableList<T>
               _controller.isModSearch, _controller.highLightIndex.value);
         }),
         floatingActionButton: widget.searchPageFloatingActionButton,
-        floatingActionButtonLocation:
-            widget.searchPageFloatingActionButtonLocation,
-        floatingActionButtonAnimator:
-            widget.searchPageFloatingActionButtonAnimator,
+        floatingActionButtonLocation: widget.searchPageFloatingActionButtonLocation,
+        floatingActionButtonAnimator: widget.searchPageFloatingActionButtonAnimator,
         persistentFooterButtons: widget.searchPagePersistentFooterButtons,
         drawer: widget.searchPageDrawer,
         endDrawer: widget.searchPageEndDrawer,
@@ -405,8 +413,7 @@ class SearchAppBarPageStateVariableList<T>
 
 class KCallbackActionVariable<T extends Intent> extends CallbackAction<T> {
   // ignore: use_super_parameters
-  KCallbackActionVariable({required void Function(T) onInvoke})
-      : super(onInvoke: onInvoke);
+  KCallbackActionVariable({required void Function(T) onInvoke}) : super(onInvoke: onInvoke);
 }
 
 class EscapeIntentVariable extends Intent {
