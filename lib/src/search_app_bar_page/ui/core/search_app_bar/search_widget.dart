@@ -106,6 +106,10 @@ class _SearchWidgetState<T> extends State<SearchWidget<T>> {
           border: InputBorder.none,
           contentPadding: const EdgeInsets.only(top: 12.0),
           hintText: widget.hintText,
+          hintStyle: TextStyle(
+              color: (widget.searchTextColor ??
+                      Theme.of(context).textTheme.titleLarge?.color)
+                  ?.withAlpha(160)),
         ),
         textCapitalization:
             widget.textCapitalization ?? TextCapitalization.none,

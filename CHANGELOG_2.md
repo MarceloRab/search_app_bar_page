@@ -1,5 +1,9 @@
 # Changelog
 
+## [5.1.2-rc.1]
+
+- Improved README documentation to better support AI agents.
+
 ## [5.1.1-rc.1]
 
 - Fixed debounce time to 300ms and improved typing detection speed.
