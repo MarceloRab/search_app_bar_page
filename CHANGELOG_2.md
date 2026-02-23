@@ -1,5 +1,9 @@
 # Changelog
 
+## [5.1.3-rc.1]
+
+- Improved AI_USAGE_GUIDE.md documentation to better support AI agents. Minimal fix in search_widget.dart.
+
 ## [5.1.2-rc.1]
 
 - Improved README documentation to better support AI agents.
