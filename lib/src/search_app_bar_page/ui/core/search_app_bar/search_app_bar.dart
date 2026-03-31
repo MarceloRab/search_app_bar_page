@@ -193,17 +193,14 @@ class _SearchAppBarState<T> extends State<SearchAppBar<T>>
       //return WillPopScope(
       //onWillPop: () => _onWillPop(isInSearchMode),
       return PopScope(
+        canPop: !isInSearchMode,
         onPopInvokedWithResult: (didPop, dynamic) {
+          if (didPop) {
+            return;
+          }
+
           if (isInSearchMode) {
             cancelSearch();
-            return;
-          } else {
-            //SystemNavigator.pop();
-            if (maxWidthHeaderSearch == Get.width) {
-              Get.back();
-            }
-
-            return;
           }
         },
         child: Stack(

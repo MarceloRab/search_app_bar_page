@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.4.4]
+
+- Fix: SearchAppBarPage now correctly handles screen width changes by updating `maxWidthHeaderSearch` + error fix - `!_debugLocked': is not true` caused by Get.back() in PopScope.
+
 ## [4.4.3]
 
 - Improved AI_USAGE_GUIDE.md documentation to better support AI agents. Minimal fix in search_widget.dart.
